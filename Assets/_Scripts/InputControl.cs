@@ -23,6 +23,7 @@ public class InputControl : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
+
                 if (hit.collider.tag == "Cube")
                 {
 					GameObject obj = hit.collider.gameObject;
@@ -32,7 +33,7 @@ public class InputControl : MonoBehaviour
                     m_selectedCube.transform.position = pos;
                     b_cubeClicked = true;
 
-					m_selectedCube.rigidbody.isKinematic = true;
+					obj.rigidbody.isKinematic = true;
 					obj.layer = LayerMask.NameToLayer("Ignore Raycast");
 					b_cubeClicked = true;
                 }
@@ -41,10 +42,12 @@ public class InputControl : MonoBehaviour
 		else if(Input.GetMouseButtonDown(0) && b_cubeClicked)
 		{
 			b_cubeClicked = false;
-			m_selectedCube.rigidbody.isKinematic = false;
 			m_selectedCube.gameObject.layer = LayerMask.NameToLayer("Default");
 			m_selectedCube.transform.Find ("Cube").gameObject.layer =  LayerMask.NameToLayer("Default");
+			m_selectedCube.transform.Find ("Cube").rigidbody.isKinematic = false;
+			m_selectedCube.GetComponent<ConnectionScript>().SendMessageToSecCube();
 		}
+
         if (b_cubeClicked == true)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

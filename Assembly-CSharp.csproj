@@ -46,13 +46,16 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\_Scripts\BuildingStorage.cs" />
      <Compile Include="Assets\_Scripts\CameraScript.cs" />
+     <Compile Include="Assets\_Scripts\ConnectionScript.cs" />
      <Compile Include="Assets\_Scripts\DecalGreen.cs" />
+     <Compile Include="Assets\_Scripts\ExtraBuildingScript.cs" />
      <Compile Include="Assets\_Scripts\GameManager.cs" />
      <Compile Include="Assets\_Scripts\InputControl.cs" />
      <Compile Include="Assets\_Scripts\Manager.cs" />
      <Compile Include="Assets\_Scripts\SecBoxScript.cs" />
-     <Compile Include="Assets\_Scripts\TagSystem.cs" />
+     <Compile Include="Assets\_Scripts\TagScript.cs" />
      <Compile Include="Assets\_Scripts\WelcomeScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
