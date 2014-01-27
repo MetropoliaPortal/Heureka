@@ -50,7 +50,12 @@
      <Compile Include="Assets\_Scripts\GameManager.cs" />
      <Compile Include="Assets\_Scripts\InputControl.cs" />
      <Compile Include="Assets\_Scripts\Manager.cs" />
+     <Compile Include="Assets\_Scripts\TagSystem.cs" />
      <Compile Include="Assets\_Scripts\WelcomeScript.cs" />
+     <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
+     <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />
+     <None Include="Assets\Test_130km-h\_cam_cible_2chemins\_MainGui_Pat_2 nov\_Shader\ProjectorAdditive.shader" />
+     <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Light.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
