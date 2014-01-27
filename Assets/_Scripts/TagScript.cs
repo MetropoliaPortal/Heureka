@@ -4,8 +4,18 @@ using System.Collections;
 public class TagScript : MonoBehaviour {
 
 	public BuildingType buildingType;
-
-
+    private bool b_tag;
+    private Rect[] r_rect = new Rect[3];
+    public SecBoxScript script;
+    void Start() 
+    {
+        float screenHalfWidth = Screen.width / 2f;
+        float screenHalfHeight = Screen.height / 2f;
+        float size = 100f;
+        r_rect[0] = new Rect(screenHalfWidth - size, screenHalfHeight - size / 2f, size, size);
+        r_rect[1] = new Rect(screenHalfWidth , screenHalfHeight - size / 2f, size, size);
+        r_rect[2] = new Rect(screenHalfWidth - size / 4, screenHalfHeight + size / 2f, size / 2f, size / 2f);
+    }
 	public BuildingType GetTag()
 	{
 		return buildingType;
@@ -13,7 +23,30 @@ public class TagScript : MonoBehaviour {
 	public void SetTag(BuildingType bt)
 	{
 	 	buildingType = bt;
+        script.SetModel();
 	}
+    public void SetTagGui(bool value) 
+    {
+        b_tag = true;
+    }
+    void OnGUI()
+    {
+        if (b_tag)
+        { 
+            if(GUI.Button(r_rect[0],"House"))
+            {
+                SetTag(BuildingType.House);
+            }
+            if(GUI.Button(r_rect[1],"Environment"))
+            {
+                SetTag(BuildingType.Environment);
+            }
+            if (GUI.Button(r_rect[2], "Ok"))
+            {
+                b_tag = false;
+            }
+        }
+    }
 }
 
 public enum BuildingType
