@@ -6,9 +6,13 @@ public class InputControl : MonoBehaviour
     #region MEMBERS
     private bool b_cubeClicked = false;
 	private Transform m_selectedCube;
+    private BoxManager m_boxManager;
     #endregion
     #region UNITY_METHODS
-	
+    void Start() 
+    {
+        m_boxManager = GetComponent<BoxManager>();
+    }
 	// Update is called once per frame
 	void Update () 
     {
@@ -62,9 +66,6 @@ public class InputControl : MonoBehaviour
             Vector3 pos = hit.point;
             pos.y += 1.01f;
             m_selectedCube.transform.position = pos;
-
-            // Inform the partner cube to look for near cubes.
-            m_selectedCube.GetComponent<ConnectionScript>().SendMessageToSecCube();
             b_cubeClicked = false;
         }
     }
@@ -80,9 +81,11 @@ public class InputControl : MonoBehaviour
                 Vector3 vec = hit.point;
                 vec.y += 2f;
                 m_selectedCube.position = vec;
+                m_boxManager.SetPosition(m_selectedCube.gameObject);
             }
         }
     }
+
     private void ChangeTag() 
     {
         if (Input.GetMouseButtonDown(1) && !b_cubeClicked)

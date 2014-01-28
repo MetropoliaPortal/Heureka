@@ -46,9 +46,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\_Scripts\BoxManager.cs" />
      <Compile Include="Assets\_Scripts\BuildingStorage.cs" />
      <Compile Include="Assets\_Scripts\CameraScript.cs" />
-     <Compile Include="Assets\_Scripts\ConnectionScript.cs" />
      <Compile Include="Assets\_Scripts\DecalGreen.cs" />
      <Compile Include="Assets\_Scripts\ExtraBuildingScript.cs" />
      <Compile Include="Assets\_Scripts\GameManager.cs" />

@@ -7,8 +7,10 @@ public class TagScript : MonoBehaviour {
     private bool b_tag;
     private Rect[] r_rect = new Rect[3];
     public SecBoxScript script;
+    private BoxManager manager;
     void Start() 
     {
+        manager = GameObject.Find("Manager").GetComponent<BoxManager>();
         float screenHalfWidth = Screen.width / 2f;
         float screenHalfHeight = Screen.height / 2f;
         float size = 100f;
@@ -23,7 +25,8 @@ public class TagScript : MonoBehaviour {
 	public void SetTag(BuildingType bt)
 	{
 	 	buildingType = bt;
-        script.SetModel();
+        GameObject o = script.SetModel();
+        manager.ChangeModel(gameObject, o);
 	}
     public void SetTagGui(bool value) 
     {

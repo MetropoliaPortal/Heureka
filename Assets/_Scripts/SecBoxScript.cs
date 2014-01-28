@@ -4,14 +4,43 @@ using System.Collections.Generic;
 
 public class SecBoxScript : MonoBehaviour 
 {
-	public Transform boxTransform;
-	private Transform m_transform;
+    private GameObject m_large;
+    private GameObject m_other;
+    public GameObject GetLarge() 
+    {
+        return m_large;
+    }
+    public void SetLarge(GameObject obj) 
+    {
+        m_large = obj;
+    }
+    public GameObject GetOther()
+    {
+        return m_other;
+    }
+    public void SetOther(GameObject obj)
+    {
+        m_other = obj;
+    }
+
+    //private GameObject go_obj;
+    private Transform m_transform;
+    private BuildingStorage buildStorage;
+    void Start() 
+    {
+        buildStorage = GameObject.Find("Manager").GetComponent<BuildingStorage>();
+        m_transform = GetComponent<Transform>();
+    }
+    /*
+	
 	private GameObject [] m_boxes;
-	private BuildingStorage buildStorage;
+	
 	private Vector3 m_prevPosition;
-    private GameObject go_obj;
+    
 	private GameObject go_large;
-	private List<SecBoxScript> scripts;
+
+	private List<SecBoxScript> scripts = new List<SecBoxScript>();
+    
 
 	void Start () 
 	{
@@ -21,33 +50,38 @@ public class SecBoxScript : MonoBehaviour
 		Vector3 pos = boxTransform.position;
 		pos.z -= 50f;
 		m_transform.position = pos;
-		buildStorage = GameObject.Find ("Manager").GetComponent<BuildingStorage>();
+
         go_obj = (GameObject)Instantiate(buildStorage.GetSmallBuilding());
         go_obj.transform.position = m_transform.position;
         go_obj.transform.parent = m_transform;
 	}
+    */
 
-	public void SetModel()
+	public GameObject SetModel()
 	{
-        if(go_obj != null)
-            Destroy(go_obj);
-		BuildingType bt = boxTransform.GetComponent<TagScript>().GetTag();
+        GameObject go_obj = null;
+		BuildingType bt = GetComponent<TagScript>().GetTag();
+        Vector3 pos;
 			switch(bt)
 			{
 				case BuildingType.House:
                     go_obj = (GameObject)Instantiate(buildStorage.GetSmallBuilding());
-                    go_obj.transform.position = m_transform.position;
-                    go_obj.transform.parent = m_transform;
+                    pos = transform.position;
+		            pos.z -= 50f;
+                    pos.y = 1f;
+                    go_obj.transform.position = pos;
 					break;
 				case BuildingType.Environment:
                     go_obj = (GameObject)Instantiate(buildStorage.GetSmallEnvironment());
-                    go_obj.transform.position = m_transform.position;
-                    go_obj.transform.parent = m_transform;	
+                    pos = transform.position;
+		            pos.z -= 50f;
+                    pos.y = 1f;
+                    go_obj.transform.position = pos;	
 					break;
 			}
-		
+            return go_obj;
 	}
-
+    /*
 	public void CheckNearItem()
 	{
         List<GameObject> listObj = new List<GameObject>();
@@ -110,6 +144,6 @@ public class SecBoxScript : MonoBehaviour
 	public void SetLargeObj(GameObject obj)
 	{
 		go_large = obj;		
-	}
+	}*/
 }
 
