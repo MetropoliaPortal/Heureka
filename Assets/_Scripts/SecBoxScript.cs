@@ -10,6 +10,8 @@ public class SecBoxScript : MonoBehaviour
 	private BuildingStorage buildStorage;
 	private Vector3 m_prevPosition;
     private GameObject go_obj;
+	private GameObject go_large;
+	private List<SecBoxScript> scripts;
 
 	void Start () 
 	{
@@ -61,12 +63,27 @@ public class SecBoxScript : MonoBehaviour
         }
         if (listObj.Count == 0) 
         {
+			if(go_obj == null)
+			{
+
+			}
             return;
         }
         if (listObj.Count == 1)
         {
             Vector3 vec = listObj[0].transform.position - m_transform.position;
             Vector3 pos = m_transform.position + 0.5f * vec;
+			Destroy(go_obj);
+			go_obj = null;
+			SecBoxScript script = listObj[0].GetComponent<SecBoxScript>();
+			Destroy (script.GetObj());
+			script.SetObj(null);
+
+			GameObject o = (GameObject)Instantiate(buildStorage.GetLargeBulding2B());
+			o.transform.position = pos;
+			go_large = o;
+			script.SetLargeObj(o);
+
             return;
         }
 	}
@@ -78,5 +95,21 @@ public class SecBoxScript : MonoBehaviour
         pos.z -= 50f;
         m_transform.position = pos;
     }
+	public GameObject GetObj()
+	{
+		return go_obj;		
+	}
+	public void SetObj(GameObject obj)
+	{
+	 	go_obj = obj;		
+	}
+	public GameObject GetLargeObj()
+	{
+		return go_large;	
+	}
+	public void SetLargeObj(GameObject obj)
+	{
+		go_large = obj;		
+	}
 }
 
