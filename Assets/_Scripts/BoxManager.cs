@@ -43,7 +43,7 @@ public class BoxManager : MonoBehaviour
         GameObject o = dict[obj];
         Vector3 pos = obj.transform.position;
         pos.z -= 50f;
-        pos.y = 1;
+        pos.y = 0.5f;
         o.transform.position = pos;
         CheckForNearBy(obj);
     }
@@ -54,10 +54,11 @@ public class BoxManager : MonoBehaviour
         if (obj.activeSelf == true)
         {
             List<GameObject> listObj = new List<GameObject>();
-            float range = 1.3f;
+            float range = 2.3f;
             for (int i = 0; i < gos.Length; i++)
             {
                 float distance = Vector3.Distance(obj.transform.position, gos[i].transform.position);
+				print (distance);
                 if (distance < range)
                 {
                     if (obj == gos[i]) continue;
@@ -71,23 +72,8 @@ public class BoxManager : MonoBehaviour
                 // if the second box is inactive, we ar emoving the box while it is a large building
                 // We need to find the big box, destroy it, reactivate the small houses, 
                 // remove the settings from this object and its couple object 
-                if (dict[obj].activeSelf == false)
-                {
-                    // Get the couple object
-                    GameObject o = obj.GetComponent<SecBoxScript>().GetOther();
-                    // Destroy big model
-                    GameObject large = obj.GetComponent<SecBoxScript>().GetLarge();
-                    Destroy(large);
-
-                    //Reactivate both objects
-                    dict[obj].SetActive(true);
-                    dict[o].SetActive(true);
-                    // Reset all variables
-                    obj.GetComponent<SecBoxScript>().SetOther(null);
-                    obj.GetComponent<SecBoxScript>().SetLarge(null);
-                    o.GetComponent<SecBoxScript>().SetOther(null);
-                    o.GetComponent<SecBoxScript>().SetLarge(null);
-                }
+				CheckForCoupleObject(obj);
+                
                 return;
             }
             if (listObj.Count == 1)
@@ -101,7 +87,7 @@ public class BoxManager : MonoBehaviour
                 // Get the point between the two objects and move it to the other setup
                 Vector3 pos = obj.transform.position + 0.5f * vec;
                 pos.z -= 50f;
-                pos.y = 1f;
+                pos.y = 0.5f;
                 // Deactivate both objects
                 
                 //SecBoxScript script = listObj[0].GetComponent<SecBoxScript>();
@@ -135,4 +121,25 @@ public class BoxManager : MonoBehaviour
         Destroy(o);
         dict[key] = value;
     }
+
+	public void CheckForCoupleObject (GameObject obj)
+	{
+		if (dict[obj].activeSelf == false)
+		{
+			// Get the couple object
+			GameObject o = obj.GetComponent<SecBoxScript>().GetOther();
+			// Destroy big model
+			GameObject large = obj.GetComponent<SecBoxScript>().GetLarge();
+			Destroy(large);
+			
+			//Reactivate both objects
+			dict[obj].SetActive(true);
+			dict[o].SetActive(true);
+			// Reset all variables
+			obj.GetComponent<SecBoxScript>().SetOther(null);
+			obj.GetComponent<SecBoxScript>().SetLarge(null);
+			o.GetComponent<SecBoxScript>().SetOther(null);
+			o.GetComponent<SecBoxScript>().SetLarge(null);
+		}
+	}
 }

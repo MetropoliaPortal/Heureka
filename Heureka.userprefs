@@ -1,10 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\SecBoxScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\BoxManager.cs">
     <Files>
+      <File FileName="Assets\_Scripts\BoxManager.cs" Line="57" Column="30" />
       <File FileName="Assets\_Scripts\SecBoxScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\SecBoxScript.cs" Line="108" Column="19" />
       <File FileName="Assets\_Scripts\BuildingStorage.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\InputControl.cs" Line="67" Column="25" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

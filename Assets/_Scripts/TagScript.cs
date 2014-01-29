@@ -24,6 +24,7 @@ public class TagScript : MonoBehaviour {
 	}
 	public void SetTag(BuildingType bt)
 	{
+		manager.CheckForCoupleObject (gameObject);
 	 	buildingType = bt;
         GameObject o = script.SetModel();
         manager.ChangeModel(gameObject, o);

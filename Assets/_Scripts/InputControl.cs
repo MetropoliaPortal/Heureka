@@ -64,7 +64,7 @@ public class InputControl : MonoBehaviour
             RaycastHit hit;
             Physics.Raycast(ray, out hit);
             Vector3 pos = hit.point;
-            pos.y += 1.01f;
+            pos.y += 0.5f;
             m_selectedCube.transform.position = pos;
             b_cubeClicked = false;
         }
