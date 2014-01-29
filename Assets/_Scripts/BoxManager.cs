@@ -2,11 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+/// <summary>
+/// Box manager.
+/// Controls all movement and alteration of the objects on screen
+/// </summary>
 public class BoxManager : MonoBehaviour 
 {
     public BuildingStorage buildStorage;
    
-    private List<GameObject> list = new List<GameObject>();
+   // private List<GameObject> list = new List<GameObject>();
     private Dictionary<GameObject, GameObject> dict = new Dictionary<GameObject, GameObject>();
     
     
@@ -38,6 +43,11 @@ public class BoxManager : MonoBehaviour
         }
 	}
 
+	/// <summary>
+	/// Sets the position of the building on screen.
+	/// It is called when the cube is physically moved in space
+	/// </summary>
+	/// <param name="obj">Object.</param>
     public void SetPosition(GameObject obj)
     {
         GameObject o = dict[obj];
@@ -45,20 +55,26 @@ public class BoxManager : MonoBehaviour
         pos.z -= 50f;
         pos.y = 0.5f;
         o.transform.position = pos;
-        CheckForNearBy(obj);
+        //CheckForNearBy(obj);
     }
-    private void CheckForNearBy(GameObject obj) 
+
+	/// <summary>
+	/// Checks for near by objects.
+	/// When the cube is put to rest, the method is called.
+	/// If objects are found in the surrounding, then a new bigger building is created.
+	/// </summary>
+	/// <param name="obj">Object.</param>
+    public void CheckForNearBy(GameObject obj) 
     {
         GameObject[] gos = new GameObject[dict.Count];
         dict.Keys.CopyTo(gos, 0);
         if (obj.activeSelf == true)
         {
             List<GameObject> listObj = new List<GameObject>();
-            float range = 2.3f;
+            float range = 1.7f;
             for (int i = 0; i < gos.Length; i++)
             {
                 float distance = Vector3.Distance(obj.transform.position, gos[i].transform.position);
-				print (distance);
                 if (distance < range)
                 {
                     if (obj == gos[i]) continue;
@@ -69,7 +85,7 @@ public class BoxManager : MonoBehaviour
 
             if (listObj.Count == 0)
             {
-                // if the second box is inactive, we ar emoving the box while it is a large building
+                // if the second box is inactive, we are moving the box while it is a large building
                 // We need to find the big box, destroy it, reactivate the small houses, 
                 // remove the settings from this object and its couple object 
 				CheckForCoupleObject(obj);
@@ -78,8 +94,9 @@ public class BoxManager : MonoBehaviour
             }
             if (listObj.Count == 1)
             {
+				SecBoxScript script = obj.GetComponent<SecBoxScript>();
                 // The object is already turned to big so we quit
-                if (obj.GetComponent<SecBoxScript>().GetLarge() != null) return;
+                if (script.GetLarge() != null) return;
                 
                 
                 // Get the vector between the two objects
@@ -88,21 +105,36 @@ public class BoxManager : MonoBehaviour
                 Vector3 pos = obj.transform.position + 0.5f * vec;
                 pos.z -= 50f;
                 pos.y = 0.5f;
-                // Deactivate both objects
                 
-                //SecBoxScript script = listObj[0].GetComponent<SecBoxScript>();
-                //Destroy(script.GetObj());
-                //script.SetObj(null);
-
+				GameObject o;
                 // Create a new large object
-                GameObject o = (GameObject)Instantiate(buildStorage.GetLargeBulding2B());
+				// Object is placed above
+				if( obj.transform.position.y >0.55f)
+				{
+					o = (GameObject)Instantiate(buildStorage.GetTallBuilding2B());
+					pos.y = 1;
+				}
+				else // Object is aside
+				{
+					o = (GameObject)Instantiate(buildStorage.GetLargeBulding2B());
+					// check for rotation
+					float dot = Mathf.Abs (Vector3.Dot (Vector3.right, vec.normalized));
+					if(dot > 0.7f)
+					{
+						o.transform.Rotate(Vector3.up, 90f);
+					}
+				}
+               
                 // Assign new position
                 o.transform.position = pos;
                 // Couple both object together by script
-                listObj[0].GetComponent<SecBoxScript>().SetLarge(o);
-                listObj[0].GetComponent<SecBoxScript>().SetOther(obj);
-                obj.GetComponent<SecBoxScript>().SetLarge(o);
-                obj.GetComponent<SecBoxScript>().SetOther(listObj[0]);
+				script.SetLarge(o);
+				script.SetOther(listObj[0]);
+				script = listObj[0].GetComponent<SecBoxScript>();
+                script.SetLarge(o);
+                script.SetOther(obj);
+
+                
                 // deactivate both objects.
                 dict[obj].SetActive(false);
                 dict[listObj[0]].SetActive(false);
@@ -126,20 +158,23 @@ public class BoxManager : MonoBehaviour
 	{
 		if (dict[obj].activeSelf == false)
 		{
-			// Get the couple object
-			GameObject o = obj.GetComponent<SecBoxScript>().GetOther();
+			SecBoxScript script = obj.GetComponent<SecBoxScript>();
 			// Destroy big model
-			GameObject large = obj.GetComponent<SecBoxScript>().GetLarge();
-			Destroy(large);
+			GameObject o = script.GetLarge();
+			Destroy(o);
+			// Get the couple object
+			o = script.GetOther();
 			
 			//Reactivate both objects
 			dict[obj].SetActive(true);
 			dict[o].SetActive(true);
 			// Reset all variables
-			obj.GetComponent<SecBoxScript>().SetOther(null);
-			obj.GetComponent<SecBoxScript>().SetLarge(null);
-			o.GetComponent<SecBoxScript>().SetOther(null);
-			o.GetComponent<SecBoxScript>().SetLarge(null);
+			script.SetOther(null);
+			script.SetLarge(null);
+
+			script = o.GetComponent<SecBoxScript>();
+			script.SetOther(null);
+			script.SetLarge(null);
 		}
 	}
 }

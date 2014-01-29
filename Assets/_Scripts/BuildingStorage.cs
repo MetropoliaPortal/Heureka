@@ -6,17 +6,7 @@ public class BuildingStorage : MonoBehaviour {
 	public GameObject[]house;
 	public GameObject[]largeBuilding2B;
 	public GameObject[]environment;
-
-	void Start () 
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
-	}
+	public GameObject[]tallBuilding2B;
 
 	public GameObject GetSmallBuilding()
 	{
@@ -34,5 +24,10 @@ public class BuildingStorage : MonoBehaviour {
 	{	
 		int rand = Random.Range (0, largeBuilding2B.Length);
 		return largeBuilding2B[rand];
+	}
+	public GameObject GetTallBuilding2B()
+	{
+		int rand = Random.Range (0, tallBuilding2B.Length);
+		return tallBuilding2B[rand];
 	}
 }

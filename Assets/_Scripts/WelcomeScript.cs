@@ -14,7 +14,10 @@ public class WelcomeScript : MonoBehaviour
     private string [] st_strWelcome = {"Welcome to the Dream-City.\nThis tutorial will explain \nhow to use the Dream-city builder",
                                           "In this environment, \nyou have 2 minutes to develop your city.\nThe counter show on the top of the screen",
                                       "To begin with,\n we will start with interaction.\n",
-                                        "To grab a cub, simply left click on it."};
+                                        "To grab a cube, simply left click on it.\n" +
+                                        "You can now move it around the plane","Press the left button to release the cube",
+		"If the cube is placed near another cube,\na bigger building is created","Finally, right click allows the changing of the tag.","You now have 2 minutes"
+										};
     private int m_index = 0;
     #endregion
     #region UNITY_METHODS
@@ -48,7 +51,7 @@ public class WelcomeScript : MonoBehaviour
             if (m_index == 3)
             {
                 m_welcomeGroup.x = Screen.width - m_welcomeGroup.width;
-                manager.SetState(State.Tutorial);
+                manager.SetState(State.Running);
             }
         }
         GUI.EndGroup();

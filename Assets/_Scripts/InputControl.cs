@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class InputControl : MonoBehaviour
 {
     #region MEMBERS
@@ -50,14 +51,20 @@ public class InputControl : MonoBehaviour
                     m_selectedCube.transform.Find("Plane").gameObject.SetActive(true);
 
                     b_cubeClicked = true;
+					m_boxManager.CheckForCoupleObject(m_selectedCube.gameObject);
                 }
             }
         }
         else if (Input.GetMouseButtonDown(0) && b_cubeClicked)
         {
             // Change layer mask of the cube to receive raycast and deactivate green plane
-            m_selectedCube.transform.Find("Cube").gameObject.layer = LayerMask.NameToLayer("Default");
-            m_selectedCube.transform.Find("Plane").gameObject.SetActive(false);
+            m_selectedCube.Find("Cube").gameObject.layer = LayerMask.NameToLayer("Default");
+			Transform tr = m_selectedCube.Find("Plane");
+			tr.gameObject.SetActive(false);
+			Vector3 v = tr.localPosition;
+			v.y = -1.99f;
+			tr.localPosition = v;
+
 
             // Get the raycast and set the position of the cube at hit point
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -65,8 +72,9 @@ public class InputControl : MonoBehaviour
             Physics.Raycast(ray, out hit);
             Vector3 pos = hit.point;
             pos.y += 0.5f;
-            m_selectedCube.transform.position = pos;
+            m_selectedCube.position = pos;
             b_cubeClicked = false;
+			m_boxManager.CheckForNearBy(m_selectedCube.gameObject);
         }
     }
 
