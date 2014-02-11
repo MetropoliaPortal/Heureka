@@ -1,14 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\BoxManager.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\Cargame\Assets\StateMachine Assets\StateMachine.cs">
     <Files>
-      <File FileName="Assets\_Scripts\BoxManager.cs" Line="104" Column="44" />
-      <File FileName="Assets\_Scripts\BuildingStorage.cs" Line="32" Column="3" />
-      <File FileName="Assets\_Scripts\InputControl.cs" Line="54" Column="65" />
-      <File FileName="Assets\_Scripts\TagScript.cs" Line="27" Column="43" />
-      <File FileName="Assets\_Scripts\SecBoxScript.cs" Line="25" Column="1" />
-      <File FileName="Assets\_Scripts\WelcomeScript.cs" Line="25" Column="6" />
-      <File FileName="Assets\_Scripts\Manager.cs" Line="8" Column="31" />
+      <File FileName="..\Cargame\Assets\StateMachine Assets\StateMachine.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
