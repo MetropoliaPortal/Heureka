@@ -34,7 +34,7 @@ public class CubePosition : MonoBehaviour
         Vector3 pos = transform.position;
         // Drop the decimal part
         pos.x = Mathf.Floor(pos.x);
-        pos.y = Mathf.Floor(pos.z);
+        pos.z = Mathf.Floor(pos.z);
         // Constrain to the grid
         pos.x = Mathf.Clamp(pos.x,1,row - 1);
         pos.z = Mathf.Clamp(pos.z, 1, column - 1);

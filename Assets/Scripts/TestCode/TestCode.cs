@@ -13,8 +13,8 @@ public class TestCode : MonoBehaviour
     public Transform[] waypoints;
     public GameObject road;
     GameObject[][] roadArray = new GameObject[7][];
-    Transform roadObj;
     int i;
+	Transform roadObj;
     void Start() 
     {
         GameObject o = new GameObject("Road");
@@ -112,7 +112,7 @@ public class TestCode : MonoBehaviour
         {
             Vector3 pos = first;
             pos.y += 0.01f;
-            GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+			GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
             arrayRoad.Add(o);
             first = Vector3.MoveTowards(first, end, 1.0f);
 
