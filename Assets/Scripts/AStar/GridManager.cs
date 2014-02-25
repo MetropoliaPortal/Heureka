@@ -124,6 +124,7 @@ public class GridManager : MonoBehaviour
 
                 //Also make the node as blocked status
                 nodes[row, col].MarkAsObstacle();
+
             }
         }
     }

@@ -60,6 +60,7 @@ public class Node : IComparable
         return 0;
     }
 }
+
 public class CrossNode 
 {
     public Node[] node = new Node[4];
@@ -69,4 +70,5 @@ public class CrossNode
         
     }
 }
+
 

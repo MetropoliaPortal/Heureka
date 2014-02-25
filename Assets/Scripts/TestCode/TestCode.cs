@@ -114,7 +114,6 @@ public class TestCode : MonoBehaviour
             pos.y += 0.01f;
             GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
             arrayRoad.Add(o);
-            o.transform.parent = roadObj;
             first = Vector3.MoveTowards(first, end, 1.0f);
 
         }
