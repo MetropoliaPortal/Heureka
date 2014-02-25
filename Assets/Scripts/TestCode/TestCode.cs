@@ -70,10 +70,8 @@ public class TestCode : MonoBehaviour
     }*/
     GameObject[] DrawRoadAStar(Vector3 start, Vector3 end) 
     {
-        if (i == 2) print("Here");
         startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
         goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
-        if (i == 2) print(startNode.position +" " +goalNode.position);
         pathArray = AStar.FindPath(startNode, goalNode);
         List<GameObject> arrayRoad = new List<GameObject>();
         

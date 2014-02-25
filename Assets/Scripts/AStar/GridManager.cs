@@ -57,10 +57,23 @@ public class GridManager : MonoBehaviour
     {
         //Get the list of obstacles objects tagged as "Obstacle"
         obstacleList = GameObject.FindGameObjectsWithTag("Obstacle");
+		for(int i = 0; i < obstacleList.Length; i++)
+		{
+			obstacleList[i].GetComponent<CubePosition>().AwakeCubePosition();
+		}
         CreateGrid();
-
+		CreateCrossNode();
         CalculateObstacles();
+
+
+		/*for(int j = 0; j < obstacleList.Length; j++)
+		{
+			obstacleList[i].GetComponent<CubePosition>().AwakeCubePosition();
+		}*/
     }
+
+
+
     void CreateCrossNode() 
     {
         dict = new Dictionary<int, CrossNode>();
@@ -72,9 +85,8 @@ public class GridManager : MonoBehaviour
             for (int j = 0; j < row; j++)
             {
                 Vector3 vec = new Vector3((float)(i + 1),0f,(float)(j + 1));
-                crossNode[i, j].position = vec;
-                for (int k = 0; k < 4; k++)
-                    crossNode[i, j].node[k] = GetNode(vec); 
+				CrossNode cn = new CrossNode(vec,nodes,dict);
+				crossNode[i,j] = cn;
             }
         }
     }
@@ -113,8 +125,18 @@ public class GridManager : MonoBehaviour
     /// </summary>
     void CalculateObstacles()
     {
+		for (int i = 0; i < obstacleList.Length ; i++)
+		{
+			Vector3 vec = obstacleList[i].transform.position;
+			int key = (int)vec.x * 100 + (int)vec.z;
+			Node[] cn = dict[key].node;
+			for(int j = 0; j < cn.Length; j++)
+			{
+				cn[j].bObstacle = true;
+			}
+		}
         //Run through the bObstacle list and set the bObstacle position
-        if (obstacleList != null && obstacleList.Length > 0)
+        /*if (obstacleList != null && obstacleList.Length > 0)
         {
             foreach (GameObject data in obstacleList)
             {
@@ -126,7 +148,7 @@ public class GridManager : MonoBehaviour
                 nodes[row, col].MarkAsObstacle();
 
             }
-        }
+        }*/
     }
     
     /// <summary>

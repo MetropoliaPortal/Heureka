@@ -12,7 +12,7 @@ public class CubePosition : MonoBehaviour
     private int row;
     private int column;
     #endregion
-    void Start () 
+    public void AwakeCubePosition () 
     {
         GameObject obj = GameObject.Find("GridManager");
         GridManager gm = obj.GetComponent<GridManager>();
@@ -33,8 +33,8 @@ public class CubePosition : MonoBehaviour
     {
         Vector3 pos = transform.position;
         // Drop the decimal part
-        pos.x = Mathf.Floor(pos.x);
-        pos.z = Mathf.Floor(pos.z);
+        pos.x = Mathf.Round(pos.x);
+        pos.z = Mathf.Round(pos.z);
         // Constrain to the grid
         pos.x = Mathf.Clamp(pos.x,1,row - 1);
         pos.z = Mathf.Clamp(pos.z, 1, column - 1);
