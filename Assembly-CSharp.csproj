@@ -51,16 +51,11 @@
      <Compile Include="Assets\Scripts\AStar\Node.cs" />
      <Compile Include="Assets\Scripts\AStar\PriorityQueue.cs" />
      <Compile Include="Assets\Scripts\TestCode\TestCode.cs" />
-     <Compile Include="Assets\_Scripts\BoxManager.cs" />
      <Compile Include="Assets\_Scripts\BuildingStorage.cs" />
      <Compile Include="Assets\_Scripts\CameraScript.cs" />
      <Compile Include="Assets\_Scripts\CubePosition.cs" />
      <Compile Include="Assets\_Scripts\GameManager.cs" />
-     <Compile Include="Assets\_Scripts\InputControl.cs" />
      <Compile Include="Assets\_Scripts\Manager.cs" />
-     <Compile Include="Assets\_Scripts\SecBoxScript.cs" />
-     <Compile Include="Assets\_Scripts\TagScript.cs" />
-     <Compile Include="Assets\_Scripts\WelcomeScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
