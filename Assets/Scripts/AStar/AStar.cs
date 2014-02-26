@@ -39,6 +39,9 @@ public class AStar
         closedList = new PriorityQueue();
         Node node = null;
 
+		//
+		Node previousNode = null;
+
         while (openList.Length != 0)
         {
             node = openList.First();
@@ -68,12 +71,16 @@ public class AStar
 	                float totalCost = node.nodeTotalCost + cost;
 					
 					//Estimated cost for neighbour node to the goal
-	                float neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;					
-					
-					//Assign neighbour node properties
-	                neighbourNode.nodeTotalCost = totalCost;
-	                neighbourNode.parent = node;
-	                neighbourNode.estimatedCost = totalCost + neighbourNodeEstCost;
+					//Does not take goal position Z into account when calculating the estimated cost to prevent zig-zag roads
+					float neighbourNodeEstCost = (neighbourNode.position - new Vector3(goal.position.x, 0, neighbourNode.position.z)).sqrMagnitude;	
+
+					//Assign new cost and parent only if totalCost is smaller than neighbours total cost
+					if(neighbourNode.nodeTotalCost == 1.0f || totalCost < neighbourNode.nodeTotalCost){
+						//Assign neighbour node properties
+						neighbourNode.nodeTotalCost = totalCost;
+						neighbourNode.parent = node;
+						neighbourNode.estimatedCost = totalCost + neighbourNodeEstCost;
+					}
 	
 	                //Add the neighbour node to the list if not already existed in the list
 	                if (!openList.Contains(neighbourNode))
