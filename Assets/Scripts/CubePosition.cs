@@ -11,17 +11,21 @@ public class CubePosition : MonoBehaviour
     private Vector3 prevPos;
     private int row;
     private int column;
+	private RoadManager roadManager;
     #endregion
+
     public void AwakeCubePosition () 
     {
         GameObject obj = GameObject.Find("GridManager");
         GridManager gm = obj.GetComponent<GridManager>();
+		roadManager = GameObject.Find ("RoadManager").GetComponent<RoadManager>();
         row = gm.numOfRows;
         column = gm.numOfColumns;
         transform = base.transform;
         PositionCube();
 #if DEBUGMODE
-        InvokeRepeating("PositionCube", 0.001f, 0.016f);
+        //InvokeRepeating("PositionCube", 0.001f, 0.016f);
+		InvokeRepeating("CheckPosition", 0.001f, 0.01f);
 #endif
 	}
     
@@ -39,8 +43,9 @@ public class CubePosition : MonoBehaviour
         pos.x = Mathf.Clamp(pos.x,1,row - 1);
         pos.z = Mathf.Clamp(pos.z, 1, column - 1);
         // Store the value
+		prevPos = transform.position;
         transform.position = pos;
-        prevPos = pos;
+		
     }
 #if DEBUGMODE
     void CheckPosition() 

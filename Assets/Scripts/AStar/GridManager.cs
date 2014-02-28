@@ -65,12 +65,40 @@ public class GridManager : MonoBehaviour
 		CreateCrossNode();
         CalculateObstacles();
 
-
-		/*for(int j = 0; j < obstacleList.Length; j++)
-		{
-			obstacleList[i].GetComponent<CubePosition>().AwakeCubePosition();
-		}*/
     }
+
+	public void DoStuff(){
+		DeleteObstacles ();
+
+		CalculateObstacles();
+
+		//for debuggin purposes
+		for (int i = 0; i < numOfColumns; i++)
+		{
+			for (int j = 0; j < numOfRows; j++)
+			{
+				if(nodes[i, j].bObstacle){
+
+					Debug.Log("true obstacle: " +nodes[i,j].position);
+				}
+					
+				
+			}
+		}
+		Debug.Log ("New round");
+	}
+
+	void DeleteObstacles()
+	{
+		foreach(KeyValuePair<int, CrossNode> entry in dict)
+		{
+			Node[] cn = entry.Value.node;
+			for(int j = 0; j < cn.Length; j++)
+			{
+				cn[j].bObstacle = false;
+			}
+		}
+	}
 
 
 
@@ -269,7 +297,7 @@ public class GridManager : MonoBehaviour
 	/// </param>
     void AssignNeighbour(int row, int column, List<Node> neighbors)
     {
-        if (row != -1 && column != -1 && row < numOfRows && column < numOfColumns)
+		if (row >= 0 && column >= 0 && row < numOfRows && column < numOfColumns)
         {
             Node nodeToAdd = nodes[row, column];
             if (!nodeToAdd.bObstacle)
