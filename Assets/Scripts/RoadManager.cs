@@ -63,7 +63,7 @@ public class RoadManager : MonoBehaviour
 
 	public void SolveRoad(){
 		DeleteRoad ();
-		GridManager.instance.DoStuff ();
+		GridManager.instance.ResolveObstacles ();
 		SolveSurroundingRoads ();
 		SolveCrossingRoads ();
 	}

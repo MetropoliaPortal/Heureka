@@ -45,6 +45,8 @@ public class CubePosition : MonoBehaviour
         // Store the value
 		prevPos = transform.position;
         transform.position = pos;
+
+		//Debug.Log ("Pos: " + transform.position.x + ", " + transform.position.z);
 		
     }
 #if DEBUGMODE

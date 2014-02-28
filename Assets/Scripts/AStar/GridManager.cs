@@ -67,25 +67,9 @@ public class GridManager : MonoBehaviour
 
     }
 
-	public void DoStuff(){
+	public void ResolveObstacles(){
 		DeleteObstacles ();
-
-		CalculateObstacles();
-
-		//for debuggin purposes
-		for (int i = 0; i < numOfColumns; i++)
-		{
-			for (int j = 0; j < numOfRows; j++)
-			{
-				if(nodes[i, j].bObstacle){
-
-					Debug.Log("true obstacle: " +nodes[i,j].position);
-				}
-					
-				
-			}
-		}
-		Debug.Log ("New round");
+		CalculateObstacles();		
 	}
 
 	void DeleteObstacles()
@@ -99,8 +83,6 @@ public class GridManager : MonoBehaviour
 			}
 		}
 	}
-
-
 
     void CreateCrossNode() 
     {
