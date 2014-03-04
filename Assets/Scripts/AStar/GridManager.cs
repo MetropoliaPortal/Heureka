@@ -84,6 +84,18 @@ public class GridManager : MonoBehaviour
 		}
 	}
 
+	public void ResetEstimatedCosts()
+	{
+		foreach(KeyValuePair<int, CrossNode> entry in dict)
+		{
+			Node[] cn = entry.Value.node;
+			for(int j = 0; j < cn.Length; j++)
+			{
+				cn[j].nodeTotalCost = 1.0f;
+			}
+		}
+	}
+
     void CreateCrossNode() 
     {
         dict = new Dictionary<int, CrossNode>();

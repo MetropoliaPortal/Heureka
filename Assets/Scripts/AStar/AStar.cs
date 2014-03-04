@@ -29,11 +29,13 @@ public class AStar
     /// </summary>
     public static List<Node> FindPath(Node start, Node goal)
     {
+		//Reset estimated costs from previous iteration
+		GridManager.instance.ResetEstimatedCosts ();
+
         //Start Finding the path
         openList = new PriorityQueue();
         openList.Push(start);
         start.nodeTotalCost = 0.0f;
-        //start.estimatedCost = HeuristicEstimateCost(start, goal);
         start.estimatedCost = (start.position - goal.position).sqrMagnitude;
         closedList = new PriorityQueue();
         Node node = null;
@@ -46,6 +48,8 @@ public class AStar
 		}else if ( start.position.z < 1 || start.position.z > (GridManager.instance.numOfRows - 1) ) {
 			discardX = true;
 		}
+
+
 		
         while (openList.Length != 0)
         {
@@ -58,7 +62,6 @@ public class AStar
 
             List<Node> neighbours = new List<Node>();
             GridManager.instance.GetNeighbours(node, neighbours);
-			ResetNeighbours(neighbours);
             #region CheckNeighbours
 
             //Get the Neighbours
@@ -82,9 +85,11 @@ public class AStar
 					//Trading one of the goal.positions coordinates if needed
 					if(discardZ){
 						neighbourNodeEstCost = (neighbourNode.position - new Vector3(goal.position.x, 0, neighbourNode.position.z)).sqrMagnitude;
+						//neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;
 					}
 					else if(discardX){
 						neighbourNodeEstCost = (neighbourNode.position - new Vector3(neighbourNode.position.x, 0, goal.position.z)).sqrMagnitude;
+						//neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;
 					}
 					else
 						neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;
@@ -120,10 +125,4 @@ public class AStar
         //Calculate the path based on the final node
         return CalculatePath(node);
     }
-
-	static void ResetNeighbours(List<Node> neighbours){
-		for (int i = 0; i < neighbours.Count; i++) {
-			neighbours[i].nodeTotalCost = 1.0f;
-		}
-	}
 }
