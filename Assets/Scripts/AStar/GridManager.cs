@@ -87,8 +87,8 @@ public class GridManager : MonoBehaviour
     void CreateCrossNode() 
     {
         dict = new Dictionary<int, CrossNode>();
-        int col = numOfColumns - 2;
-        int row = numOfRows - 2;
+        int col = numOfColumns - 1;
+        int row = numOfRows - 1;
         crossNode = new CrossNode[col, row];
         for (int i = 0; i < col; i++)
         {
