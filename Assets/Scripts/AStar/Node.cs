@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class Node : IComparable
 {
@@ -58,6 +59,51 @@ public class Node : IComparable
             return 1;
 
         return 0;
+    }
+}
+
+[System.Serializable]
+public class CrossNode 
+{
+    public Node[] node = new Node[4];
+    public Vector3 position;
+    public CrossNode(Vector3 position, Node[,]nodeArray, Dictionary<int, CrossNode>dict) 
+    {
+		// Assign position of the cross node
+		this.position = position;
+
+		// Get the position of the 4 squares around the node
+		Vector3[] pos = {position, position, position, position};
+		pos[0].x -= 0.5f;
+		pos[0].z -= 0.5f;
+		pos[1].x -= 0.5f;
+		pos[1].z += 0.5f;
+		pos[2].x += 0.5f;
+		pos[2].z -= 0.5f;
+		pos[3].x += 0.5f;
+		pos[3].z += 0.5f;
+
+		// Find the squares(nodes) from the list of squares 
+		// Place them in the array of square(nodes)
+		int row = nodeArray.GetLength(0);
+		int col = nodeArray.GetLength(1);
+		for (int i = 0; i < 4 ; i++)
+		{
+			for(int j = 0; j < row ; j++)
+			{
+				for(int k = 0; k < col ; k++)
+				{
+					if(nodeArray[k,j].position == pos[i])
+					{
+						node[i] = nodeArray[k,j];
+						break;
+					}
+				}
+			}
+		}
+
+		int  key = (int)position.x * 100 + (int)position.z;
+		dict.Add(key, this);
     }
 }
 

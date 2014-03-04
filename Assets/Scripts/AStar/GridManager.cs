@@ -41,7 +41,9 @@ public class GridManager : MonoBehaviour
 
     private Vector3 origin = new Vector3();
     private GameObject[] obstacleList;
-    public Node[,] nodes { get; set; }
+    public Node[,] nodes;
+    public CrossNode[,] crossNode;
+    public Dictionary<int, CrossNode> dict;
     #endregion
 
     //Origin of the grid manager
@@ -55,17 +57,62 @@ public class GridManager : MonoBehaviour
     {
         //Get the list of obstacles objects tagged as "Obstacle"
         obstacleList = GameObject.FindGameObjectsWithTag("Obstacle");
-		CalculateObstacles();
+		for(int i = 0; i < obstacleList.Length; i++)
+		{
+			obstacleList[i].GetComponent<CubePosition>().AwakeCubePosition();
+		}
+        CreateGrid();
+		CreateCrossNode();
+        CalculateObstacles();
 
-		//Adjust the position of the grid to the plane
-		Vector3 planePosition = GameObject.Find("Plane").GetComponent<Transform>().position;
-		transform.position = new Vector3(planePosition.x - numOfRows / 2, 0, planePosition.z - numOfColumns / 2);
+    }
+
+	public void ResolveObstacles(){
+		DeleteObstacles ();
+		CalculateObstacles();		
+	}
+
+	void DeleteObstacles()
+	{
+		foreach(KeyValuePair<int, CrossNode> entry in dict)
+		{
+			Node[] cn = entry.Value.node;
+			for(int j = 0; j < cn.Length; j++)
+			{
+				cn[j].bObstacle = false;
+			}
+		}
+	}
+
+    void CreateCrossNode() 
+    {
+        dict = new Dictionary<int, CrossNode>();
+        int col = numOfColumns - 2;
+        int row = numOfRows - 2;
+        crossNode = new CrossNode[col, row];
+        for (int i = 0; i < col; i++)
+        {
+            for (int j = 0; j < row; j++)
+            {
+                Vector3 vec = new Vector3((float)(i + 1),0f,(float)(j + 1));
+				CrossNode cn = new CrossNode(vec,nodes,dict);
+				crossNode[i,j] = cn;
+            }
+        }
+    }
+
+    Node GetNode(Vector3 pos) 
+    {
+        int indexCell = GetGridIndex(pos);
+        int col = GetColumn(indexCell);
+        int row = GetRow(indexCell);
+        return nodes[col, row];
     }
 
     /// <summary>
-    /// Calculate which cells in the grids are mark as obstacles
+    /// Create the grid for squares
     /// </summary>
-    void CalculateObstacles()
+    void CreateGrid() 
     {
         //Initialise the nodes
         nodes = new Node[numOfColumns, numOfRows];
@@ -82,40 +129,36 @@ public class GridManager : MonoBehaviour
                 index++;
             }
         }
-
+    }
+    /// <summary>
+    /// Calculate which cells in the grids are mark as obstacles
+    /// </summary>
+    void CalculateObstacles()
+    {
+		for (int i = 0; i < obstacleList.Length ; i++)
+		{
+			Vector3 vec = obstacleList[i].transform.position;
+			int key = (int)vec.x * 100 + (int)vec.z;
+			Node[] cn = dict[key].node;
+			for(int j = 0; j < cn.Length; j++)
+			{
+				cn[j].bObstacle = true;
+			}
+		}
         //Run through the bObstacle list and set the bObstacle position
-        if (obstacleList != null && obstacleList.Length > 0)
+        /*if (obstacleList != null && obstacleList.Length > 0)
         {
             foreach (GameObject data in obstacleList)
             {
-                //int indexCell = GetGridIndex(data.transform.position);
-                //int col = GetColumn(indexCell);
-                //int row = GetRow(indexCell);
-
-				int col = (int)data.transform.position.x;
-				int row = (int)data.transform.position.z;
-				Debug.Log("Obstacle: " +col +"," +row);
+                int indexCell = GetGridIndex(data.transform.position);
+                int col = GetColumn(indexCell);
+                int row = GetRow(indexCell);
 
                 //Also make the node as blocked status
                 nodes[row, col].MarkAsObstacle();
 
-				//Calculate rest of the nodes to be blocked according to the first one
-				int otherRow = row - 1;
-				int otherCol = col;
-				nodes[otherRow, otherCol].MarkAsObstacle();
-				Debug.Log("Obstacle: " +otherCol +"," +otherRow);
-
-				otherRow = row;
-				otherCol = col - 1;
-				nodes[otherRow, otherCol].MarkAsObstacle();
-				Debug.Log("Obstacle: " +otherCol +"," +otherRow);
-
-				otherRow = row - 1;
-				otherCol = col - 1;
-				nodes[otherRow, otherCol].MarkAsObstacle();
-				Debug.Log("Obstacle: " +otherCol +"," +otherRow);
             }
-        }
+        }*/
     }
     
     /// <summary>
@@ -124,8 +167,8 @@ public class GridManager : MonoBehaviour
     public Vector3 GetGridCellCenter(int index)
     {
         Vector3 cellPosition = GetGridCellPosition(index);
-        cellPosition.x += (int)(gridCellSize / 2.0f);
-        cellPosition.z += (int)(gridCellSize / 2.0f);
+        cellPosition.x += (gridCellSize / 2.0f);
+        cellPosition.z += (gridCellSize / 2.0f);
         return cellPosition;
     }
 
@@ -236,7 +279,7 @@ public class GridManager : MonoBehaviour
 	/// </param>
     void AssignNeighbour(int row, int column, List<Node> neighbors)
     {
-        if (row != -1 && column != -1 && row < numOfRows && column < numOfColumns)
+		if (row >= 0 && column >= 0 && row < numOfRows && column < numOfColumns)
         {
             Node nodeToAdd = nodes[row, column];
             if (!nodeToAdd.bObstacle)

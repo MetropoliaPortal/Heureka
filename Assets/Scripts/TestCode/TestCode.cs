@@ -13,10 +13,14 @@ public class TestCode : MonoBehaviour
     public Transform[] waypoints;
     public GameObject road;
     GameObject[][] roadArray = new GameObject[7][];
-
+    int i;
+	Transform roadObj;
     void Start() 
     {
-        for (int i = 0; i < waypoints.Length - 1; i++)
+        GameObject o = new GameObject("Road");
+        roadObj = o.transform;
+        roadObj.position = new Vector3(0f, 0f, 0f);
+        for (i = 0; i < waypoints.Length - 1; i++)
         {
             if (Physics.Linecast(waypoints[i].position, waypoints[i + 1].position))
             {
@@ -37,13 +41,13 @@ public class TestCode : MonoBehaviour
             roadArray[5] = DrawStraightRoad(waypoints[0].position, waypoints[3].position);
         }
         
-        if (Physics.Linecast(waypoints[2].position, waypoints[5].position))
+        if (Physics.Linecast(waypoints[5].position, waypoints[2].position))
         {
-            roadArray[6] = DrawRoadAStar(waypoints[2].position, waypoints[5].position);
+            roadArray[6] = DrawRoadAStar(waypoints[5].position, waypoints[2].position);
         }
         else
         {
-            roadArray[6] = DrawStraightRoad(waypoints[2].position, waypoints[5].position);
+            roadArray[6] = DrawStraightRoad(waypoints[5].position, waypoints[2].position);
         }
     }
     /*void OnDrawGizmos()
@@ -70,16 +74,30 @@ public class TestCode : MonoBehaviour
         goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
         pathArray = AStar.FindPath(startNode, goalNode);
         List<GameObject> arrayRoad = new List<GameObject>();
+        
+        // Place first
+        Vector3 pos = start;
+        pos.y += 0.01f;
+        GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+        arrayRoad.Add(o);
+        o.transform.parent = roadObj;
+
         for (int k = 0; k < pathArray.Count - 1; k++)
         {
-            Vector3 pos = pathArray[k].position;
+            pos = pathArray[k].position;
             pos.y += 0.01f;
-            arrayRoad.Add((GameObject)Instantiate(road, pos, Quaternion.identity));
-            
+            o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+            if (i == 2) o.name = "New";
+            arrayRoad.Add(o);
+           
+            o.transform.parent = roadObj;
             pos = pathArray[k + 1].position - pathArray[k].position;
             pos = pathArray[k].position + 0.5f * pos;
             pos.y += 0.01f;
-            arrayRoad.Add((GameObject)Instantiate(road, pos, Quaternion.identity));
+            o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+            arrayRoad.Add(o);
+            o.transform.parent = roadObj;
+            if (i == 2) o.name = "New";
         }
         return arrayRoad.ToArray();
     }
@@ -92,7 +110,8 @@ public class TestCode : MonoBehaviour
         {
             Vector3 pos = first;
             pos.y += 0.01f;
-            arrayRoad.Add((GameObject)Instantiate(road, pos, Quaternion.identity));
+			GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+            arrayRoad.Add(o);
             first = Vector3.MoveTowards(first, end, 1.0f);
 
         }

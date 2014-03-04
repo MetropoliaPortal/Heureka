@@ -7,7 +7,6 @@ public class AStar
     #region List fields
 
     public static PriorityQueue closedList, openList;
-
     #endregion
 
     /// <summary>
@@ -39,6 +38,15 @@ public class AStar
         closedList = new PriorityQueue();
         Node node = null;
 
+		//Determine where starting point is and discard one of the goal.positions components to achieve 
+		//more natural looking roads
+		bool discardX = false, discardZ = false;
+		if ( start.position.x < 1 || start.position.x > (GridManager.instance.numOfColumns - 1) ) {
+			discardZ = true;
+		}else if ( start.position.z < 1 || start.position.z > (GridManager.instance.numOfRows - 1) ) {
+			discardX = true;
+		}
+		
         while (openList.Length != 0)
         {
             node = openList.First();
@@ -50,7 +58,7 @@ public class AStar
 
             List<Node> neighbours = new List<Node>();
             GridManager.instance.GetNeighbours(node, neighbours);
-
+			ResetNeighbours(neighbours);
             #region CheckNeighbours
 
             //Get the Neighbours
@@ -68,12 +76,25 @@ public class AStar
 	                float totalCost = node.nodeTotalCost + cost;
 					
 					//Estimated cost for neighbour node to the goal
-	                float neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;					
-					
-					//Assign neighbour node properties
-	                neighbourNode.nodeTotalCost = totalCost;
-	                neighbourNode.parent = node;
-	                neighbourNode.estimatedCost = totalCost + neighbourNodeEstCost;
+					//Remove one of the goals position components. for preventing zig-zag roads
+					float neighbourNodeEstCost;
+
+					//Trading one of the goal.positions coordinates if needed
+					if(discardZ){
+						neighbourNodeEstCost = (neighbourNode.position - new Vector3(goal.position.x, 0, neighbourNode.position.z)).sqrMagnitude;
+					}
+					else if(discardX){
+						neighbourNodeEstCost = (neighbourNode.position - new Vector3(neighbourNode.position.x, 0, goal.position.z)).sqrMagnitude;
+					}
+					else
+						neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;
+
+					//Assign new neighbour node properties only if totalCost is smaller than neighbours current total cost
+					if(neighbourNode.nodeTotalCost == 1.0f || totalCost < neighbourNode.nodeTotalCost){
+						neighbourNode.nodeTotalCost = totalCost;
+						neighbourNode.parent = node;
+						neighbourNode.estimatedCost = totalCost + neighbourNodeEstCost;
+					}
 	
 	                //Add the neighbour node to the list if not already existed in the list
 	                if (!openList.Contains(neighbourNode))
@@ -99,4 +120,10 @@ public class AStar
         //Calculate the path based on the final node
         return CalculatePath(node);
     }
+
+	static void ResetNeighbours(List<Node> neighbours){
+		for (int i = 0; i < neighbours.Count; i++) {
+			neighbours[i].nodeTotalCost = 1.0f;
+		}
+	}
 }
