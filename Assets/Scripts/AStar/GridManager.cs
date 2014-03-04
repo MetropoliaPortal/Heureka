@@ -149,6 +149,7 @@ public class GridManager : MonoBehaviour
     {
 		for (int i = 0; i < obstacleList.Length ; i++)
 		{
+			//Might throw a keynotfound -exception sometimes because transforms position might be momentarily off
 			Vector3 vec = obstacleList[i].transform.position;
 			int key = (int)vec.x * 100 + (int)vec.z;
 			Node[] cn = dict[key].node;
