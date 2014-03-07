@@ -35,6 +35,8 @@ public class ConnectScript : MonoBehaviour {
 		st_url = url + tagQuuppa;
 		while(true)
 		{
+#if UNITY_EDITOR
+#else
 			WWW www = new WWW(st_url);
 			yield return www;
 			if(www.error != null)
@@ -60,5 +62,6 @@ public class ConnectScript : MonoBehaviour {
 				text = e.Message;
 			}
 		}
+#endif
 	}
 }
