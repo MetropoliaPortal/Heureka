@@ -1,12 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\AStar\GridManager.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="C:\Users\lucasc\Documents\New Unity Project 3\Assets\NewBehaviourScript.cs">
     <Files>
-      <File FileName="Assets\Scripts\RoadManager.cs" Line="26" Column="6" />
-      <File FileName="Assets\Scripts\CubePosition.cs" Line="38" Column="42" />
-      <File FileName="Assets\Scripts\AStar\AStar.cs" Line="127" Column="6" />
-      <File FileName="Assets\Scripts\AStar\GridManager.cs" Line="243" Column="3" />
-      <File FileName="Assets\Scripts\AStar\Node.cs" Line="74" Column="3" />
+      <File FileName="C:\Users\lucasc\Documents\New Unity Project 3\Assets\NewBehaviourScript.cs" Line="25" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
