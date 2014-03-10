@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />
      <Compile Include="Assets\Scripts\RoadManager.cs" />
+     <Compile Include="Assets\Scripts\StackPool.cs" />
      <Compile Include="Assets\Scripts\TestCode\TestCode.cs" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />

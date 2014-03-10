@@ -84,11 +84,23 @@ public class GridManager : MonoBehaviour
 		}
 	}
 
+	public void ResetEstimatedCosts()
+	{
+		foreach(KeyValuePair<int, CrossNode> entry in dict)
+		{
+			Node[] cn = entry.Value.node;
+			for(int j = 0; j < cn.Length; j++)
+			{
+				cn[j].nodeTotalCost = 1.0f;
+			}
+		}
+	}
+
     void CreateCrossNode() 
     {
         dict = new Dictionary<int, CrossNode>();
-        int col = numOfColumns - 2;
-        int row = numOfRows - 2;
+        int col = numOfColumns - 1;
+        int row = numOfRows - 1;
         crossNode = new CrossNode[col, row];
         for (int i = 0; i < col; i++)
         {
@@ -137,6 +149,7 @@ public class GridManager : MonoBehaviour
     {
 		for (int i = 0; i < obstacleList.Length ; i++)
 		{
+			//Might throw a keynotfound -exception sometimes because transforms position might be momentarily off
 			Vector3 vec = obstacleList[i].transform.position;
 			int key = (int)vec.x * 100 + (int)vec.z;
 			Node[] cn = dict[key].node;

@@ -39,8 +39,8 @@ public class CubePosition : MonoBehaviour
         pos.x = Mathf.Round(pos.x);
         pos.z = Mathf.Round(pos.z);
         // Constrain to the grid
-        pos.x = Mathf.Clamp(pos.x,1,row - 1);
-        pos.z = Mathf.Clamp(pos.z, 1, column - 1);
+        pos.x = Mathf.Clamp(pos.x,2,row - 2);
+        pos.z = Mathf.Clamp(pos.z, 2, column - 2);
         // Store the value
 		prevPos = transform.position;
         transform.position = pos;
