@@ -52,18 +52,16 @@ public class RoadManager : MonoBehaviour
 	void Start() 
 	{
         m_stack = new StackPool(road);
+        // Here values is arbitrary, it could be lower, dunno
         for (int i = 0; i < 50; i++)
         {
             GameObject o = (GameObject)Instantiate(road);
             m_stack.Push(o);
         }
-            // Draw edge roads.
+        // Draw edge roads.
         DrawEdgeRoad();
-        // DrawCentreRoad();
-
-		//Solve road after repeatedly after each timestep. Solving the road is currently too heavy procedure to be done
-		//after every time a cube is moved
-		InvokeRepeating("SolveRoad", 0.001f, 1.0f);
+        // Register the solving of the road to the movement of a cube
+        CubePosition.OnMove += SolveRoad;
 	}
 
     private void DrawCentreRoad()
@@ -72,7 +70,7 @@ public class RoadManager : MonoBehaviour
         GameObject[] centerWp = GameObject.FindGameObjectsWithTag("CenterWp");
         // Sort them in order since Unity has no logic to find objects in scene
         centerWp = centerWp.OrderBy(x => x.name).ToArray();
-        GameObject o = new GameObject("RoadCenter");
+        new GameObject("RoadCenter");
 
     }
 
@@ -98,22 +96,24 @@ public class RoadManager : MonoBehaviour
         }
     }
 
-	void DeleteRoad()
-    {
-		GameObject[] roads = GameObject.FindGameObjectsWithTag("Road");
-        for (int i = 0; i < roads.Length; i++)
-        {
-            m_stack.Push(roads[i]);
-        }
-	}
-
 	public void SolveRoad()
     {
+        print("Call");
 		DeleteRoad ();
 		GridManager.instance.ResolveObstacles ();
 		SolveCrossingRoads ();
 	}
 
+    void DeleteRoad()
+    {
+        // This does not delete them anymore, it just deactivates them and stores them back on the stack
+        // Only the two roads in the middle are concerned anymore
+        GameObject[] roads = GameObject.FindGameObjectsWithTag("Road");
+        for (int i = 0; i < roads.Length; i++)
+        {
+            m_stack.Push(roads[i]);
+        }
+    }
 	void SolveCrossingRoads()
     {
 		if (Physics.Linecast(waypoints[1].position, waypoints[5].position))
@@ -147,6 +147,7 @@ public class RoadManager : MonoBehaviour
 		pos.y += 0.01f;
 		GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
         o.tag = "Road";
+
 		arrayRoad.Add(o);
 		o.transform.parent = roadObj;
 		

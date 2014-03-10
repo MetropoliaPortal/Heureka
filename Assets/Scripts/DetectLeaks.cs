@@ -32,10 +32,10 @@ public class DetectLeaks : MonoBehaviour
 		}
 		);
 		
-		foreach (KeyValuePair<string, int> entry in myList)
+		/*foreach (KeyValuePair<string, int> entry in myList)
 		{
 			GUILayout.Label(entry.Key + ": " + entry.Value);
-		}
+		}*/
 		
 	}
 }

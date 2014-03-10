@@ -27,7 +27,6 @@ public class StackPool
         }
         else 
         {
-            MonoBehaviour.print("new Road");
             GameObject o = (GameObject)MonoBehaviour.Instantiate(road);
             return o;
         }
