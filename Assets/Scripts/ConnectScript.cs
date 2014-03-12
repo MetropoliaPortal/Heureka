@@ -5,7 +5,7 @@ using System;
 [RequireComponent(typeof(CubePosition))]
 public class ConnectScript : MonoBehaviour {
 
-	public string tagQuuppa = "001830ed41a4";
+	public string tagQuuppa;// = "001830ed41a4";
 	CubePosition m_cubePosition;
 	private Rect r_rect;
 	string st_positionX = "positionX";
