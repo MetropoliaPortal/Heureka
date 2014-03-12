@@ -14,6 +14,8 @@ public class RoadManager : MonoBehaviour
 	public Transform[] waypoints;
 
 	public GameObject road;
+	public GameObject car;
+
 	GameObject[][] roadArray = new GameObject[2][];
     StackPool m_stack;
 	int i;
@@ -62,8 +64,19 @@ public class RoadManager : MonoBehaviour
         DrawEdgeRoad();
         // Register the solving of the road to the movement of a cube
         CubePosition.OnMove += SolveRoad;
+
+
+		InvokeRepeating("AddCar", 2.0f, 1.0f);
+		//Physics.IgnoreLayerCollision (0, 8);
+		//AddCar();
 	}
 
+	private void AddCar(){
+		GameObject c = (GameObject)Instantiate (car);
+	}
+
+	//Not in use
+	/*
     private void DrawCentreRoad()
     {
         // Get corner points tagged as CornerWp
@@ -72,7 +85,7 @@ public class RoadManager : MonoBehaviour
         centerWp = centerWp.OrderBy(x => x.name).ToArray();
         new GameObject("RoadCenter");
 
-    }
+    }*/
 
     private void DrawEdgeRoad()
     {
@@ -98,10 +111,11 @@ public class RoadManager : MonoBehaviour
 
 	public void SolveRoad()
     {
-        print("Call");
+        //print("Call");
 		DeleteRoad ();
 		GridManager.instance.ResolveObstacles ();
 		SolveCrossingRoads ();
+		
 	}
 
     void DeleteRoad()

@@ -1,8 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="C:\Users\lucasc\Documents\New Unity Project 3\Assets\NewBehaviourScript.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CarAgent.cs">
     <Files>
-      <File FileName="C:\Users\lucasc\Documents\New Unity Project 3\Assets\NewBehaviourScript.cs" Line="25" Column="4" />
+      <File FileName="Assets\Scripts\CarAgent.cs" Line="106" Column="24" />
+      <File FileName="Assets\Scripts\Manager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\RoadManager.cs" Line="76" Column="3" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CubePosition.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AStar\AStar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\DetectLeaks.cs" Line="1" Column="1" />
+      <File FileName="Assets\Road.cs" Line="17" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -39,17 +39,20 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Car.cs" />
+     <Compile Include="Assets\Road.cs" />
      <Compile Include="Assets\Scripts\AStar\AStar.cs" />
      <Compile Include="Assets\Scripts\AStar\GridManager.cs" />
      <Compile Include="Assets\Scripts\AStar\Node.cs" />
      <Compile Include="Assets\Scripts\AStar\PriorityQueue.cs" />
+     <Compile Include="Assets\Scripts\CarAgent.cs" />
      <Compile Include="Assets\Scripts\ConnectScript.cs" />
      <Compile Include="Assets\Scripts\CubePosition.cs" />
      <Compile Include="Assets\Scripts\DetectLeaks.cs" />
