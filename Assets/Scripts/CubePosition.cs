@@ -11,20 +11,21 @@ public class CubePosition : MonoBehaviour
     private Vector3 prevPos;
     private int row;
     private int column;
-	private RoadManager roadManager;
     public delegate void EventMove();
     public static event EventMove OnMove = new EventMove(() => { });
     private bool b_fireEvent = false;
     #endregion
 
-    public void AwakeCubePosition () 
+    public void Start () 
     {
+        transform = base.transform;
         GameObject obj = GameObject.Find("GridManager");
         GridManager gm = obj.GetComponent<GridManager>();
-		roadManager = GameObject.Find ("RoadManager").GetComponent<RoadManager>();
         row = gm.numOfRows;
         column = gm.numOfColumns;
-        transform = base.transform;
+        GridManager.obstacleList.Add(gameObject);
+        PositionCube(0,0,0);
+        
 #if DEBUGMODE
 		InvokeRepeating("CheckPosition", 0.001f, 0.01f);
 #endif
@@ -37,11 +38,12 @@ public class CubePosition : MonoBehaviour
     public void PositionCube(float x, float y , float z)
     {
         // Drop the decimal part
-		x *= (row - 2) / 5.0f;
-		y *= (column - 2) / 5.0f;
         x = Mathf.Round(x);
         y = Mathf.Round(y);
-		z = Mathf.Round(z);
+        z = Mathf.Round(z);
+		x *= (row - 2) / 5.0f;
+		y *= (column - 2) / 5.0f;
+
         // Store the value
 		prevPos = transform.position;
 		transform.position = new Vector3(Mathf.Clamp(x,2,row - 2),z,Mathf.Clamp(y, 2, column - 2));	
@@ -74,8 +76,6 @@ public class CubePosition : MonoBehaviour
         // Store the value
         prevPos = transform.position;
         transform.position = pos;
-        //Debug.Log ("Pos: " + transform.position.x + ", " + transform.position.z);
-
     }
 #endif
 }

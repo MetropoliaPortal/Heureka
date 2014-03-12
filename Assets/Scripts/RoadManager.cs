@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+/// <summary>
+/// Class is attached to empty game object to create and take care of the roads
+/// </summary>
 public class RoadManager : MonoBehaviour 
 {
 	private Transform startPos, endPos;
@@ -16,10 +19,11 @@ public class RoadManager : MonoBehaviour
 	public GameObject road;
 	public GameObject car;
 
-	GameObject[][] roadArray = new GameObject[2][];
     StackPool m_stack;
 	int i;
-	Transform roadObj;
+    GameObject objRoadEdge;
+    GameObject objRoadCenter;
+
 
 	#region Singleton implementation
 	// s_Instance is used to cache the instance found in the scene so we don't have to look it up every time.
@@ -53,53 +57,37 @@ public class RoadManager : MonoBehaviour
 
 	void Start() 
 	{
-        m_stack = new StackPool(road);
-        // Here values is arbitrary, it could be lower, dunno
-        for (int i = 0; i < 50; i++)
-        {
-            GameObject o = (GameObject)Instantiate(road);
-            m_stack.Push(o);
-        }
-        // Draw edge roads.
-        DrawEdgeRoad();
-        // Register the solving of the road to the movement of a cube
-        CubePosition.OnMove += SolveRoad;
 
+        objRoadEdge = new GameObject("EdgeRoadParent");         // Parent object for edge roads
+        objRoadEdge.transform.position = Vector3.zero;          // Position at origin
+
+        objRoadCenter = new GameObject("CenterRoadParent");     // Parent object for center roads
+        objRoadCenter.transform.position = Vector3.zero;        // Position at origin
+
+        m_stack = new StackPool(                                // Create stack for center roads, 
+            road,                                               // road prefab
+            objRoadCenter.transform);                           // Parent object
+
+        DrawEdgeRoads();                                        // Draw edge roads.
+        DrawCenterRoads();                                      // Draw center roads
+        CubePosition.OnMove += SolveRoad;                       // Register the solving of the road to the movement of a cube
 
 		InvokeRepeating("AddCar", 2.0f, 1.0f);
-		//Physics.IgnoreLayerCollision (0, 8);
-		//AddCar();
 	}
 
 	private void AddCar(){
 		GameObject c = (GameObject)Instantiate (car);
 	}
-
-	//Not in use
-	/*
-    private void DrawCentreRoad()
+    private void DrawEdgeRoads()
     {
-        // Get corner points tagged as CornerWp
-        GameObject[] centerWp = GameObject.FindGameObjectsWithTag("CenterWp");
-        // Sort them in order since Unity has no logic to find objects in scene
-        centerWp = centerWp.OrderBy(x => x.name).ToArray();
-        new GameObject("RoadCenter");
-
-    }*/
-
-    private void DrawEdgeRoad()
-    {
+       
         // Get corner points tagged as CornerWp
         GameObject[] cornerWp = GameObject.FindGameObjectsWithTag("CornerWp");
         // Sort them in order since Unity has no logic to find objects in scene
         cornerWp = cornerWp.OrderBy(x => x.name).ToArray();
-        GameObject o = new GameObject("Road");
-        // Tag them differently so they are not considered when redrawing
-        roadObj = o.transform;
-        roadObj.position = new Vector3(0f, 0f, 0f);
+
         // Iterate to join each consecutive point
         // Last point gets joined with first
-        string tag = "EdgeRoad";
         for (i = 0; i < cornerWp.Length; i++)
         {
             if (i != cornerWp.Length - 1)
@@ -111,11 +99,9 @@ public class RoadManager : MonoBehaviour
 
 	public void SolveRoad()
     {
-        //print("Call");
 		DeleteRoad ();
 		GridManager.instance.ResolveObstacles ();
-		SolveCrossingRoads ();
-		
+		DrawCenterRoads ();
 	}
 
     void DeleteRoad()
@@ -128,24 +114,25 @@ public class RoadManager : MonoBehaviour
             m_stack.Push(roads[i]);
         }
     }
-	void SolveCrossingRoads()
+
+	void DrawCenterRoads()
     {
 		if (Physics.Linecast(waypoints[1].position, waypoints[5].position))
 		{
-			roadArray[0] = DrawRoadAStar(waypoints[1].position, waypoints[5].position);
+            DrawRoadAStar(waypoints[1].position, waypoints[5].position);
 		}
 		else
 		{
-			roadArray[0] = DrawStraightRoad(waypoints[1].position, waypoints[5].position);
+		    DrawStraightRoad(waypoints[1].position, waypoints[5].position);
 		}
 		
 		if (Physics.Linecast(waypoints[3].position, waypoints[7].position))
 		{
-			roadArray[1] = DrawRoadAStar(waypoints[3].position, waypoints[7].position);
+            DrawRoadAStar(waypoints[3].position, waypoints[7].position);
 		}
 		else
 		{
-			roadArray[1] = DrawStraightRoad(waypoints[3].position, waypoints[7].position);
+            DrawStraightRoad(waypoints[3].position, waypoints[7].position);
 		}
 	}
 
@@ -163,7 +150,6 @@ public class RoadManager : MonoBehaviour
         o.tag = "Road";
 
 		arrayRoad.Add(o);
-		o.transform.parent = roadObj;
 		
 		for (int k = 0; k < pathArray.Count; k++)
 		{
@@ -176,7 +162,7 @@ public class RoadManager : MonoBehaviour
 		return arrayRoad.ToArray();
 	}
 	
-	GameObject[] DrawStraightRoad(Vector3 start, Vector3 end, string tag = "Road") 
+	GameObject[] DrawStraightRoad(Vector3 start, Vector3 end,string tag = "Road") 
 	{
 		Vector3 first = start;
 		List<GameObject> arrayRoad = new List<GameObject>();

@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\Manager.cs" />
      <Compile Include="Assets\Scripts\RoadManager.cs" />
      <Compile Include="Assets\Scripts\StackPool.cs" />
+     <Compile Include="Assets\Scripts\StartScript.cs" />
      <Compile Include="Assets\Scripts\TestCode\TestCode.cs" />
      <Compile Include="Assets\Scripts\UvScript.cs" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />

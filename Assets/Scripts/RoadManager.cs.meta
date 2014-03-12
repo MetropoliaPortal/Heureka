@@ -3,8 +3,7 @@ guid: 5e404ab1913d48e4ab4e17c423352898
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
-  - road: {instanceID: 0}
-  - car: {fileID: 100000, guid: 7f36c854a2e263948b961cce4794f26a, type: 2}
+  - road: {fileID: 100000, guid: 7f36c854a2e263948b961cce4794f26a, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
