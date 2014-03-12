@@ -40,7 +40,7 @@ public class GridManager : MonoBehaviour
     public bool showObstacleBlocks = true;
 
     private Vector3 origin = new Vector3();
-    private GameObject[] obstacleList;
+    public static List<GameObject> obstacleList = new List<GameObject>();
     public Node[,] nodes;
     public CrossNode[,] crossNode;
     public Dictionary<int, CrossNode> dict;
@@ -55,19 +55,13 @@ public class GridManager : MonoBehaviour
     //Initialise the grid manager
     void Awake()
     {
-        //Get the list of obstacles objects tagged as "Obstacle"
-        obstacleList = GameObject.FindGameObjectsWithTag("Obstacle");
-		for(int i = 0; i < obstacleList.Length; i++)
-		{
-			obstacleList[i].GetComponent<CubePosition>().AwakeCubePosition();
-		}
         CreateGrid();
 		CreateCrossNode();
         CalculateObstacles();
-
     }
 
-	public void ResolveObstacles(){
+	public void ResolveObstacles()
+    {
 		DeleteObstacles ();
 		CalculateObstacles();		
 	}
@@ -147,7 +141,7 @@ public class GridManager : MonoBehaviour
     /// </summary>
     void CalculateObstacles()
     {
-		for (int i = 0; i < obstacleList.Length ; i++)
+		for (int i = 0; i < obstacleList.Count ; i++)
 		{
 			//Might throw a keynotfound -exception sometimes because transforms position might be momentarily off
 			Vector3 vec = obstacleList[i].transform.position;
@@ -158,20 +152,6 @@ public class GridManager : MonoBehaviour
 				cn[j].bObstacle = true;
 			}
 		}
-        //Run through the bObstacle list and set the bObstacle position
-        /*if (obstacleList != null && obstacleList.Length > 0)
-        {
-            foreach (GameObject data in obstacleList)
-            {
-                int indexCell = GetGridIndex(data.transform.position);
-                int col = GetColumn(indexCell);
-                int row = GetRow(indexCell);
-
-                //Also make the node as blocked status
-                nodes[row, col].MarkAsObstacle();
-
-            }
-        }*/
     }
     
     /// <summary>
@@ -311,23 +291,6 @@ public class GridManager : MonoBehaviour
         if (showGrid)
         {
             DebugDrawGrid(transform.position, numOfRows, numOfColumns, gridCellSize, Color.blue);
-        }
-
-        //Grid Start Position
-        Gizmos.DrawSphere(transform.position, 0.5f);
-
-        //Draw Obstacle obstruction
-        if (showObstacleBlocks)
-        {
-            Vector3 cellSize = new Vector3(gridCellSize, 1.0f, gridCellSize);
-
-            if (obstacleList != null && obstacleList.Length > 0)
-            {
-                foreach (GameObject data in obstacleList)
-                {
-                    Gizmos.DrawCube(GetGridCellCenter(GetGridIndex(data.transform.position)), cellSize);
-                }
-            }
         }
     }
 

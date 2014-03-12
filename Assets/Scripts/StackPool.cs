@@ -5,11 +5,13 @@ public class StackPool
 {
     GameObject road;
     Stack<GameObject> m_stack = null;
+    Transform parentTr;
 
-    public StackPool(GameObject road)
+    public StackPool(GameObject road, Transform parentTr)
     {
         m_stack = new Stack<GameObject>();
         this.road = road;
+        this.parentTr = parentTr;
     }
 
     public void Push(GameObject obj) 
@@ -28,6 +30,8 @@ public class StackPool
         else 
         {
             GameObject o = (GameObject)MonoBehaviour.Instantiate(road);
+            o.tag = "Road";
+            o.transform.parent = parentTr;
             return o;
         }
     }
