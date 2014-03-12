@@ -33,8 +33,6 @@ public class ConnectScript : MonoBehaviour {
 		string url = "192.168.123.124:8080/qpe/getHAIPLocation?tag=" + tagQuuppa;
 		while(true)
 		{
-#if UNITY_EDITOR
-#else
 			WWW www = new WWW(url);
 			yield return www;
 			if(www.error != null)
@@ -59,7 +57,6 @@ public class ConnectScript : MonoBehaviour {
 			{
 				text = e.Message;
 			}
-#endif
         }
 	}
 }
