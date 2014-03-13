@@ -46,10 +46,14 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Car.cs" />
+     <Compile Include="Assets\Road.cs" />
      <Compile Include="Assets\Scripts\AStar\AStar.cs" />
      <Compile Include="Assets\Scripts\AStar\GridManager.cs" />
      <Compile Include="Assets\Scripts\AStar\Node.cs" />
      <Compile Include="Assets\Scripts\AStar\PriorityQueue.cs" />
+     <Compile Include="Assets\Scripts\Agent\CarScript.cs" />
+     <Compile Include="Assets\Scripts\CarAgent.cs" />
      <Compile Include="Assets\Scripts\ConnectScript.cs" />
      <Compile Include="Assets\Scripts\CubePosition.cs" />
      <Compile Include="Assets\Scripts\DetectLeaks.cs" />

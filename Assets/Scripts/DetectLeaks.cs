@@ -31,8 +31,9 @@ public class DetectLeaks : MonoBehaviour
 			return nextPair.Value.CompareTo((firstPair.Value));
 		}
 		);
-		
-		/*foreach (KeyValuePair<string, int> entry in myList)
+
+		/*
+		foreach (KeyValuePair<string, int> entry in myList)
 		{
 			GUILayout.Label(entry.Key + ": " + entry.Value);
 		}*/

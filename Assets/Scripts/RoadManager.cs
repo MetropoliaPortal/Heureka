@@ -17,11 +17,13 @@ public class RoadManager : MonoBehaviour
 	public Transform[] waypoints;
 
 	public GameObject road;
+	public GameObject car;
 
     StackPool m_stack;
 	int i;
     GameObject objRoadEdge;
     GameObject objRoadCenter;
+
 
 	#region Singleton implementation
 	// s_Instance is used to cache the instance found in the scene so we don't have to look it up every time.
@@ -55,6 +57,7 @@ public class RoadManager : MonoBehaviour
 
 	void Start() 
 	{
+
         objRoadEdge = new GameObject("EdgeRoadParent");         // Parent object for edge roads
         objRoadEdge.transform.position = Vector3.zero;          // Position at origin
 
@@ -68,8 +71,13 @@ public class RoadManager : MonoBehaviour
         DrawEdgeRoads();                                        // Draw edge roads.
         DrawCenterRoads();                                      // Draw center roads
         CubePosition.OnMove += SolveRoad;                       // Register the solving of the road to the movement of a cube
+
+		//InvokeRepeating("AddCar", 2.0f, 1.0f);
 	}
 
+	private void AddCar(){
+		//GameObject c = (GameObject)Instantiate (car);
+	}
     private void DrawEdgeRoads()
     {
        
