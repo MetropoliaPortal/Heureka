@@ -10,9 +10,10 @@ using System.Collections.Generic;
 /// </summary>
 public class StartScript : MonoBehaviour 
 {
-
+    UvScript textureScript;
 	void Start () 
 	{
+        textureScript = GetComponent<UvScript>();
 		/*string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server
 		WWW www = new WWW(url);                                                 // GET request
 		yield return www;
@@ -23,6 +24,7 @@ public class StartScript : MonoBehaviour
                 o.AddComponent<CubePosition>();               // Add components (could be replaced by prefab)
                 ConnectScript cs = o.AddComponent<ConnectScript>();
                 cs.tagQuuppa = arrGUID[i];                                      // tagQuuppa is given the GUID
+                o.renderer.material
 		}*/
 	}
 	

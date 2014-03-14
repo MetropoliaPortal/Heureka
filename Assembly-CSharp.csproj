@@ -56,6 +56,7 @@
      <Compile Include="Assets\Scripts\CarAgent.cs" />
      <Compile Include="Assets\Scripts\ConnectScript.cs" />
      <Compile Include="Assets\Scripts\CubeScript\CubePosition.cs" />
+     <Compile Include="Assets\Scripts\CubeScript\UvSc.cs" />
      <Compile Include="Assets\Scripts\CubeScript\UvScript.cs" />
      <Compile Include="Assets\Scripts\DetectLeaks.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
