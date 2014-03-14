@@ -1,19 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CarAgent.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PathManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\CarAgent.cs" Line="23" Column="1" />
-      <File FileName="Assets\Scripts\Manager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\RoadManager.cs" Line="33" Column="30" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\CubePosition.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\AStar\AStar.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\DetectLeaks.cs" Line="1" Column="1" />
-      <File FileName="Assets\Road.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\AStar\GridManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\ConnectScript.cs" Line="1" Column="15" />
-      <File FileName="Assets\Scripts\StackPool.cs" Line="18" Column="6" />
-      <File FileName="Assets\Scripts\StartScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Agent\CarScript.cs" Line="28" Column="41" />
+      <File FileName="Assets\Scripts\CarAgent.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StackPool.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\RoadManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CarPool.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PathManager.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

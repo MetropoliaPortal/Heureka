@@ -72,12 +72,9 @@ public class RoadManager : MonoBehaviour
         DrawCenterRoads();                                      // Draw center roads
         CubePosition.OnMove += SolveRoad;                       // Register the solving of the road to the movement of a cube
 
-		InvokeRepeating("AddCar", 2.0f, 1.0f);
+
 	}
 
-	private void AddCar(){
-		GameObject c = (GameObject)Instantiate (car);
-	}
     private void DrawEdgeRoads()
     {
        

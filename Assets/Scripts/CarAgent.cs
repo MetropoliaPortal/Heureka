@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class CarAgent : MonoBehaviour {
-
+	private CarPool _carPool;
 	private int _step;
 	private int _amountSteps;
 	private Vector3 _nextStepPosition;
@@ -28,9 +28,27 @@ public class CarAgent : MonoBehaviour {
 		_direction = (int)Directions.LEFT;
 		_currentRoad = null;
 		_layerMask = 1 << 8;
+		_carPool = GameObject.Find("Test").GetComponent<CarPool>();
 
 		SolvePositionFix();
 		SolveStartingPosition();
+
+	}
+
+	public void Initialize(){
+
+		_step = 0;
+		_amountSteps = Random.Range(20,40);
+		_nextStepPosition = new Vector3(0,0,0);
+		_positionFix = new Vector3(0,0,0);
+		_direction = (int)Directions.LEFT;
+		_currentRoad = null;
+		//_layerMask = 1 << 8;
+		//_carPool = GameObject.Find("Test").GetComponent<CarPool>();
+		
+		SolvePositionFix();
+		SolveStartingPosition();
+
 	}
 
 
@@ -40,6 +58,7 @@ public class CarAgent : MonoBehaviour {
 		CheckRoadUnder();
 		CheckStepsRemaining();
 		CheckStepReached();
+
 	}
 	
 	void SolveStartingPosition(){
@@ -50,43 +69,42 @@ public class CarAgent : MonoBehaviour {
 		list.AddRange (edgeRoads);
 		list.AddRange (centreRoads);
 		GameObject[] roads = list.ToArray();
-		
-		Vector3 startPos = roads [Random.Range (0, roads.Length - 1)].transform.position;
-		startPos += _positionFix;
-		transform.position = startPos;
-		
+
+		_currentRoad = roads [Random.Range (0, roads.Length - 1)].collider;
+		transform.position = _currentRoad.transform.position;
+
+		AdjustPosition();
+		SolveNextStep();
+
 	}
 	
 	void Move(){
 
-		//Make sure next step is resolved
-		if(_nextStepPosition != new Vector3(0,0,0))
-			transform.position = Vector3.MoveTowards (transform.position, _nextStepPosition, 0.05f);
-		else{
-			if( _currentRoad != null)
-				SolveNextStep();
-		}
+		transform.position = Vector3.MoveTowards (transform.position, _nextStepPosition, 0.05f);
+
 	}
 	 
 
 	void CheckRoadUnder(){
-		
-		Vector3 castEnd = transform.position;
-		castEnd.y -= 1.0f;
-		
+
 		Vector3 castStart = transform.position;
 		castStart.y += 0.5f;
 		
+		Vector3 castEnd = transform.position;
+		castEnd.y -= 0.5f;
+
 		if ( !Physics.Linecast (castStart, castEnd, _layerMask) ){
 			Destroy();
 		}
+
 	}
 	
 	
 	void CheckStepsRemaining(){
 		
 		if (_step > _amountSteps)
-			GameObject.Destroy (gameObject);
+			Destroy();
+
 	}
 	
 	
@@ -95,30 +113,21 @@ public class CarAgent : MonoBehaviour {
 		if (CompareApproximate(transform.position, _nextStepPosition)) {
 			SolveNextStep();
 		}
+
 	}
 
 	
 	void SolveNextStep(){
 
-		List<int> routes = new List<int>();
+		List<int> routes;
 		int r;
 
 		SolveForbiddenDirection();
-
-		for(int i = 0; i <= 3; i++){
-			if( i != _forbiddenDirection ){
-				if ( CheckForRoad(i) ){
-					routes.Add( i );
-				}
-			}
-		}
+		routes = SolvePossibleRoutes();
 
 		if( routes.Count != 0){
 			r = Random.Range(0, routes.Count);
-
-			_direction = routes[r];
-			ChangeDirection();
-
+			ChangeDirection( routes[r] );
 			//Solve target point for next step and position fix corresponding to direction
 			SolvePositionFix();
 			_nextStepPosition = SolveNextPosition( _direction );
@@ -132,12 +141,28 @@ public class CarAgent : MonoBehaviour {
 			//Destroy if no road found
 			Destroy();
 		}
+
+	}
+
+
+	List<int> SolvePossibleRoutes(){
+		List<int> routes = new List<int>();
+		for(int i = 0; i <= 3; i++){
+			if( i != _forbiddenDirection ){
+				if ( CheckForRoad(i) ){
+					routes.Add( i );
+				}
+			}
+		}
+		return routes;
 	}
 
 
 	bool CheckForRoad(int dir){
+
 		Vector3 nextPosition = SolveNextPosition(dir);
 		return Physics.Linecast (transform.position, nextPosition, _layerMask);	
+
 	}
 
 
@@ -173,6 +198,7 @@ public class CarAgent : MonoBehaviour {
 		}
 
 		return nextPos;
+
 	}
 
 
@@ -195,10 +221,13 @@ public class CarAgent : MonoBehaviour {
 			_forbiddenDirection = (int) Directions.LEFT;
 			break;
 		}
+
 	}
 
 
-	void ChangeDirection(){
+	void ChangeDirection(int dir){
+
+		_direction = dir;
 
 		switch ( _direction ) {
 		case((int)Directions.LEFT):
@@ -217,6 +246,7 @@ public class CarAgent : MonoBehaviour {
 			transform.rotation = Quaternion.Euler(new Vector3(0,0,0));
 			break;
 		}
+
 	}
 
 
@@ -249,6 +279,7 @@ public class CarAgent : MonoBehaviour {
 			_positionFix = new Vector3(0, 0, 0);
 			break;
 		}
+
 	}
 
 
@@ -263,17 +294,21 @@ public class CarAgent : MonoBehaviour {
 		if( !(Mathf.Abs(a.z - b.z) < tolerance) )
 			return false;
 		return true;
+
 	}
 
 
 	void OnTriggerEnter(Collider d){
 
 		_currentRoad = d;
+
 	}
 
 
 	void Destroy(){
 
-		GameObject.Destroy (gameObject);
+		_carPool.RemoveCar( gameObject );
+		//GameObject.Destroy (gameObject);
+
 	}
 }
