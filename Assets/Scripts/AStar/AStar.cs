@@ -27,7 +27,7 @@ public class AStar
     /// <summary>
     /// Find the path between start node and goal node using AStar Algorithm
     /// </summary>
-    public static List<Node> FindPath(Node start, Node goal)
+    public static List<Node> FindPath(Node start, Node goal, bool pathForRoad)
     {
 		//Reset estimated costs from previous iteration
 		GridManager.instance.ResetEstimatedCosts ();
@@ -70,10 +70,16 @@ public class AStar
                 //Cost between neighbour nodes
                 Node neighbourNode = neighbours[i];
 
+				//Break the loop iteration if needed
+				if( pathForRoad && neighbourNode.bObstacle )
+					continue;
+				if ( !pathForRoad && (!neighbourNode.isRoad && !neighbourNode.isEdgeRoad) )
+					continue;
+
+
                 if (!closedList.Contains(neighbourNode))
                 {					
 					//Cost from current node to this neighbour node
-	                //float cost = HeuristicEstimateCost(node, neighbourNode);
                     float cost = (node.position - neighbourNode.position).sqrMagnitude;
 					//Total Cost So Far from start to this neighbour node
 	                float totalCost = node.nodeTotalCost + cost;
@@ -85,11 +91,9 @@ public class AStar
 					//Trading one of the goal.positions coordinates if needed
 					if(discardZ){
 						neighbourNodeEstCost = (neighbourNode.position - new Vector3(goal.position.x, 0, neighbourNode.position.z)).sqrMagnitude;
-						//neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;
 					}
 					else if(discardX){
 						neighbourNodeEstCost = (neighbourNode.position - new Vector3(neighbourNode.position.x, 0, goal.position.z)).sqrMagnitude;
-						//neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;
 					}
 					else
 						neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;

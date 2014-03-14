@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class CarAgent : MonoBehaviour {
-	private CarPool _carPool;
+	private CarManager _carPool;
 	private int _step;
 	private int _amountSteps;
 	private Vector3 _nextStepPosition;
@@ -28,7 +28,7 @@ public class CarAgent : MonoBehaviour {
 		_direction = (int)Directions.LEFT;
 		_currentRoad = null;
 		_layerMask = 1 << 8;
-		_carPool = GameObject.Find("Test").GetComponent<CarPool>();
+		_carPool = GameObject.Find("Test").GetComponent<CarManager>();
 
 		SolvePositionFix();
 		SolveStartingPosition();

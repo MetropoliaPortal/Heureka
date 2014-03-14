@@ -2,14 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CarPool : MonoBehaviour {
+public class CarManager : MonoBehaviour {
 
 
 	public GameObject _car;
-	const int AMOUNT_CARS = 3;
+	const int AMOUNT_CARS = 5;
 	Stack<GameObject> _stack = null;
 	
-	public CarPool(){
+	public CarManager(){
 		_stack = new Stack<GameObject>();
 	}
 
@@ -21,8 +21,11 @@ public class CarPool : MonoBehaviour {
 	}
 
 	void Start(){
+
+		PathManager.GeneratePaths();
 		InitializeCars();
 		InvokeRepeating("AddCar", 2.0f, 1.0f);
+
 	}
 
 	void AddCar(){
@@ -43,7 +46,7 @@ public class CarPool : MonoBehaviour {
 		if (_stack.Count > 0){
 			GameObject o = _stack.Pop();
 			o.SetActive(true);
-			o.GetComponent<CarAgent>().Initialize();
+			//o.GetComponent<CarAgent>().Initialize();
 			return o;
 		}
 		else{

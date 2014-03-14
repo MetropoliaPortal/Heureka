@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+
+
+//////////////////////////
+// I think this one is not used anymore
+//////////////////////////////////////
 public class TestCode : MonoBehaviour 
 {
     private Transform startPos, endPos;
@@ -72,7 +77,7 @@ public class TestCode : MonoBehaviour
     {
         startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
         goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
-        pathArray = AStar.FindPath(startNode, goalNode);
+        //pathArray = AStar.FindPath(startNode, goalNode);
         List<GameObject> arrayRoad = new List<GameObject>();
         
         // Place first
