@@ -71,13 +71,9 @@ public class RoadManager : MonoBehaviour
         DrawEdgeRoads();                                        // Draw edge roads.
         DrawCenterRoads();                                      // Draw center roads
         CubePosition.OnMove += SolveRoad;                       // Register the solving of the road to the movement of a cube
-
-		//InvokeRepeating("AddCar", 2.0f, 1.0f);
+		
 	}
 
-	private void AddCar(){
-		//GameObject c = (GameObject)Instantiate (car);
-	}
     private void DrawEdgeRoads()
     {
        
@@ -113,6 +109,7 @@ public class RoadManager : MonoBehaviour
         {
             m_stack.Push(roads[i]);
         }
+	
     }
 
 	void DrawCenterRoads()
@@ -140,7 +137,7 @@ public class RoadManager : MonoBehaviour
 	{
 		startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
 		goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
-		pathArray = AStar.FindPath(startNode, goalNode);
+		pathArray = AStar.FindPath(startNode, goalNode, true);
 		List<GameObject> arrayRoad = new List<GameObject>();
 		
 		// Place first
@@ -151,13 +148,14 @@ public class RoadManager : MonoBehaviour
 
 		arrayRoad.Add(o);
 		
-		for (int k = 0; k < pathArray.Count; k++)
+		for (int i = 0; i < pathArray.Count; i++)
 		{
-			pos = pathArray[k].position;
+			pos = pathArray[i].position;
 			pos.y += 0.01f;
 			o = (GameObject)Instantiate(road, pos, Quaternion.identity);
 			if (i == 2) o.name = "New";
 			arrayRoad.Add(o);
+			pathArray[i].isRoad = true;
 		}
 		return arrayRoad.ToArray();
 	}

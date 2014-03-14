@@ -9,6 +9,8 @@ public class Node : IComparable
     public float nodeTotalCost;         //Total cost so far for the node
     public float estimatedCost;         //Estimated cost from this node to the goal node
     public bool bObstacle;              //Does the node is an obstacle or not
+	public bool isRoad;					//Marks roads for path manager
+	public bool isEdgeRoad;				//Marks edge roads for path manager
     public Node parent;                 //Parent of the node in the linked list
     public Vector3 position;            //Position of the node
     #endregion
@@ -21,6 +23,8 @@ public class Node : IComparable
         this.estimatedCost = 0.0f;
         this.nodeTotalCost = 1.0f;
         this.bObstacle = false;
+		this.isRoad = false;
+		this.isEdgeRoad = false;		
         this.parent = null;
     }
 
@@ -32,17 +36,10 @@ public class Node : IComparable
         this.estimatedCost = 0.0f;
         this.nodeTotalCost = 1.0f;
         this.bObstacle = false;
+		this.isRoad = false;
+		this.isEdgeRoad = false;
         this.parent = null;
-
         this.position = pos;
-    }
-
-    /// <summary>
-    //Make the node to be noted as an obstacle
-    /// </summary>
-    public void MarkAsObstacle()
-    {
-        this.bObstacle = true;
     }
 
     /// <summary>

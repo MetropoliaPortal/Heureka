@@ -77,7 +77,7 @@ public class TestCode : MonoBehaviour
     {
         startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
         goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
-        pathArray = AStar.FindPath(startNode, goalNode);
+        //pathArray = AStar.FindPath(startNode, goalNode);
         List<GameObject> arrayRoad = new List<GameObject>();
         
         // Place first

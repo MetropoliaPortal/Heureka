@@ -57,16 +57,18 @@ public class GridManager : MonoBehaviour
     {
         CreateGrid();
 		CreateCrossNode();
-        CalculateObstacles();
+        ResolveObstacles();
+		MarkEdgeRoads();
     }
 
 	public void ResolveObstacles()
     {
-		DeleteObstacles ();
+		DeleteObstacleFlags ();
+		DeleteRoadFlags();
 		CalculateObstacles();		
 	}
 
-	void DeleteObstacles()
+	void DeleteObstacleFlags()
 	{
 		foreach(KeyValuePair<int, CrossNode> entry in dict)
 		{
@@ -74,6 +76,36 @@ public class GridManager : MonoBehaviour
 			for(int j = 0; j < cn.Length; j++)
 			{
 				cn[j].bObstacle = false;
+			}
+		}
+	}
+
+	void MarkEdgeRoads(){
+		for(int i = 0; i < numOfColumns; i++){
+			nodes[i,0].isEdgeRoad = true;
+		}
+
+		for(int i = 0; i < numOfRows; i++){
+			nodes[0,i].isEdgeRoad = true;
+		}
+
+		for(int i = 0; i < numOfColumns; i++){
+			nodes[numOfColumns - 1,i].isEdgeRoad = true;
+		}
+
+		for(int i = 0; i < numOfRows; i++){
+			nodes[i,numOfRows - 1].isEdgeRoad = true;
+		}
+	}
+
+	void DeleteRoadFlags()
+	{
+		foreach(KeyValuePair<int, CrossNode> entry in dict)
+		{
+			Node[] cn = entry.Value.node;
+			for(int j = 0; j < cn.Length; j++)
+			{
+				cn[j].isRoad = false;
 			}
 		}
 	}
@@ -89,6 +121,7 @@ public class GridManager : MonoBehaviour
 			}
 		}
 	}
+
 
     void CreateCrossNode() 
     {
@@ -275,10 +308,14 @@ public class GridManager : MonoBehaviour
 		if (row >= 0 && column >= 0 && row < numOfRows && column < numOfColumns)
         {
             Node nodeToAdd = nodes[row, column];
+
+			neighbors.Add(nodeToAdd);
+
+			/*
             if (!nodeToAdd.bObstacle)
             {
                 neighbors.Add(nodeToAdd);
-            }
+            }*/
         } 
     }
 
