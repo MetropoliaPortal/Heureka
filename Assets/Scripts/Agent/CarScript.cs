@@ -9,7 +9,6 @@ using System.Collections.Generic;
 /// ///////////////////////////////////////////////
 public class CarScript : MonoBehaviour 
 {
-
     private new Transform transform;
     private Transform cam;
     List<Transform> currentPath;

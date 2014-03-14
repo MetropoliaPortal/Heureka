@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+
+
+//////////////////////////
+// I think this one is not used anymore
+//////////////////////////////////////
 public class TestCode : MonoBehaviour 
 {
     private Transform startPos, endPos;
