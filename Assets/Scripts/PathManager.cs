@@ -39,7 +39,7 @@ public static class PathManager
 	/// on them are recalculated.
 	/// </summary>
 	public static void CheckPathsChanged(){
-		Debug.Log("Checking changed paths");
+		//Debug.Log("Checking changed paths");
 		List<int> pathsToRecalculate = new List<int>();
 		foreach(KeyValuePair<int, List<Node>> entry in paths)
 		{
