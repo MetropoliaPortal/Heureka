@@ -5,7 +5,7 @@ using System.Linq;
 using System;
 
 /// <summary>
-/// Class is attached to empty game object to create and take care of the roads
+/// Class is attached to empty game object to create and take care of the roads and cars
 /// </summary>
 public class RoadManager : MonoBehaviour 
 {
@@ -19,10 +19,14 @@ public class RoadManager : MonoBehaviour
 	public GameObject road;
 	public GameObject car;
 
-    StackPool m_stack;
+    StackPool roadStack;
+	StackPool carStack;
 	int i;
     GameObject objRoadEdge;
     GameObject objRoadCenter;
+
+	//Maximum number of cars on screen
+	const int AMOUNT_CARS = 5;
 
 
 	#region Singleton implementation
@@ -64,14 +68,38 @@ public class RoadManager : MonoBehaviour
         objRoadCenter = new GameObject("CenterRoadParent");     // Parent object for center roads
         objRoadCenter.transform.position = Vector3.zero;        // Position at origin
 
-        m_stack = new StackPool(                                // Create stack for center roads, 
+        roadStack = new StackPool(                                // Create stack for center roads, 
             road,                                               // road prefab
             objRoadCenter.transform);                           // Parent object
 
         DrawEdgeRoads();                                        // Draw edge roads.
         DrawCenterRoads();                                      // Draw center roads
         CubePosition.OnMove += SolveRoad;                       // Register the solving of the road to the movement of a cube
+		CreateCars();
 		
+	}
+
+	/// <summary>
+	/// Creates cars (amount spesified with AMOUNT_CARS constant) and puts them into car stack. 
+	/// Tries to pop cars with InvokeRepeating.
+	/// </summary>
+	void CreateCars(){
+		carStack = new StackPool( );
+		PathManager.Initialize();
+		for(int i = 0; i < AMOUNT_CARS; i++)
+		{
+			carStack.Push ( (GameObject)Instantiate( car ) );
+		}
+		InvokeRepeating("AddCar", 2.0f, 1.0f);
+	}
+
+	/// <summary>
+	/// Tries to pop car from stack if possible initializes it
+	/// </summary>
+	void AddCar(){
+		GameObject go = carStack.PopLimited();
+		if(go!=null)
+			go.GetComponent<CarScript>().Initialize();
 	}
 
     private void DrawEdgeRoads()
@@ -107,7 +135,7 @@ public class RoadManager : MonoBehaviour
         GameObject[] roads = GameObject.FindGameObjectsWithTag("Road");
         for (int i = 0; i < roads.Length; i++)
         {
-            m_stack.Push(roads[i]);
+            roadStack.Push(roads[i]);
         }
 	
     }

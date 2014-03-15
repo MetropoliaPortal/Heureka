@@ -2,15 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PathManager
+public static class PathManager
 {
 	static Dictionary<int, List<Node>> paths;
 
-	public static void GeneratePaths(){
+	/// <summary>
+	/// TEMPORARY: Generates hard-coded paths
+	/// Registers path checking to movement of a cube
+	/// TODO: Logic for creating needed paths
+	/// </summary>
+	public static void Initialize(){
 
 		paths = new Dictionary<int, List<Node>>();
-
-		//Couple of hard-coded path start and end points for now
 
 		//path 1
 		Node startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex( new Vector3(0.5f, 0, 3.5f) )));
@@ -26,8 +29,15 @@ public class PathManager
 		startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex( new Vector3(21.5f, 0, 39.5f) )));
 		goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex( new Vector3(21.5f, 0, 0.5f) )));
 		paths.Add(2, AStar.FindPath(startNode, goalNode, false) );
+
+		CubePosition.OnMove += CheckPathsChanged;
 	}
 
+	/// <summary>
+	/// Checks every created path node by node to find if any of them contains nodes 
+	/// which are not marked with isRoad == true. Paths which have nodes without road
+	/// on them are recalculated.
+	/// </summary>
 	public static void CheckPathsChanged(){
 		Debug.Log("Checking changed paths");
 		List<int> pathsToRecalculate = new List<int>();
@@ -35,7 +45,7 @@ public class PathManager
 		{
 			List<Node> nodeList = entry.Value;
 			for(int i = 0; i < nodeList.Count; i++){
-				if( !nodeList[i].isRoad && !nodeList[i].isEdgeRoad ){
+				if( !nodeList[i].isRoad ){
 					pathsToRecalculate.Add( entry.Key );
 					break;
 				}
@@ -49,18 +59,41 @@ public class PathManager
 
 	}
 
-	static void RecalculatePath(int pathIndex){
+	/// <summary>
+	/// Recalculates a path which is not usable anymore
+	/// </summary>
+	/// <param name="pathIndex">Path index.</param>
+	static void RecalculatePath(int id){
 		List<Node> nodeList;
-		paths.TryGetValue( pathIndex, out nodeList );
+		paths.TryGetValue( id, out nodeList );
 		Node startNode = nodeList[0];
 		Node goalNode = nodeList[ nodeList.Count-1 ];
 		List<Node> pathList = AStar.FindPath(startNode, goalNode, false);
-		paths[pathIndex] = pathList;
+		paths[id] = pathList;
 	}
 
-	public static List<Node> GetNewPath(){
+	public static List<Node> GetUpdatedPath( int id ){
 		List<Node> nodeList;
-		paths.TryGetValue( Random.Range(0, paths.Count), out nodeList );
+		paths.TryGetValue( id, out nodeList );
 		return nodeList;
+	}
+
+	/// <summary>
+	/// Get a path with id 
+	/// </summary>
+	/// <returns>The new path.</returns>
+	/// <param name="id">Identifier.</param>
+	public static List<Node> GetNewPath( int id ){
+		List<Node> nodeList;
+		paths.TryGetValue( id, out nodeList );
+		return nodeList;
+	}
+
+	/// <summary>
+	/// Randomly generates new path id
+	/// </summary>
+	/// <returns>The new path identifier.</returns>
+	public static int GetNewPathId(){
+		return Random.Range(0, paths.Count );
 	}
 }

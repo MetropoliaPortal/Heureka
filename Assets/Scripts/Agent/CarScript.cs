@@ -9,74 +9,101 @@ using System.Collections.Generic;
 /// ///////////////////////////////////////////////
 public class CarScript : MonoBehaviour 
 {
-    private new Transform transform;
+    //private new Transform transform;
     private Transform cam;
+	int currentPathId;
     List<Node> currentPath;
     int index;
     public float speed;
     private float range;
+	private bool isMovingOppositeDirection;
 
     void Start() {
-        transform = base.transform;
+		//transform = base.transform;
         cam = Camera.main.transform;
 		range = 0.1f;
 		speed = 1.0f;
 		index = 0;
-
-		//Checking for changed is done temporarily only here
-		PathManager.CheckPathsChanged();
-		currentPath = PathManager.GetNewPath();
-		transform.position = currentPath[0].position;
     }
+
+	/// <summary>
+	/// Called from RoadManager when getting a car from stack.
+	/// Randomly decides which direction the car is moving
+	/// currentPathId is stored for getting the possibly updated path.
+	/// </summary>
+	public void Initialize(){
+
+		isMovingOppositeDirection = ( Random.Range(0,2) == 1) ? true : false;
+		
+		currentPathId = PathManager.GetNewPathId();
+		currentPath = PathManager.GetNewPath( currentPathId );
+
+		if( isMovingOppositeDirection )
+			index = currentPath.Count-1;
+		else
+			index = 0;
+
+		transform.position = currentPath[ index ].position;
+	}
 
     void Update() 
     {
-		// this is not this straight forward
+		currentPath = PathManager.GetUpdatedPath( currentPathId );
         // Always face the camera
-        //transform.LookAt(-cam.position);
+        transform.LookAt(-cam.position);
         // Check for orientation
         // Using some cross product
 
         // Move towards target
 		Vector3 direction = (currentPath[index].position - transform.position);
-		transform.Translate(direction.normalized * Time.deltaTime * speed);
+
+		//This is affected by transform.lookAt() function
+		//transform.Translate(direction.normalized * Time.deltaTime * speed);
+
+		//Move transform without getting affected by lookAt()
+		transform.position = Vector3.MoveTowards (transform.position, currentPath[index].position, 0.05f);
 
 		if (direction.sqrMagnitude < range) 
 		{
-			if (++index == currentPath.Count) 
-			{
-				// Get new Path from some path manager
-				currentPath = PathManager.GetNewPath();
-				
-				// Respawn object
-				index = 0;
-				transform.position = currentPath[0].position;
-			}
+			if ( isMovingOppositeDirection )
+				MoveToNextOpposite();
+			else
+				MoveToNext();
 		}
 
-
-		//Some problems with this too
-
-        // Check if there is a road below
-		/*
-        RaycastHit hit;
-        Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (hit.collider.CompareTag("Ground")) 
-            {
-                // No road under
-                // from the current path find the closest road block and respawn there
-                Node closest = FindClosestRoadBlock();
-                transform.position = closest.position;
-                // Update index 
-                index = currentPath.IndexOf(closest);
-            }
-        }
-		*/
-        
+		CheckRoadUnder();    
     }
 
+	void MoveToNextOpposite(){
+		if (--index == 0)
+			Initialize();
+	}
+
+	void MoveToNext(){
+		if (++index == currentPath.Count) 
+			Initialize();
+	}
+	
+	/// <summary>
+	/// Uses linecast from default layer(cars) to road layer(roads) to check if road is below
+	/// </summary>
+	void CheckRoadUnder(){
+		int _layerMask = 1 << 8;
+
+		Vector3 castStart = transform.position;
+		castStart.y += 0.5f;
+		
+		Vector3 castEnd = transform.position;
+		castEnd.y -= 0.5f;
+		
+		if ( !Physics.Linecast (castStart, castEnd, _layerMask) ){
+			Node closest = FindClosestRoadBlock();
+			transform.position = closest.position;
+			// Update index 
+			index = currentPath.IndexOf(closest);
+		}	
+	}
+	
 	Node FindClosestRoadBlock() 
     {
         Node closest = null;
