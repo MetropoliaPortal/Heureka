@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// No need for that, just use the stack already existin
 public class CarManager : MonoBehaviour {
 
 
@@ -29,6 +30,7 @@ public class CarManager : MonoBehaviour {
 	}
 
 	void AddCar(){
+        // Not storing the game object
 		Pop ();
 	}
 
@@ -41,7 +43,7 @@ public class CarManager : MonoBehaviour {
 		_stack.Push(obj);
 	}
 
-
+    // why should this return a value, it is not storing it anywhere
 	public GameObject Pop() {
 		if (_stack.Count > 0){
 			GameObject o = _stack.Pop();

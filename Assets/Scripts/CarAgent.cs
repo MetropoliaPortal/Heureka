@@ -79,7 +79,7 @@ public class CarAgent : MonoBehaviour {
 	}
 	
 	void Move(){
-
+        // Why using MoveTowards when Translate does it already 
 		transform.position = Vector3.MoveTowards (transform.position, _nextStepPosition, 0.05f);
 
 	}
@@ -93,6 +93,7 @@ public class CarAgent : MonoBehaviour {
 		Vector3 castEnd = transform.position;
 		castEnd.y -= 0.5f;
 
+        // Linecast is slower than raycast which is why I was using it.
 		if ( !Physics.Linecast (castStart, castEnd, _layerMask) ){
 			Destroy();
 		}
@@ -224,7 +225,7 @@ public class CarAgent : MonoBehaviour {
 
 	}
 
-
+    // No rotation is involved, I clearly said it is always facing the camera and only the texture is changing 
 	void ChangeDirection(int dir){
 
 		_direction = dir;

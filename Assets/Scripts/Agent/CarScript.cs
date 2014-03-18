@@ -2,96 +2,142 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public class CarScript : MonoBehaviour {
 
-/// //////////////////////////////////////////////
-// This is all done without any test so it may not totally work but still
-// I would guess the logic is there
-/// ///////////////////////////////////////////////
-public class CarScript : MonoBehaviour 
-{
-    private new Transform transform;
-    private Transform cam;
-    List<Node> currentPath;
-    int index;
-    public float speed;
-    private float range;
+	public GameObject waypoints;
+	private Transform [] path;
+	private Vector3 prevDirection;
+	public Texture2D front, back, sideLeft, sideRight; 
+	public Vector3 target;
+	public bool DynamicRoadOn{get;set;}
+	int index = 0;
+	// Use this for initialization
 
-    void Start() {
-        transform = base.transform;
-        cam = Camera.main.transform;
-		range = 0.1f;
-		speed = 1.0f;
-		index = 0;
-
-		//Checking for changed is done temporarily only here
-		PathManager.CheckPathsChanged();
-		currentPath = PathManager.GetNewPath();
-		transform.position = currentPath[0].position;
-    }
-
-    void Update() 
-    {
-		// this is not this straight forward
-        // Always face the camera
-        //transform.LookAt(-cam.position);
-        // Check for orientation
-        // Using some cross product
-
-        // Move towards target
-		Vector3 direction = (currentPath[index].position - transform.position);
-		transform.Translate(direction.normalized * Time.deltaTime * speed);
-
-		if (direction.sqrMagnitude < range) 
+	void Start () {
+		List<Transform>list = new List<Transform>();
+		foreach(Transform t in waypoints.transform)
 		{
-			if (++index == currentPath.Count) 
+			list.Add (t);
+		}
+		// Get one waypoint at random
+		Transform start = list[Random.Range(0,list.Count)];
+	 	// Get the WaypointScript
+		WaypointScript ws = start.GetComponent<WaypointScript>();
+		// Get a random item for the connection array of the waypoint
+		path = ws.GetPath(this);
+		index  = 0;
+
+		transform.position = start.position;
+		Vector3 direction = (path[0].position - transform.position).normalized;
+		prevDirection = direction;
+		CubePosition.OnMoveSecond += UpdatePath;
+	}
+	
+	// Update is called once per frame
+	void Update () 
+	{
+		Vector3 direction = (path[index].position - transform.position).normalized;
+		target = path[index].position;
+		transform.Translate (direction * Time.deltaTime * 4f, Space.World);
+		transform.LookAt(Camera.main.transform.position);
+
+		// Check distance with target point
+		if(Vector3.Distance(transform.position, path[index].position)< 0.2f)
+		{
+			if(++index == path.Length)index = 0;
+		}
+		// Define orientation and texture to apply
+		if(prevDirection != direction)
+			GetDirection(direction);
+		prevDirection = direction;
+
+		// Debug for agent path
+		for(int i = 0; i < path.Length - 1; i++)
+		{
+			Debug.DrawLine(path[i].position, path[i+1].position, Color.white);
+		}
+	}
+
+	// Appropriate 2D dot with x and z
+	float Dot(Vector3 vec, Vector3 direction)
+	{
+		return vec.x * direction.x + vec.z * direction.z;
+	}
+
+	// Apply the corresponding texture based on direction
+	void GetDirection(Vector3 direction)
+	{
+		Vector3 [] directions = {Vector3.right, Vector3.left,Vector3.forward, Vector3.back};
+		int ind = -1;
+		for(int i = 0; i < directions.Length; i++ )
+		{
+			float dot = Dot (direction, directions[i]);
+			if(IsEqual (dot, 1))ind = i;
+		}
+		switch(ind){
+		case 0:
+			//print ("Right");
+			break;
+		case 1 :
+			//print ("Left");
+			break;
+		case 2:
+			//print ("Up");
+			break;
+		case 3:
+			//print ("Down");
+			break;
+		}
+	}
+
+	bool IsEqual(float a, float b) {
+		if (a >= b - 0.05f && a <= b + 0.05f)
+			return true;
+		else
+			return false;
+	}
+
+	WaypointScript ws;
+	// When Car enters a trigger, the Waypoint script of the waypoint is accessed to get a new path.
+	void OnTriggerEnter(Collider col)
+	{
+		if(col.CompareTag("CornerWp")||col.CompareTag("CenterWp"))
+		{
+			ws = col.gameObject.GetComponent<WaypointScript>();
+			path = ws.GetPath(this);
+			index  = 0;
+		}
+	}
+	void UpdatePath()
+	{
+		// If not on a Dynamic road quit the method
+		if(DynamicRoadOn == false)return;
+
+		// Current direction of the agen
+		Vector3 direction = (path[index].position - transform.position).normalized;
+		// get the new path
+		path = ws.GetDynamicPath();
+		float distance = Mathf.Infinity;
+		int ind = 0;
+		Vector3 position = transform.position;
+		for(int i = 0 ; i < path.Length; i++)
+		{
+			float dist = (position - path[i].position).sqrMagnitude;
+			if(dist < distance)
 			{
-				// Get new Path from some path manager
-				currentPath = PathManager.GetNewPath();
-				
-				// Respawn object
-				index = 0;
-				transform.position = currentPath[0].position;
+				distance = dist;
+				ind = i;
 			}
 		}
-
-
-		//Some problems with this too
-
-        // Check if there is a road below
-		/*
-        RaycastHit hit;
-        Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (hit.collider.CompareTag("Ground")) 
-            {
-                // No road under
-                // from the current path find the closest road block and respawn there
-                Node closest = FindClosestRoadBlock();
-                transform.position = closest.position;
-                // Update index 
-                index = currentPath.IndexOf(closest);
-            }
-        }
-		*/
-        
-    }
-
-	Node FindClosestRoadBlock() 
-    {
-        Node closest = null;
-        Vector3 position = transform.position;
-        float distance = Mathf.Infinity;
-		foreach (Node node in currentPath)
-        {
-            Vector3 diff = node.position - position;
-            float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance)
-            {
-                closest = node;
-                distance = curDistance;
-            }
-        }
-        return closest;
-    }
+		float dot = Vector3.Dot (direction, (transform.position - path[ind].position).normalized);
+		if(dot < 0 )ind++;
+		RaycastHit hit;
+		Ray ray = new Ray(transform.position, Vector3.down);
+		Physics.Raycast(ray, out hit);
+		if(hit.collider.name == "Ground")
+		{
+			transform.position = path[ind].position;
+		}
+		
+	}
 }
