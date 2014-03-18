@@ -5,7 +5,7 @@ using System.Linq;
 using System;
 public delegate void HandlerEvent();
 /// <summary>
-/// Class is attached to empty game object to create and take care of the roads
+/// Class is attached to empty game object to create and take care of the roads and cars
 /// </summary>
 public class RoadManager : MonoBehaviour 
 {
@@ -20,7 +20,8 @@ public class RoadManager : MonoBehaviour
 	public GameObject road;
 	public GameObject car;
 
-    StackPool m_stack;
+    StackPool m_roadStack;
+	StackPool carStack;
 	int i;
     GameObject objRoadEdge;
     GameObject objRoadCenter;
@@ -68,7 +69,7 @@ public class RoadManager : MonoBehaviour
         objRoadCenter = new GameObject("CenterRoadParent");     // Parent object for center roads
         objRoadCenter.transform.position = Vector3.zero;        // Position at origin
 
-        m_stack = new StackPool(                                // Create stack for center roads, 
+        m_roadStack = new StackPool(                                // Create stack for center roads, 
             road,                                               // road prefab
             objRoadCenter.transform);                           // Parent object
 
@@ -76,6 +77,7 @@ public class RoadManager : MonoBehaviour
         DrawCenterRoads();                                      // Draw center roads
         CubePosition.OnMove += SolveRoad;                       // Register the solving of the road to the movement of a cube		
 	}
+	
 
     private void DrawEdgeRoads()
     {   
@@ -110,7 +112,7 @@ public class RoadManager : MonoBehaviour
         GameObject[] roads = GameObject.FindGameObjectsWithTag("Road");
         for (int i = 0; i < roads.Length; i++)
         {
-            m_stack.Push(roads[i]);
+            m_roadStack.Push(roads[i]);
         }	
     }
 

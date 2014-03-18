@@ -53,7 +53,6 @@
      <Compile Include="Assets\Scripts\Agent\CarScript.cs" />
      <Compile Include="Assets\Scripts\Agent\WaypointScript.cs" />
      <Compile Include="Assets\Scripts\CarAgent.cs" />
-     <Compile Include="Assets\Scripts\CarManager.cs" />
      <Compile Include="Assets\Scripts\ConnectScript.cs" />
      <Compile Include="Assets\Scripts\CubeScript\CubePosition.cs" />
      <Compile Include="Assets\Scripts\CubeScript\UvSc.cs" />

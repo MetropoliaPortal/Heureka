@@ -65,6 +65,7 @@ public class GridManager : MonoBehaviour
     {
 		DeleteObstacleFlags ();
 		DeleteRoadFlags();
+		MarkEdgeRoads();
 		CalculateObstacles();		
 	}
 
@@ -82,19 +83,19 @@ public class GridManager : MonoBehaviour
 
 	void MarkEdgeRoads(){
 		for(int i = 0; i < numOfColumns; i++){
-			nodes[i,0].isEdgeRoad = true;
+			nodes[i,0].isRoad = true;
 		}
 
 		for(int i = 0; i < numOfRows; i++){
-			nodes[0,i].isEdgeRoad = true;
+			nodes[0,i].isRoad = true;
 		}
 
 		for(int i = 0; i < numOfColumns; i++){
-			nodes[numOfColumns - 1,i].isEdgeRoad = true;
+			nodes[numOfColumns - 1,i].isRoad = true;
 		}
 
 		for(int i = 0; i < numOfRows; i++){
-			nodes[i,numOfRows - 1].isEdgeRoad = true;
+			nodes[i,numOfRows - 1].isRoad = true;
 		}
 	}
 
@@ -292,7 +293,7 @@ public class GridManager : MonoBehaviour
     }
 	
 	/// <summary>
-	/// Check the neighbour. If it's not obstacle, assigns the neighbour.
+	/// Check the neighbours inside the grid.
 	/// </summary>
 	/// <param name='row'>
 	/// Row.
@@ -310,12 +311,6 @@ public class GridManager : MonoBehaviour
             Node nodeToAdd = nodes[row, column];
 
 			neighbors.Add(nodeToAdd);
-
-			/*
-            if (!nodeToAdd.bObstacle)
-            {
-                neighbors.Add(nodeToAdd);
-            }*/
         } 
     }
 

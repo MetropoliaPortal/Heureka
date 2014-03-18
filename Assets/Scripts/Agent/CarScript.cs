@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class CarScript : MonoBehaviour {
-
+	
 	public float speed = 4f;							// The speed of the movement 
 	public Texture2D front, back, sideLeft, sideRight; 	// texture to ba applied
 	public bool DynamicRoadOn{get;set;}					// Is the agent on a dynamic road, 
@@ -101,7 +101,6 @@ public class CarScript : MonoBehaviour {
 		}
 	}
 
-
 	// When Car enters a trigger, the Waypoint script of the waypoint is accessed to get a new path.
 	void OnTriggerEnter(Collider col)
 	{
@@ -112,6 +111,8 @@ public class CarScript : MonoBehaviour {
 			i_index  = 0;
 		}
 	}
+
+	// Update path is called by the event of the Cube hen moved
 	void UpdatePath()
 	{
 		// If not on a Dynamic road quit the method
@@ -142,11 +143,13 @@ public class CarScript : MonoBehaviour {
 		// Throw raycast downward to check if the agent is still on road.
 		RaycastHit hit;
 		Ray ray = new Ray(transform.position, Vector3.down);
-		Physics.Raycast(ray, out hit);
-		// if the ray hits the ground the agen tis repositioned on the nearest node
-		if(hit.collider.name == "Ground")
+		if(Physics.Raycast(ray, out hit))
 		{
-			transform.position = m_path[ind].position;
+			// if the ray hits the ground the agent is repositioned on the nearest node
+			if(hit.collider.name == "Ground")
+			{
+				transform.position = m_path[ind].position;
+			}
 		}
 	}
 }

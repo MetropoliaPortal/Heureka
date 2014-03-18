@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class CarAgent : MonoBehaviour {
-	private CarManager _carPool;
+	private StackPool _carPool;
 	private int _step;
 	private int _amountSteps;
 	private Vector3 _nextStepPosition;
@@ -28,7 +28,7 @@ public class CarAgent : MonoBehaviour {
 		_direction = (int)Directions.LEFT;
 		_currentRoad = null;
 		_layerMask = 1 << 8;
-		_carPool = GameObject.Find("Test").GetComponent<CarManager>();
+		_carPool = new StackPool();
 
 		SolvePositionFix();
 		SolveStartingPosition();
@@ -308,8 +308,7 @@ public class CarAgent : MonoBehaviour {
 
 	void Destroy(){
 
-		_carPool.RemoveCar( gameObject );
-		//GameObject.Destroy (gameObject);
+		_carPool.Push( gameObject );
 
 	}
 }

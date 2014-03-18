@@ -70,10 +70,11 @@ public class AStar
                 //Cost between neighbour nodes
                 Node neighbourNode = neighbours[i];
 
+				//With this code the function can be used with paths for roads and cars
 				//Break the loop iteration if needed
 				if( pathForRoad && neighbourNode.bObstacle )
 					continue;
-				if ( !pathForRoad && (!neighbourNode.isRoad && !neighbourNode.isEdgeRoad) )
+				if ( !pathForRoad && !neighbourNode.isRoad )
 					continue;
 
 

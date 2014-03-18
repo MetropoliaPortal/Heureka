@@ -10,9 +10,6 @@ public class WaypointScript : MonoBehaviour {
 
 	private RoadManager m_manager;
 	private Transform [][] m_roads;
-	//public Color color;
-
-	//public event HandlerEvent OnNewDynamicRoad = new HandlerEvent(()=>{});
 
 	void Awake()
 	{
@@ -51,7 +48,6 @@ public class WaypointScript : MonoBehaviour {
 	public Transform [] GetPath(CarScript sc)
 	{	
 		int r = Random.Range(0,m_roads.Length);
-		if(isDynamic)r = 2;
 		if(r == 2)
 		{
 			sc.DynamicRoadOn = true;
