@@ -4,16 +4,27 @@ using System.Collections.Generic;
 
 public class CarScript : MonoBehaviour {
 
-	public GameObject waypoints;
-	private Transform [] path;
-	private Vector3 prevDirection;
-	public Texture2D front, back, sideLeft, sideRight; 
-	public Vector3 target;
-	public bool DynamicRoadOn{get;set;}
-	int index = 0;
-	// Use this for initialization
+	public float speed = 4f;							// The speed of the movement 
+	public Texture2D front, back, sideLeft, sideRight; 	// texture to ba applied
+	public bool DynamicRoadOn{get;set;}					// Is the agent on a dynamic road, 
+														// is used to skip the updating of the path 
+														//if the agent is not on dynamic road
 
-	void Start () {
+	private WaypointScript ws;							// Last waypoint script used
+	                                           			// It is used when updating the path on movement of a cube
+														// This helps figure out what road the agent is on
+	private new Transform transform;					// Cache of the transform
+	private Transform [] m_path;						// Current path
+	private Vector3 v_prevDirection;					// Previous direction to see if direction has changed
+	private int i_index = 0;							// Current index
+
+	void Start () 
+	{
+		transform = base.transform;
+
+		// Get the main waypoint object
+		GameObject waypoints = GameObject.Find ("Wp");
+		// get all children waypoints
 		List<Transform>list = new List<Transform>();
 		foreach(Transform t in waypoints.transform)
 		{
@@ -24,55 +35,55 @@ public class CarScript : MonoBehaviour {
 	 	// Get the WaypointScript
 		WaypointScript ws = start.GetComponent<WaypointScript>();
 		// Get a random item for the connection array of the waypoint
-		path = ws.GetPath(this);
-		index  = 0;
+		m_path = ws.GetPath(this);
+		i_index  = 0;
 
+		// Place the agent at start position and get the initial direction
 		transform.position = start.position;
-		Vector3 direction = (path[0].position - transform.position).normalized;
-		prevDirection = direction;
+		v_prevDirection = (m_path[0].position - transform.position).normalized;
+
+		// Subscribe to event on movement of the cube
 		CubePosition.OnMoveSecond += UpdatePath;
 	}
-	
-	// Update is called once per frame
+
 	void Update () 
 	{
-		Vector3 direction = (path[index].position - transform.position).normalized;
-		target = path[index].position;
-		transform.Translate (direction * Time.deltaTime * 4f, Space.World);
+		// Update direction
+		Vector3 direction = (m_path[i_index].position - transform.position).normalized;
+		// Move agent in the dierction
+		transform.Translate (direction * Time.deltaTime * speed, Space.World);
+		// Agen always face camera
 		transform.LookAt(Camera.main.transform.position);
 
 		// Check distance with target point
-		if(Vector3.Distance(transform.position, path[index].position)< 0.2f)
+		if(Vector3.Distance(transform.position, m_path[i_index].position)< 0.2f)
 		{
-			if(++index == path.Length)index = 0;
+			if(++i_index == m_path.Length)i_index = 0;
 		}
 		// Define orientation and texture to apply
-		if(prevDirection != direction)
+		if(v_prevDirection != direction)
 			GetDirection(direction);
-		prevDirection = direction;
+		v_prevDirection = direction;
 
 		// Debug for agent path
-		for(int i = 0; i < path.Length - 1; i++)
+		for(int i = 0; i < m_path.Length - 1; i++)
 		{
-			Debug.DrawLine(path[i].position, path[i+1].position, Color.white);
+			Debug.DrawLine(m_path[i].position, m_path[i+1].position, Color.white);
 		}
 	}
 
-	// Appropriate 2D dot with x and z
-	float Dot(Vector3 vec, Vector3 direction)
-	{
-		return vec.x * direction.x + vec.z * direction.z;
-	}
 
 	// Apply the corresponding texture based on direction
 	void GetDirection(Vector3 direction)
 	{
+		// Get all four directions
 		Vector3 [] directions = {Vector3.right, Vector3.left,Vector3.forward, Vector3.back};
 		int ind = -1;
+		// Check current direction against all directions to find which has dot close to 1
 		for(int i = 0; i < directions.Length; i++ )
 		{
-			float dot = Dot (direction, directions[i]);
-			if(IsEqual (dot, 1))ind = i;
+			float dot =  direction.x * directions[i].x + direction.z * directions[i].z;
+			if(dot >= 1 - 0.05f && dot <= 1 + 0.05f)ind = i;
 		}
 		switch(ind){
 		case 0:
@@ -90,22 +101,15 @@ public class CarScript : MonoBehaviour {
 		}
 	}
 
-	bool IsEqual(float a, float b) {
-		if (a >= b - 0.05f && a <= b + 0.05f)
-			return true;
-		else
-			return false;
-	}
 
-	WaypointScript ws;
 	// When Car enters a trigger, the Waypoint script of the waypoint is accessed to get a new path.
 	void OnTriggerEnter(Collider col)
 	{
 		if(col.CompareTag("CornerWp")||col.CompareTag("CenterWp"))
 		{
 			ws = col.gameObject.GetComponent<WaypointScript>();
-			path = ws.GetPath(this);
-			index  = 0;
+			m_path = ws.GetPath(this);
+			i_index  = 0;
 		}
 	}
 	void UpdatePath()
@@ -114,30 +118,35 @@ public class CarScript : MonoBehaviour {
 		if(DynamicRoadOn == false)return;
 
 		// Current direction of the agen
-		Vector3 direction = (path[index].position - transform.position).normalized;
-		// get the new path
-		path = ws.GetDynamicPath();
+		Vector3 direction = (m_path[i_index].position - transform.position).normalized;
+		// get the new dynamic path
+		m_path = ws.GetDynamicPath();
+		// Get closest node of the path
 		float distance = Mathf.Infinity;
 		int ind = 0;
 		Vector3 position = transform.position;
-		for(int i = 0 ; i < path.Length; i++)
+		for(int i = 0 ; i < m_path.Length; i++)
 		{
-			float dist = (position - path[i].position).sqrMagnitude;
+			float dist = (position - m_path[i].position).sqrMagnitude;
 			if(dist < distance)
 			{
 				distance = dist;
 				ind = i;
 			}
 		}
-		float dot = Vector3.Dot (direction, (transform.position - path[ind].position).normalized);
+
+		// Get direction to check if found node is ahead or behind
+		float dot = Vector3.Dot (direction, (transform.position - m_path[ind].position).normalized);
+		// if behind get next node
 		if(dot < 0 )ind++;
+		// Throw raycast downward to check if the agent is still on road.
 		RaycastHit hit;
 		Ray ray = new Ray(transform.position, Vector3.down);
 		Physics.Raycast(ray, out hit);
+		// if the ray hits the ground the agen tis repositioned on the nearest node
 		if(hit.collider.name == "Ground")
 		{
-			transform.position = path[ind].position;
+			transform.position = m_path[ind].position;
 		}
-		
 	}
 }

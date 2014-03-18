@@ -5,10 +5,11 @@ using System.Collections.Generic;
 public class WaypointScript : MonoBehaviour {
 
 	public Transform[]connections;
-	public bool dynamic = false;
-	private RoadManager m_manager;
 	public int indexArray;
-	private Transform [][] roads;
+	public bool isDynamic = false;
+
+	private RoadManager m_manager;
+	private Transform [][] m_roads;
 	//public Color color;
 
 	//public event HandlerEvent OnNewDynamicRoad = new HandlerEvent(()=>{});
@@ -16,19 +17,19 @@ public class WaypointScript : MonoBehaviour {
 	void Awake()
 	{
 		m_manager = GameObject.Find ("RoadManager").GetComponent<RoadManager>();
-		if(dynamic)
+		if(isDynamic)
 		{
-			roads = new Transform[3][];
+			m_roads = new Transform[3][];
 		}
 		else{
-			roads = new Transform[2][];
+			m_roads = new Transform[2][];
 		}
 		for (int i = 0; i < connections.Length; i++ )
 		{
 			Transform[] path = {connections[i]};
-			roads[i] = path;  
+			m_roads[i] = path;  
 		}
-		if(dynamic)
+		if(isDynamic)
 		{
 			UpdatePath ();
 		}
@@ -36,11 +37,11 @@ public class WaypointScript : MonoBehaviour {
 	}
 	void Update()
 	{
-		if(dynamic)
+		if(isDynamic)
 		{
-			for(int i = 0; i < roads[2].Length - 1; i++)
+			for(int i = 0; i < m_roads[2].Length - 1; i++)
 			{
-				Debug.DrawLine(roads[2][i].position, roads[2][i+1].position, Color.blue);
+				Debug.DrawLine(m_roads[2][i].position, m_roads[2][i+1].position, Color.blue);
 			}
 		}
 		/*RaycastHit hit;
@@ -49,8 +50,8 @@ public class WaypointScript : MonoBehaviour {
 
 	public Transform [] GetPath(CarScript sc)
 	{	
-		int r = Random.Range(0,roads.Length);
-		if(dynamic)r = 2;
+		int r = Random.Range(0,m_roads.Length);
+		if(isDynamic)r = 2;
 		if(r == 2)
 		{
 			sc.DynamicRoadOn = true;
@@ -59,17 +60,17 @@ public class WaypointScript : MonoBehaviour {
 		{
 			sc.DynamicRoadOn = false;
 		}
-		return roads[r];
+		return m_roads[r];
 	}
 	private  void UpdatePath()
 	{
-		if(dynamic)
+		if(isDynamic)
 		{
-			roads[2] = m_manager.GetDynamicPath(indexArray);
+			m_roads[2] = m_manager.GetDynamicPath(indexArray);
 		}
 	}
 	public Transform[] GetDynamicPath()
 	{
-		return roads[2];
+		return m_roads[2];
 	}
 }
