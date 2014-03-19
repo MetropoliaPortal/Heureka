@@ -1,17 +1,26 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Agent\CarScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\AStar\PriorityQueue.cs">
     <Files>
-      <File FileName="Assets\Scripts\Agent\CarScript.cs" Line="26" Column="13" />
-      <File FileName="Assets\Scripts\AStar\AStar.cs" Line="73" Column="56" />
-      <File FileName="Assets\Scripts\AStar\GridManager.cs" Line="250" Column="2" />
-      <File FileName="Assets\Scripts\RoadScript\RoadManager.cs" Line="88" Column="28" />
-      <File FileName="Assets\Scripts\PathManager.cs" Line="79" Column="3" />
-      <File FileName="Assets\Scripts\AStar\Node.cs" Line="23" Column="35" />
+      <File FileName="Assets\Scripts\AStar\PriorityQueue.cs" Line="30" Column="6" />
+      <File FileName="Assets\Scripts\PathManager.cs" Line="42" Column="5" />
+      <File FileName="Assets\Scripts\Agent\CarScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AStar\AStar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AStar\GridManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\RoadScript\RoadManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AStar\Node.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True" />
+        <State expanded="True">
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Scripts" expanded="True">
+              <Node name="AStar" expanded="True">
+                <Node name="PriorityQueue.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
       </Pad>
       <Pad Id="ClassPad">
         <State expanded="True" selected="True" />
