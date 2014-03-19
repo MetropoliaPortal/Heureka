@@ -37,7 +37,6 @@ public class GridManager : MonoBehaviour
     public int numOfColumns;
     public float gridCellSize;
     public bool showGrid = true;
-    public bool showObstacleBlocks = true;
 
     private Vector3 origin = new Vector3();
     public static List<GameObject> obstacleList = new List<GameObject>();

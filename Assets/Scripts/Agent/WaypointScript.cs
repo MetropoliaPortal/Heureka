@@ -41,8 +41,6 @@ public class WaypointScript : MonoBehaviour {
 				Debug.DrawLine(m_roads[2][i].position, m_roads[2][i+1].position, Color.blue);
 			}
 		}
-		/*RaycastHit hit;
-		Physics.Raycast (transform.position, Vector3.down, out hit)*/
 	}
 
 	public Transform [] GetPath(CarScript sc)

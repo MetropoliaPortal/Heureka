@@ -10,10 +10,10 @@ using System.Collections.Generic;
 /// </summary>
 public class StartScript : MonoBehaviour 
 {
-    UvScript textureScript;
+    UvSc textureScript;
 	void Start () 
 	{
-        textureScript = GetComponent<UvScript>();
+        textureScript = GetComponent<UvSc>();
 		/*string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server
 		WWW www = new WWW(url);                                                 // GET request
 		yield return www;
