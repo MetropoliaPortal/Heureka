@@ -6,6 +6,7 @@ public class CarScript : MonoBehaviour {
 	
 	public float speed = 4f;							// The speed of the movement 
 	public Texture2D front, back, sideLeft, sideRight; 	// texture to ba applied
+	private Material mat;
 	public bool DynamicRoadOn{get;set;}					// Is the agent on a dynamic road, 
 														// is used to skip the updating of the path 
 														//if the agent is not on dynamic road
@@ -21,7 +22,7 @@ public class CarScript : MonoBehaviour {
 	void Start () 
 	{
 		transform = base.transform;
-
+		mat = renderer.material;
 		// Get the main waypoint object
 		GameObject waypoints = GameObject.Find ("Wp");
 		// get all children waypoints
@@ -39,7 +40,9 @@ public class CarScript : MonoBehaviour {
 		i_index  = 0;
 
 		// Place the agent at start position and get the initial direction
-		transform.position = start.position;
+		Vector3 pos = start.position;
+		pos.y += 0.5f;
+		transform.position = pos;
 		v_prevDirection = (m_path[0].position - transform.position).normalized;
 
 		// Subscribe to event on movement of the cube
@@ -52,11 +55,13 @@ public class CarScript : MonoBehaviour {
 		Vector3 direction = (m_path[i_index].position - transform.position).normalized;
 		// Move agent in the dierction
 		transform.Translate (direction * Time.deltaTime * speed, Space.World);
-		// Agen always face camera
-		transform.LookAt(Camera.main.transform.position);
-
+		Vector3 pos = transform.position;
+		pos.y = 0.5f;
+		transform.position = pos;
+		// Agent always face camera
+		//transform.LookAt(Camera.main.transform.position);
 		// Check distance with target point
-		if(Vector3.Distance(transform.position, m_path[i_index].position)< 0.2f)
+		if(Vector3.Distance(transform.position, m_path[i_index].position)< 0.51f)
 		{
 			if(++i_index == m_path.Length)i_index = 0;
 		}
@@ -85,20 +90,26 @@ public class CarScript : MonoBehaviour {
 			float dot =  direction.x * directions[i].x + direction.z * directions[i].z;
 			if(dot >= 1 - 0.05f && dot <= 1 + 0.05f)ind = i;
 		}
+		Vector3 pos = transform.position;
 		switch(ind){
 		case 0:
 			//print ("Right");
+			mat.mainTexture = sideRight;
 			break;
 		case 1 :
 			//print ("Left");
+			mat.mainTexture = sideLeft;
 			break;
 		case 2:
 			//print ("Up");
+			mat.mainTexture = back;
 			break;
 		case 3:
 			//print ("Down");
+			mat.mainTexture = front;
 			break;
 		}
+		transform.position = pos;
 	}
 
 	// When Car enters a trigger, the Waypoint script of the waypoint is accessed to get a new path.

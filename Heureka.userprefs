@@ -1,14 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\AStar\GridManager.cs">
     <Files>
-      <File FileName="..\..\New Unity Project 1\Assets\_Script in project\AIScript.cs" Line="44" Column="6" />
-      <File FileName="Assets\Scripts\Global\TimerScript.cs" Line="17" Column="56" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="78" Column="19" />
-      <File FileName="Assets\Scripts\StartScript.cs" Line="13" Column="9" />
-      <File FileName="Assets\Scripts\CubeScript\UvSc.cs" Line="42" Column="18" />
-      <File FileName="Assets\Scripts\Agent\WaypointScript.cs" Line="43" Column="4" />
-      <File FileName="Assets\Scripts\AStar\GridManager.cs" Line="79" Column="1" />
+      <File FileName="Assets\Scripts\Global\BackgroundTextureScript.cs" Line="13" Column="19" />
+      <File FileName="Assets\Scripts\CubeScript\UvSc.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Agent\CarScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AStar\Node.cs" Line="1" Column="1" />
+      <File FileName="..\..\New Unity Project 1\Assets\_Script in project\AIScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Global\TimerScript.cs" Line="55" Column="6" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StartScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Agent\WaypointScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AStar\GridManager.cs" Line="42" Column="48" />
+      <File FileName="Assets\Scripts\AStar\AStar.cs" Line="30" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

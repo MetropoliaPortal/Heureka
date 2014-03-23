@@ -55,29 +55,12 @@ public class TestCode : MonoBehaviour
             roadArray[6] = DrawStraightRoad(waypoints[5].position, waypoints[2].position);
         }
     }
-    /*void OnDrawGizmos()
-    {
-        if (pathArray == null)
-            return;
 
-        if (pathArray.Count > 0)
-        {
-            int index = 1;
-            foreach (Node node in pathArray)
-            {
-                if (index < pathArray.Count)
-                {
-                    UnityEngine.Debug.DrawLine(node.position, pathArray[index].position, Color.blue, 50f);
-                    index++;
-                }
-            };
-        }
-    }*/
     GameObject[] DrawRoadAStar(Vector3 start, Vector3 end) 
     {
-        startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
-        goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
-        //pathArray = AStar.FindPath(startNode, goalNode);
+    //    startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
+      //  goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
+//        pathArray = AStar.FindPath(startNode, goalNode);
         List<GameObject> arrayRoad = new List<GameObject>();
         
         // Place first

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class TimerScript : MonoBehaviour {
 
@@ -15,7 +16,7 @@ public class TimerScript : MonoBehaviour {
 		float midWidth = Screen.width / 2f - size / 2f;
 		r_rect = new Rect(midWidth, 0, size, size / 2f);
 		r_restartRect = new Rect(midWidth, Screen.height / 2 - size/4, size, size / 2);
-		timer = 120f;
+		timer = 5f;
 		b_showButton = true;
 		m_manager = GetComponent<GameManager>();
 		m_manager.SetState(State.StartMenu);
@@ -26,6 +27,7 @@ public class TimerScript : MonoBehaviour {
 	{
 		State current = m_manager.GetState();
 		if(current == State.StartMenu)return;
+		if(current == State.Postgame)return;
 
 		timer -= Time.deltaTime;
 		if(timer <=0)
@@ -47,7 +49,10 @@ public class TimerScript : MonoBehaviour {
 			{
 				if(GUI.Button (r_restartRect, "RESTART"))
 				{
-					Application.LoadLevel(Application.loadedLevel);
+					GC.Collect ();
+					timer = 5f;
+					m_manager.SetState(State.StartMenu);
+					GetComponent<BackgroundTextureScript>().SetValue();
 				}
 			}
 			else if(current == State.StartMenu)
