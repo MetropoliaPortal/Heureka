@@ -52,7 +52,6 @@
      <Compile Include="Assets\Scripts\AStar\PriorityQueue.cs" />
      <Compile Include="Assets\Scripts\Agent\CarScript.cs" />
      <Compile Include="Assets\Scripts\Agent\WaypointScript.cs" />
-     <Compile Include="Assets\Scripts\CarAgent.cs" />
      <Compile Include="Assets\Scripts\ConnectScript.cs" />
      <Compile Include="Assets\Scripts\CubeScript\CubePosition.cs" />
      <Compile Include="Assets\Scripts\CubeScript\UvSc.cs" />
@@ -67,6 +66,7 @@
      <Compile Include="Assets\Scripts\StartScript.cs" />
      <Compile Include="Assets\Scripts\TestCode\TestCode.cs" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
+     <None Include="Assets\Resources\Textures\RimLight.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />

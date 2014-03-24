@@ -18,6 +18,7 @@ public class CarScript : MonoBehaviour {
 	private Transform [] m_path;						// Current path
 	private Vector3 v_prevDirection;					// Previous direction to see if direction has changed
 	private int i_index = 0;							// Current index
+	private float height = 0.3f;						// Car height
 
 	void Start () 
 	{
@@ -41,7 +42,7 @@ public class CarScript : MonoBehaviour {
 
 		// Place the agent at start position and get the initial direction
 		Vector3 pos = start.position;
-		pos.y += 0.5f;
+		pos.y += height;
 		transform.position = pos;
 		v_prevDirection = (m_path[0].position - transform.position).normalized;
 
@@ -56,7 +57,7 @@ public class CarScript : MonoBehaviour {
 		// Move agent in the dierction
 		transform.Translate (direction * Time.deltaTime * speed, Space.World);
 		Vector3 pos = transform.position;
-		pos.y = 0.5f;
+		pos.y = height;
 		transform.position = pos;
 		// Agent always face camera
 		//transform.LookAt(Camera.main.transform.position);
