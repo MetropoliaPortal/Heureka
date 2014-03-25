@@ -119,30 +119,49 @@ public class RoadManager : MonoBehaviour
 	void DrawCenterRoads()
     {
 		// Get dynamic paths and store in array
-		if (Physics.Linecast(waypoints[1].position, waypoints[5].position))
+		RaycastHit hit;
+		if (Physics.Linecast(waypoints[1].position, waypoints[5].position, out hit))
 		{
+			print ("A");
+			print(hit.collider.name);
             roads[0] = DrawRoadAStar(waypoints[1].position, waypoints[5].position);
 		}
 		else
 		{
+			print ("B");
 			roads[0] = DrawStraightRoad(waypoints[1].position, waypoints[5].position);
 		}
 
-		if (Physics.Linecast(waypoints[3].position, waypoints[7].position))
+		if (Physics.Linecast(waypoints[3].position, waypoints[7].position,out hit))
 		{
+			print ("C");
 			roads[1] = DrawRoadAStar(waypoints[3].position, waypoints[7].position);
 		}
 		else
 		{
+			print ("D");
 			roads[1] = DrawStraightRoad(waypoints[3].position, waypoints[7].position);
 		}
 
 		// Store reverse array.
 		roads[2] = ReverseArray(roads[0]);
-		roads[3] = ReverseArray(roads[1]);;
+		roads[3] = ReverseArray(roads[1]);
 
+		/*Array.Copy(roads[0], roads[2], roads[0].Length);
+		Array.Copy(roads[1], roads[3], roads[1].Length);
+		Array.Reverse (roads[2]);
+		Array.Reverse (roads[3]);*/
 		//Call all events
 		OnRoadChange();
+	}
+	void CopyArray(Transform [] source, Transform[]target){
+		target = null;
+		int l = source.Length;
+		target = new Transform[source.Length];
+		for(int i = 0; i < l; i++)
+		{
+			target[i] = source[i];
+		}
 	}
 	Transform[] ReverseArray(Transform[]arr)
 	{
@@ -165,7 +184,7 @@ public class RoadManager : MonoBehaviour
 		
 		// Place first
 		Vector3 pos = start;
-		pos.y += 0.01f;
+		pos.y = 0.01f;
 		GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
         o.tag = "Road";
 
@@ -174,7 +193,7 @@ public class RoadManager : MonoBehaviour
 		for (int i = 0; i < pathArray.Count; i++)
 		{
 			pos = pathArray[i].position;
-			pos.y += 0.01f;
+			pos.y = 0.01f;
 			o = (GameObject)Instantiate(road, pos, Quaternion.identity);
 			arrayRoad.Add(o.transform);
 			pathArray[i].isRoad = true;
@@ -189,7 +208,7 @@ public class RoadManager : MonoBehaviour
 		while (first != end)
 		{
 			Vector3 pos = first;
-			pos.y += 0.01f;
+			pos.y = 0.01f;
 			GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
             o.tag = tag;
 			arrayRoad.Add(o.transform);
