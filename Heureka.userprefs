@@ -1,15 +1,6 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Agent\CarScript.cs">
-    <Files>
-      <File FileName="Assets\Scripts\Agent\CarScript.cs" Line="115" Column="4" />
-      <File FileName="Assets\Scripts\Global\BackgroundTextureScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Global\TimerScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Agent\WaypointScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\RoadScript\RoadManager.cs" Line="168" Column="9" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
