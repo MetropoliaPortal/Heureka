@@ -13,6 +13,7 @@ public class CubePosition : MonoBehaviour
     private int column;
     public delegate void EventMove();
     public static event EventMove OnMove = new EventMove(() => { });
+	public static event EventMove OnMoveSecond = new EventMove(() => { });
     private bool b_fireEvent = false;
     #endregion
 
@@ -24,7 +25,7 @@ public class CubePosition : MonoBehaviour
         row = gm.numOfRows;
         column = gm.numOfColumns;
         GridManager.obstacleList.Add(gameObject);
-        PositionCube(0,0,0);
+        //PositionCube(0,0,0);
         
 #if DEBUGMODE
 		InvokeRepeating("CheckPosition", 0.001f, 0.01f);
@@ -61,6 +62,7 @@ public class CubePosition : MonoBehaviour
         {
             b_fireEvent = false;
             OnMove();
+			OnMoveSecond();
         }
         
     }
