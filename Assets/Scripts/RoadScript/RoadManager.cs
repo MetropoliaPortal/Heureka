@@ -126,6 +126,7 @@ public class RoadManager : MonoBehaviour
 		}
 		else
 		{
+
 			roads[0] = DrawStraightRoad(waypoints[1].position, waypoints[5].position);
 		}
 
@@ -149,6 +150,7 @@ public class RoadManager : MonoBehaviour
 		//Call all events
 		OnRoadChange();
 	}
+
 	void CopyArray(Transform [] source, Transform[]target){
 		target = null;
 		int l = source.Length;

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -59,22 +59,11 @@ public class CarScript : MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos.y = height;
 		transform.position = pos;
-		// Agent always face camera
-		//transform.LookAt(Camera.main.transform.position);
+
 		// Check distance with target point
 		if(Vector3.Distance(transform.position, m_path[i_index].position)< 0.51f)
 		{
 			if(++i_index == m_path.Length)i_index = 0;
-		}
-		// Define orientation and texture to apply
-		//if(v_prevDirection != direction) 
-		//GetDirection(direction);
-		//v_prevDirection = direction;
-		
-		// Debug for agent path
-		for(int i = 0; i < m_path.Length - 1; i++)
-		{
-			Debug.DrawLine(m_path[i].position, m_path[i+1].position, Color.white);
 		}
 	}
 	void LateUpdate(){

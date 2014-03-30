@@ -54,6 +54,7 @@ public class WaypointScript : MonoBehaviour {
 		{
 			sc.DynamicRoadOn = false;
 		}
+
 		return m_roads[r];
 	}
 	private  void UpdatePath()
