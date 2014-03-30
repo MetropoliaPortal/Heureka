@@ -10,22 +10,29 @@ using System.Collections.Generic;
 /// </summary>
 public class StartScript : MonoBehaviour 
 {
-    UvSc textureScript;
-	void Start () 
+    //UvSc textureScript;
+	public Material[] materials;
+
+	IEnumerator Start () 
 	{
-        textureScript = GetComponent<UvSc>();
-		/*string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server
+        //textureScript = GetComponent<UvSc>();
+		string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server
 		WWW www = new WWW(url);                                                 // GET request
 		yield return www;
 		string [] arrGUID = FindAllGUID(www.text);                              // All GUID are stored in array
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
 		{
-                GameObject o = GameObject.CreatePrimitive(PrimitiveType.Cube);  // Create a new cube
-                o.AddComponent<CubePosition>();               // Add components (could be replaced by prefab)
-                ConnectScript cs = o.AddComponent<ConnectScript>();
-                cs.tagQuuppa = arrGUID[i];                                      // tagQuuppa is given the GUID
-                o.renderer.material
-		}*/
+     		GameObject o = GameObject.CreatePrimitive(PrimitiveType.Cube);  // Create a new cube
+			o.transform.localScale = new Vector3(2,2,2);
+			o.AddComponent<CubePosition>();               // Add components (could be replaced by prefab)
+	        ConnectScript cs = o.AddComponent<ConnectScript>();
+			UvSc uvScript = o.AddComponent<UvSc>();
+			o.renderer.material = materials[Random.Range(0, materials.Length)];
+			uvScript.Initialize();
+
+	        cs.tagQuuppa = arrGUID[i];                                      // tagQuuppa is given the GUID
+	        
+		}
 	}
 	
 	/// <summary>

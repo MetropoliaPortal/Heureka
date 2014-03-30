@@ -85,7 +85,6 @@ public class CarScript : MonoBehaviour {
 	// Apply the corresponding texture based on direction
 	void GetDirection(Vector3 direction)
 	{
-		print (direction);
 		// Get all four directions
 		Vector3 [] directions = {Vector3.right, Vector3.left,Vector3.forward, Vector3.back};
 		int ind = -1;

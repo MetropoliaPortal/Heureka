@@ -4,7 +4,7 @@ using System.Collections;
 public class UvSc : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () {
+	public void Initialize () {
         Mesh theMesh;
         theMesh = GetComponent<MeshFilter>().mesh;
 

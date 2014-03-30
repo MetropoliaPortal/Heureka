@@ -122,24 +122,19 @@ public class RoadManager : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Linecast(waypoints[1].position, waypoints[5].position, out hit))
 		{
-			print ("A");
-			print(hit.collider.name);
             roads[0] = DrawRoadAStar(waypoints[1].position, waypoints[5].position);
 		}
 		else
 		{
-			print ("B");
 			roads[0] = DrawStraightRoad(waypoints[1].position, waypoints[5].position);
 		}
 
 		if (Physics.Linecast(waypoints[3].position, waypoints[7].position,out hit))
 		{
-			print ("C");
 			roads[1] = DrawRoadAStar(waypoints[3].position, waypoints[7].position);
 		}
 		else
 		{
-			print ("D");
 			roads[1] = DrawStraightRoad(waypoints[3].position, waypoints[7].position);
 		}
 
