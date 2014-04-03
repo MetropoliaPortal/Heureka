@@ -32,16 +32,6 @@ public class WaypointScript : MonoBehaviour {
 		}
 		RoadManager.OnRoadChange += UpdatePath;
 	}
-	void Update()
-	{
-		if(isDynamic)
-		{
-			for(int i = 0; i < m_roads[2].Length - 1; i++)
-			{
-				Debug.DrawLine(m_roads[2][i].position, m_roads[2][i+1].position, Color.blue);
-			}
-		}
-	}
 
 	public Transform [] GetPath(CarScript sc)
 	{	

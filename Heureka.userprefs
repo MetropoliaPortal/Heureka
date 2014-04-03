@@ -1,19 +1,15 @@
 ﻿<Properties>
-<<<<<<< HEAD
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CubeScript\CubePosition.cs">
     <Files>
-      <File FileName="Assets\Scripts\StartScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\ConnectScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\CubeScript\CubePosition.cs" Line="44" Column="38" />
-      <File FileName="Assets\Scripts\CubeScript\UvSc.cs" Line="52" Column="1" />
-      <File FileName="Assets\Scripts\Global\TimerScript.cs" Line="52" Column="16" />
-=======
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Agent\CarScript.cs">
-    <Files>
-      <File FileName="Assets\Scripts\Agent\CarScript.cs" Line="26" Column="27" />
->>>>>>> 4d0907206a1300e19de5a9014a8e14f595c87145
+      <File FileName="Assets\Scripts\Agent\WaypointScript.cs" Line="1" Column="19" />
+      <File FileName="Assets\Scripts\RoadScript\RoadManager.cs" Line="100" Column="2" />
+      <File FileName="Assets\Scripts\AStar\AStar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AStar\GridManager.cs" Line="117" Column="6" />
+      <File FileName="Assets\Scripts\AStar\Node.cs" Line="23" Column="33" />
+      <File FileName="Assets\Scripts\Agent\WaypointScript.cs" Line="1" Column="19" />
+      <File FileName="Assets\Scripts\StartScript.cs" Line="63" Column="1" />
+      <File FileName="Assets\Scripts\CubeScript\CubePosition.cs" Line="61" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -13,7 +13,7 @@ public class StartScript : MonoBehaviour
     //UvSc textureScript;
 	public Material[] materials;
 
-	IEnumerator Start () 
+	/*IEnumerator Start () 
 	{
         //textureScript = GetComponent<UvSc>();
 		string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server
@@ -33,7 +33,7 @@ public class StartScript : MonoBehaviour
 	        cs.tagQuuppa = arrGUID[i];                                      // tagQuuppa is given the GUID
 	        
 		}
-	}
+	}*/
 	
 	/// <summary>
 	/// The whole json files are given to the method
