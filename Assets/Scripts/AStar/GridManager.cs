@@ -43,6 +43,8 @@ public class GridManager : MonoBehaviour
     public Node[,] nodes;
     public CrossNode[,] crossNode;
     public Dictionary<int, CrossNode> dict;
+	public static Dictionary<int, Vector3> gridDict = new Dictionary<int, Vector3>();
+	public static float []values = {0.715f, 1.115f, 1.515f, 1.915f, 2.315f, 2.715f};
     #endregion
 
     //Origin of the grid manager
@@ -65,7 +67,21 @@ public class GridManager : MonoBehaviour
 		DeleteObstacleFlags ();
 		DeleteRoadFlags();
 		MarkEdgeRoads();
-		CalculateObstacles();		
+		CalculateObstacles();
+		int x = 2;
+		int z = 2;
+		for(int i = 0; i < values.Length ; i++)
+		{
+			for (int j = 0; j < values.Length; j++)
+			{ 
+				int key = (int)(values[i] * 1000 + values[j]*10); 
+				int xTemp = x * (i + 1);
+				int zTemp = z * (j + 1);
+				print (key);
+				Vector3 value = new Vector3(xTemp,1,zTemp);
+				gridDict.Add (key,value);
+			}
+		}
 	}
 
 	void DeleteObstacleFlags()

@@ -8,24 +8,17 @@ public class CubePosition : MonoBehaviour
     // Cache the transform for faster performance
     private new Transform transform;
 
-	private Queue<Vector3> m_queue = new Queue<Vector3>();
-    // Cache the grid
     private Vector3 prevPos;
-    private int row;
-    private int column;
     public delegate void EventMove();
     public static event EventMove OnMove = new EventMove(() => { });
 	public static event EventMove OnMoveSecond = new EventMove(() => { });
     private bool b_fireEvent = false;
+
     #endregion
 
     public void Start () 
     {
         transform = base.transform;
-        GameObject obj = GameObject.Find("GridManager");
-        GridManager gm = obj.GetComponent<GridManager>();
-        row = gm.numOfRows;
-        column = gm.numOfColumns;
         GridManager.obstacleList.Add(gameObject);
         PositionCube(0,0,0);
         
@@ -40,21 +33,21 @@ public class CubePosition : MonoBehaviour
     /// </summary>
     public void PositionCube(float x, float y , float z)
     {
-        // Drop the decimal part
-		m_queue.Enqueue(new Vector3(x,y,z));
-		Vector3 v = CheckValue();
-		v.x *= (row) / 3.43f;
-		v.y *= (column) / 3.43f;
-		v.x = Mathf.Round(v.x);
-		v.y = Mathf.Round(v.y);
-		//z = Mathf.Round(z);
-		if(v.z <= 0.40)v.z = 1;
-		else if (v.z > 0.40 && v.z <= 0.80)v.z = 3;
-		else if (v.z > 0.80) v.z = 5;
+		Vector3 pos = new Vector3();
+		pos.x = CheckValue(x);
+		pos.y = CheckValue (y);
+
+		// Check what cell is used
+		Vector2 cell = GetCell(pos.x,pos.y);
+		// Convert to game grid
+		int key = (int)(cell.x * 1000 + cell.y*10);
+		pos = GridManager.gridDict[key];
+		if(pos.z <= 0.40)pos.z = 1;
+		else if (pos.z > 0.40 && pos.z <= 0.80)pos.z = 3;
+		else if (pos.z > 0.80) pos.z = 5;
         // Store the value
 		prevPos = transform.position;
-		Vector3 pos = new Vector3(Mathf.Clamp(v.x,2,row - 2), v.z ,Mathf.Clamp(v.y, 2, column - 2));	
-		//m_queue.Enqueue(pos);
+			
 		transform.position = pos;
 		CheckPosition();
     }
@@ -64,7 +57,6 @@ public class CubePosition : MonoBehaviour
         // Check if Cube has moved
         if (prevPos != transform.position)
         {
-            //PositionCube();
             b_fireEvent = true;
         }
         else if (prevPos == transform.position && b_fireEvent == true)
@@ -74,34 +66,38 @@ public class CubePosition : MonoBehaviour
 			OnMoveSecond();
         }  
     }
-	private Vector3 CheckValue()
+
+
+	private float CheckValue(float input)
 	{
-		if(m_queue.Count < 10) return prevPos;
-		while(m_queue.Count > 10)
+		float offset = 0.2f;
+		float [] values = GridManager.values;
+		int length = values.Length;
+		for(int i = 0 ; i < length; i++)
 		{
-			m_queue.Dequeue();
+			float v = values[i];
+			if((v - offset)  < input && input <= (v + offset))
+			{
+				return v;
+			}
 		}
-		List<Vector3> list = new List<Vector3>(m_queue);
+		return input;
+	}
 
-		float totalX = 0f;
-		float totalY = 0f;
-		float totalZ = 0f;
-		int count = list.Count;
-		// Get average for each component
-		for (int i = 0; i < count; i++)
+	Vector2 GetCell (float x, float y)
+	{
+		Vector2 cell = new Vector2();
+		int i = 0;
+		float [] values = GridManager.values;
+		int length = values.Length;
+		for(; i < length; i++)
 		{
-			totalX += list[i].x;
-			totalY += list[i].y;
-			totalZ += list[i].z;
+			if(x == values[i])cell.x = i;
 		}
-		Vector3 vec = new Vector3();
-		float c = (float)count;
-		vec.x = totalX / c;
-		vec.y = totalY / c;
-		vec.z = totalZ / c;
-
-
-
-		return vec;
+		for(i = 0; i < length; i++)
+		{
+			if(y == values[i])cell.y = i;
+		}
+		return cell;
 	}
 }
