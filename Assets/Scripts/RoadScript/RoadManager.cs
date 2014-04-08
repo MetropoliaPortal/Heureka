@@ -138,7 +138,7 @@ public class RoadManager : MonoBehaviour
     {
 		// Get dynamic paths and store in array
 		RaycastHit hit;
-		if (Physics.Linecast(waypoints[1].position, waypoints[5].position, out hit,m_layer))
+		if (Physics.Linecast(waypoints[1].position, waypoints[5].position, out hit/*,m_layer*/))
 		{
             roads[0] = DrawRoadAStar(waypoints[1].position, waypoints[5].position);
 		}
@@ -147,7 +147,7 @@ public class RoadManager : MonoBehaviour
 			roads[0] = DrawStraightRoad(waypoints[1].position, waypoints[5].position);
 		}
 
-		if (Physics.Linecast(waypoints[3].position, waypoints[7].position,out hit,m_layer))
+		if (Physics.Linecast(waypoints[3].position, waypoints[7].position,out hit/*,m_layer*/))
 		{
 			roads[1] = DrawRoadAStar(waypoints[3].position, waypoints[7].position);
 		}
