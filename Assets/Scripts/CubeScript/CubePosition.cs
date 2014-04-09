@@ -16,7 +16,12 @@ public class CubePosition : MonoBehaviour
 
     #endregion
 
-	public void Init () 
+	public void Init ()
+	{
+
+	}
+
+	void Start () 
     {
         transform = base.transform;
 		PositionCube(0.7f,0.2f,0.7f);
@@ -46,9 +51,9 @@ public class CubePosition : MonoBehaviour
 		{
 			print (e.Message);
 		}
-		if(y <= 0.40)pos.y = 1;
-		else if (y > 0.40f && y <= 0.80f)pos.y = 3;
-		else if (y > 0.80f) pos.y = 5;
+		if(y <= 0.40)						pos.y = 1;
+		else if (y > 0.40f && y <= 0.80f)	pos.y = 3;
+		else if (y > 0.80f) 				pos.y = 5;
         // Store the value
 		prevPos = transform.position;
 			
