@@ -19,20 +19,22 @@ public class StartScript : MonoBehaviour
 		string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server
 		WWW www = new WWW(url);                                                 // GET request
 		yield return www;
+		if(www.error != null)print (www.error);
 		string [] arrGUID = FindAllGUID(www.text);                              // All GUID are stored in array
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
 		{
-     		GameObject o = GameObject.CreatePrimitive(PrimitiveType.Cube);  // Create a new cube
+     		GameObject o = GameObject.CreatePrimitive(PrimitiveType.Cube);  	// Create a new cube
 			o.transform.localScale = new Vector3(2,2,2);
-			o.AddComponent<CubePosition>();               // Add components (could be replaced by prefab)
+			CubePosition cp = o.AddComponent<CubePosition>();               						// Add components (could be replaced by prefab)
+			cp.Init();
 	        ConnectScript cs = o.AddComponent<ConnectScript>();
 			UvSc uvScript = o.AddComponent<UvSc>();
 			o.renderer.material = materials[Random.Range(0, materials.Length)];
 			uvScript.Initialize();
 
-	        cs.tagQuuppa = arrGUID[i];                                      // tagQuuppa is given the GUID
-	        
+	        cs.tagQuuppa = arrGUID[i];                                      // tagQuuppa is given the GUI  
 		}
+	 	
 	}
 	
 	/// <summary>

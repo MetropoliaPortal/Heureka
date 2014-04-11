@@ -43,6 +43,9 @@ public class GridManager : MonoBehaviour
     public Node[,] nodes;
     public CrossNode[,] crossNode;
     public Dictionary<int, CrossNode> dict;
+	public static Dictionary<int, Vector3> gridDict = new Dictionary<int, Vector3>();
+	public static float [] valuesX = {1.115f, 1.515f, 1.915f, 2.315f, 2.715f, 3.115f};
+	public static float [] valuesY = {0.715f, 1.115f, 1.515f, 1.915f, 2.315f, 2.715f};
     #endregion
 
     //Origin of the grid manager
@@ -57,7 +60,20 @@ public class GridManager : MonoBehaviour
         CreateGrid();
 		CreateCrossNode();
         ResolveObstacles();
-		MarkEdgeRoads();
+		//MarkEdgeRoads();
+		int x = 2;
+		int z = 2;
+		for(int i = 0; i < valuesX.Length ; i++)
+		{
+			for (int j = 0; j < valuesY.Length; j++)
+			{ 
+				int key = (int)(valuesX[i] * 1000f + valuesY[j]*10f); 
+				int xTemp = x * (i + 1);
+				int zTemp = z * (j + 1);
+				Vector3 value = new Vector3(xTemp,1,zTemp);
+				gridDict.Add (key,value);
+			}
+		}
     }
 
 	public void ResolveObstacles()
@@ -65,7 +81,7 @@ public class GridManager : MonoBehaviour
 		DeleteObstacleFlags ();
 		DeleteRoadFlags();
 		MarkEdgeRoads();
-		CalculateObstacles();		
+		CalculateObstacles();
 	}
 
 	void DeleteObstacleFlags()
@@ -117,7 +133,7 @@ public class GridManager : MonoBehaviour
 			Node[] cn = entry.Value.node;
 			for(int j = 0; j < cn.Length; j++)
 			{
-				cn[j].nodeTotalCost = 1.0f;
+				cn[j].nodeTotalCost = 0.0f;
 			}
 		}
 	}

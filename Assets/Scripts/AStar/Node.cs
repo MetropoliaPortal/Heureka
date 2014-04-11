@@ -20,7 +20,7 @@ public class Node : IComparable
     public Node()
     {
         this.estimatedCost = 0.0f;
-        this.nodeTotalCost = 1.0f;
+        this.nodeTotalCost = 0.0f;
         this.bObstacle = false;
 		this.isRoad = false;	
         this.parent = null;
@@ -32,7 +32,7 @@ public class Node : IComparable
     public Node(Vector3 pos)
     {
         this.estimatedCost = 0.0f;
-        this.nodeTotalCost = 1.0f;
+        this.nodeTotalCost = 0.0f;
         this.bObstacle = false;
 		this.isRoad = false;
         this.parent = null;
@@ -68,6 +68,7 @@ public class CrossNode
 
 		// Get the position of the 4 squares around the node
 		Vector3[] pos = {position, position, position, position};
+
 		pos[0].x -= 0.5f;
 		pos[0].z -= 0.5f;
 		pos[1].x -= 0.5f;

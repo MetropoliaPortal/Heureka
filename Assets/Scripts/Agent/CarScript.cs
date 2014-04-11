@@ -16,7 +16,6 @@ public class CarScript : MonoBehaviour {
 	// This helps figure out what road the agent is on
 	private new Transform transform;					// Cache of the transform
 	private Transform [] m_path;						// Current path
-	private Vector3 v_prevDirection;					// Previous direction to see if direction has changed
 	private int i_index = 0;							// Current index
 	private float height = 0.3f;						// Car height
 	
@@ -42,9 +41,7 @@ public class CarScript : MonoBehaviour {
 		
 		// Place the agent at start position and get the initial direction
 		Vector3 pos = start.position;
-		//pos.y += height;
 		transform.position = pos;
-		v_prevDirection = (m_path[0].position - transform.position).normalized;
 		
 		// Subscribe to event on movement of the cube
 		CubePosition.OnMoveSecond += UpdatePath;

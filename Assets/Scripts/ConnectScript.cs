@@ -35,21 +35,28 @@ public class ConnectScript : MonoBehaviour {
                 int indexY = www.text.IndexOf(st_positionY) + st_positionY.Length + offset;
 				int indexZ = www.text.IndexOf(st_positionZ) + st_positionY.Length + offset;
                 string posX = www.text.Substring(indexX, offsetValue);
+				posX = RemoveComaEnd(posX);
                 string posY = www.text.Substring(indexY, offsetValue);
+				posY = RemoveComaEnd(posY);;
 				string posZ = www.text.Substring(indexZ, offsetValue);
+				posZ = RemoveComaEnd(posZ);
 				try{
                 	float x = float.Parse(posX);
                 	float y = float.Parse(posY);
 					float z = float.Parse(posZ);
-					m_cubePosition.PositionCube(x, y, z);
+					m_cubePosition.PositionCube(x, z, y);
 				}
-				catch(Exception)
+				catch(Exception e)
 				{
-					print ("Ex:" +posX + " " + posY);
+					print ("Ex:"+ e.Message+" " +posX + " " + posY+" "+posZ);
 				}
-
-			
             }
         }
+	}
+
+	string RemoveComaEnd(string str)
+	{
+		if(str[str.Length - 1] == ',')str = str.Substring(0,str.Length - 1);
+		return str;
 	}
 }
