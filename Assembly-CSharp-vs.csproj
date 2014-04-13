@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\ConnectScript.cs" />
      <Compile Include="Assets\Scripts\CubeScript\CubePosition.cs" />
      <Compile Include="Assets\Scripts\CubeScript\UvSc.cs" />
+     <Compile Include="Assets\Scripts\CubeStacking.cs" />
      <Compile Include="Assets\Scripts\DetectLeaks.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\Global\BackgroundTextureScript.cs" />
