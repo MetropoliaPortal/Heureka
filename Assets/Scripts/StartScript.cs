@@ -3,38 +3,74 @@ using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 
+public enum BuildingType{
+	Official, Residential,Leisure, Shop
+}
 /// <summary>
 /// Script is attached to an empty game object
 /// Purpose is to fetch from server how many tags are active
 /// This avoids manipulation of the software if a tag or a cube goes broken.
+/// The object is used on start of the program and destroy at the end of the Start
+/// 
+/// 	StartScript.cs -------------|
+/// 		|						|->UvSc.cs modifies the Material uv map of the Cube object
+///    	Cube object-----------------|
+/// 		|
+/// 		|-> ConnectScript.cs
+/// 		|		|
+/// 		|		|-> Sends info to CubePosition -> process and modify Transform of the Cube object
+/// 		|		|
+/// 		|		|-> Sends info to CubeRotation -> process and modify the texture on the Cube object
+/// 		|
+/// 		|-> UvSc.cs -> modifies the uv of the cube
+/// 
+/// 
+/// 
+/// 
 /// </summary>
 public class StartScript : MonoBehaviour 
 {
-    //UvSc textureScript;
-	public Material[] materials;
-
 	IEnumerator Start () 
 	{
-        //textureScript = GetComponent<UvSc>();
-		string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server
+		string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server, all tags are requested
 		WWW www = new WWW(url);                                                 // GET request
 		yield return www;
 		if(www.error != null)print (www.error);
 		string [] arrGUID = FindAllGUID(www.text);                              // All GUID are stored in array
+
+		/////////////////////////////////////////////
+		/// 
+		/// Here the file for building type attribution is accessed
+		/// 
+		/////////////////////////////////////////////
+
+		UvSc uvScript = gameObject.AddComponent<UvSc>();						// Add UvSc.cs to that object
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
 		{
      		GameObject o = GameObject.CreatePrimitive(PrimitiveType.Cube);  	// Create a new cube
-			o.transform.localScale = new Vector3(2,2,2);
-			CubePosition cp = o.AddComponent<CubePosition>();               						// Add components (could be replaced by prefab)
-			cp.Init();
-	        ConnectScript cs = o.AddComponent<ConnectScript>();
-			UvSc uvScript = o.AddComponent<UvSc>();
-			o.renderer.material = materials[Random.Range(0, materials.Length)];
-			uvScript.Initialize();
+			o.transform.localScale = new Vector3(2,2,2);						// The cube is scaled up to 2
 
-	        cs.tagQuuppa = arrGUID[i];                                      // tagQuuppa is given the GUI  
+			CubePosition cp = o.AddComponent<CubePosition>();               	// Add components (could be replaced by prefab)
+			cp.Init();															// Calling the Init method from CubePosition
+
+			CubeRotation cr = o.AddComponent<CubeRotation>();					// Add CubeRotation to that object
+	        
+			ConnectScript cs = o.AddComponent<ConnectScript>();					// Add ConnectScript to that object
+			cs.Init(cp, cr,arrGUID[i]); 
+
+			uvScript.Initialize(o);												// Initialize the UvSc for the current cube object
+			                                  
+			/////////////////////////////////////////////
+			/// 
+			/// Here the file for building type attribution is read
+			/// BuildingType type = GetBuildingTypeFromTag(cs.tagQuuppa);
+			/// 
+			/////////////////////////////////////////////
+			cr.Init(arrGUID[i]/*, type*/);												// initialize the CubeRotation on that object
 		}
-	 	
+		// Remove the objects as there are no longer useful
+		Destroy (uvScript);
+		Destroy (this);
 	}
 	
 	/// <summary>

@@ -44,8 +44,8 @@ public class GridManager : MonoBehaviour
     public CrossNode[,] crossNode;
     public Dictionary<int, CrossNode> dict;
 	public static Dictionary<int, Vector3> gridDict = new Dictionary<int, Vector3>();
-	public static float [] valuesX = {1.115f, 1.515f, 1.915f, 2.315f, 2.715f, 3.115f};
-	public static float [] valuesY = {0.715f, 1.115f, 1.515f, 1.915f, 2.315f, 2.715f};
+	public static float [] valuesX = {1.47f, 1.87f, 2.27f, 2.67f, 3.07f, 3.47f};
+	public static float [] valuesY = {1.04f, 1.44f, 1.84f, 2.24f, 2.64f, 3.04f};
     #endregion
 
     //Origin of the grid manager

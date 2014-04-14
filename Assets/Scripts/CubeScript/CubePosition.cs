@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// CubePosition.cs
+/// Script is added to each from the StartScript.cs
+/// </summary>
 public class CubePosition : MonoBehaviour
 {
     #region MEMBERS
@@ -16,8 +20,12 @@ public class CubePosition : MonoBehaviour
 
     #endregion
 
+	/// <summary>
+	/// Initialize this instance.
+	/// The method is called once from the StartScript.cs on creation
+	/// </summary>*
 	public void Init () 
-    {
+   	{
         transform = base.transform;
 		PositionCube(0.7f,0.2f,0.7f);
         GridManager.obstacleList.Add(gameObject);
@@ -29,11 +37,10 @@ public class CubePosition : MonoBehaviour
     /// </summary>
     public void PositionCube(float x, float y , float z)
     {
-		Vector3 pos = SolveAveragePosition(new Vector3(x,y,z));
+		Vector3 pos = new Vector3(x,y,z);
 		pos.x = CheckValue(x, Axis.X);
 		pos.z = CheckValue (z, Axis.Y);
-		// Check what cell position is used
-		//Vector2 cell = GetCell(pos.x,pos.z);
+
 		// Convert to game grid
 		// The key is defined to be unique
 		int key = (int)(pos.x * 1000f + pos.z*10f);
