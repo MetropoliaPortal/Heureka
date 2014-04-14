@@ -19,6 +19,7 @@ public class AStar
         {
             list.Add(node);
             node = node.parent;
+
         }
         list.Reverse();
         return list;
@@ -29,6 +30,7 @@ public class AStar
     /// </summary>
     public static List<Node> FindPath(Node start, Node goal, bool pathForRoad)
     {
+
 		//Reset estimated costs from previous iteration
 		GridManager.instance.ResetEstimatedCosts ();
 
@@ -55,7 +57,7 @@ public class AStar
         {
             node = openList.First();
 
-            if (node.position == goal.position)
+			if (node.position.x == goal.position.x && node.position.z == goal.position.z)
             {
                 return CalculatePath(node);
             }
@@ -90,6 +92,7 @@ public class AStar
 					float neighbourNodeEstCost;
 
 					//Trading one of the goal.positions coordinates if needed
+
 					if(discardZ){
 						neighbourNodeEstCost = (neighbourNode.position - new Vector3(goal.position.x, 0, neighbourNode.position.z)).sqrMagnitude;
 					}
@@ -100,7 +103,7 @@ public class AStar
 						neighbourNodeEstCost = (neighbourNode.position - goal.position).sqrMagnitude;
 
 					//Assign new neighbour node properties only if totalCost is smaller than neighbours current total cost
-					if(neighbourNode.nodeTotalCost == 0.5f || totalCost < neighbourNode.nodeTotalCost){
+					if(neighbourNode.nodeTotalCost == 0.0f || totalCost < neighbourNode.nodeTotalCost){
 						neighbourNode.nodeTotalCost = totalCost;
 						neighbourNode.parent = node;
 						neighbourNode.estimatedCost = totalCost + neighbourNodeEstCost;

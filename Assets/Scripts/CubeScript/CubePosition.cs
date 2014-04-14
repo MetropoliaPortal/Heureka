@@ -17,15 +17,20 @@ public class CubePosition : MonoBehaviour
 	public static event EventMove OnMoveSecond = new EventMove(() => { });
     private bool b_fireEvent = false;
 	private Queue<Vector3> previousPositions = new Queue<Vector3>();
+	private CubeStacking cubeStacking;
 
     #endregion
 
-	/// <summary>
-	/// Initialize this instance.
-	/// The method is called once from the StartScript.cs on creation
-	/// </summary>*
-	public void Init () 
-   	{
+	public void Init ()
+	{
+
+	}
+
+	void Start () 
+    {
+		cubeStacking = GameObject.Find("Scripts").GetComponent<CubeStacking>();
+		if(cubeStacking == null)
+			Debug.LogError("CubeStacking script is null");
         transform = base.transform;
 		PositionCube(0.7f,0.2f,0.7f);
         GridManager.obstacleList.Add(gameObject);
@@ -53,14 +58,21 @@ public class CubePosition : MonoBehaviour
 		{
 			print (e.Message);
 		}
-		if(y <= 0.40)pos.y = 1;
-		else if (y > 0.40f && y <= 0.80f)pos.y = 3;
-		else if (y > 0.80f) pos.y = 5;
+
+		/*
+		if(y <= 0.40)						pos.y = 1;
+		else if (y > 0.40f && y <= 0.80f)	pos.y = 3;
+		else if (y > 0.80f) 				pos.y = 5;
+		*/
+		//Check y position
+		pos = CheckYComponent(prevPos, pos);
+
         // Store the value
 		prevPos = transform.position;
 			
 		transform.position = pos;
 		CheckPosition();
+
     }
 
 	void CheckPosition() 
@@ -69,6 +81,7 @@ public class CubePosition : MonoBehaviour
         if (prevPos != transform.position)
         {
             b_fireEvent = true;
+
         }
         else if (prevPos == transform.position && b_fireEvent == true)
         {
@@ -77,6 +90,35 @@ public class CubePosition : MonoBehaviour
 			OnMoveSecond();
         }  
     }
+
+	/// <summary>
+	/// Gets the number of cubes on it's current position and places the cube on top of the pile
+	/// </summary>
+	/// <returns>Position with possibly adjusted Y value.</returns>
+	/// <param name="oldPos">Old position.</param>
+	/// <param name="newPos">New position.</param>
+	Vector3 CheckYComponent(Vector3 oldPos, Vector3 newPos)
+	{
+		if( oldPos != newPos)
+		{
+			int yLevel = cubeStacking.UpdateOccupiedArray(oldPos, newPos);
+			Vector3 p = newPos;
+
+			if 		(yLevel == 1)	p.y = 1;
+			else if (yLevel == 2)	p.y = 3;
+			else if (yLevel == 3) 	p.y = 5;
+			else
+			{
+				Debug.LogError("too high y level");
+			}
+
+			return p;
+		}
+		else
+		{
+			return newPos;
+		}
+	}
 
 	Vector3 SolveAveragePosition(Vector3 currentPos)
 	{

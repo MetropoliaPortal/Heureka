@@ -163,7 +163,8 @@ public class RoadManager : MonoBehaviour
 		OnRoadChange();
 	}
 
-	void CopyArray(Transform [] source, Transform[]target){
+	void CopyArray(Transform [] source, Transform[]target)
+	{
 		target = null;
 		int l = source.Length;
 		target = new Transform[source.Length];
@@ -186,15 +187,20 @@ public class RoadManager : MonoBehaviour
 	}
 	Transform[] DrawRoadAStar(Vector3 start, Vector3 end) 
 	{
-		startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
-		goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
+
+		//startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
+		//goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
+		startNode = new Node(start);
+		goalNode = new Node(end);
 		pathArray = AStar.FindPath(startNode, goalNode, true);
 		List<Transform> arrayRoad = new List<Transform>();
 		
 		// Place first
 		Vector3 pos = start;
 		pos.y = 0.01f;
-		GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+		//GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+		GameObject o = m_roadStack.Pop();
+		o.transform.position = pos;
         o.tag = "Road";
 
 		arrayRoad.Add(o.transform);
@@ -203,7 +209,9 @@ public class RoadManager : MonoBehaviour
 		{
 			pos = pathArray[i].position;
 			pos.y = 0.01f;
-			o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+			//o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+			o = m_roadStack.Pop();
+			o.transform.position = pos;
 			arrayRoad.Add(o.transform);
 			pathArray[i].isRoad = true;
 		}
@@ -212,19 +220,23 @@ public class RoadManager : MonoBehaviour
 	
 	Transform[] DrawStraightRoad(Vector3 start, Vector3 end,string tag = "Road") 
 	{
+
 		Vector3 first = start;
 		List<Transform> arrayRoad = new List<Transform>();
 		while (first != end)
 		{
 			Vector3 pos = first;
 			pos.y = 0.01f;
-			GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+			//GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
+			GameObject o = m_roadStack.Pop();
+			o.transform.position = pos;
             o.tag = tag;
 			arrayRoad.Add(o.transform);
 			first = Vector3.MoveTowards(first, end, 1.0f);
 		}
 		return arrayRoad.ToArray();
 	}
+
 	public Transform[]GetDynamicPath(int index)
 	{
 		if(index < roads.Length)

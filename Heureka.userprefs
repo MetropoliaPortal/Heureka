@@ -5,7 +5,7 @@
       <File FileName="Assets\Scripts\StartScript.cs" Line="17" Column="38" />
       <File FileName="Assets\Scripts\CubeScript\CubePosition.cs" Line="43" Column="1" />
       <File FileName="Assets\Scripts\CubeScript\CubeRotation.cs" Line="23" Column="3" />
-      <File FileName="Assets\Scripts\ConnectScript.cs" Line="168" Column="47" />
+      <File FileName="Assets\Scripts\ConnectScript.cs" Line="51" Column="25" />
       <File FileName="Assets\Scripts\CubeScript\UvSc.cs" Line="19" Column="22" />
     </Files>
   </MonoDevelop.Ide.Workbench>

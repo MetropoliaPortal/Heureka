@@ -60,7 +60,7 @@ public class GridManager : MonoBehaviour
         CreateGrid();
 		CreateCrossNode();
         ResolveObstacles();
-		MarkEdgeRoads();
+		//MarkEdgeRoads();
 		int x = 2;
 		int z = 2;
 		for(int i = 0; i < valuesX.Length ; i++)
@@ -133,7 +133,7 @@ public class GridManager : MonoBehaviour
 			Node[] cn = entry.Value.node;
 			for(int j = 0; j < cn.Length; j++)
 			{
-				cn[j].nodeTotalCost = 1.0f;
+				cn[j].nodeTotalCost = 0.0f;
 			}
 		}
 	}
