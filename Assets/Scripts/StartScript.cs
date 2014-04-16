@@ -37,12 +37,14 @@ public class StartScript : MonoBehaviour
 		yield return www;
 		if(www.error != null)print (www.error);
 		string [] arrGUID = FindAllGUID(www.text);                              // All GUID are stored in array
+		// Dictionary<string, BuildingType>dict;
 
 		/////////////////////////////////////////////
 		/// 
 		/// Here the file for building type attribution is accessed
 		/// 
 		/////////////////////////////////////////////
+		// dict = GetFileBuilding();
 
 		UvSc uvScript = gameObject.AddComponent<UvSc>();						// Add UvSc.cs to that object
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
@@ -51,8 +53,6 @@ public class StartScript : MonoBehaviour
 			o.transform.localScale = new Vector3(2,2,2);						// The cube is scaled up to 2
 
 			CubePosition cp = o.AddComponent<CubePosition>();               	// Add components (could be replaced by prefab)
-			cp.Init();															// Calling the Init method from CubePosition
-
 			CubeRotation cr = o.AddComponent<CubeRotation>();					// Add CubeRotation to that object
 	        
 			ConnectScript cs = o.AddComponent<ConnectScript>();					// Add ConnectScript to that object
@@ -66,7 +66,7 @@ public class StartScript : MonoBehaviour
 			/// BuildingType type = GetBuildingTypeFromTag(cs.tagQuuppa);
 			/// 
 			/////////////////////////////////////////////
-			cr.Init(arrGUID[i]/*, type*/);												// initialize the CubeRotation on that object
+			cr.Init(arrGUID[i]/*, dict[arrGUID[i]]*/);												// initialize the CubeRotation on that object
 		}
 		// Remove the objects as there are no longer useful
 		Destroy (uvScript);
@@ -96,5 +96,22 @@ public class StartScript : MonoBehaviour
 			str = str.Substring(start + length);    // Cut the string for next search
 		}
 		return list.ToArray ();                     // Return the list
+	}
+	Dictionary<string, BuildingType> GetFileBuilding()
+	{
+		string file = null;
+		// Dictionary for Key-tag / Value- Building type
+		Dictionary<string, BuildingType>dict = new Dictionary<string, BuildingType>();
+		// Get the file from location
+		// while not the end of the file
+			// Read each line of the file
+			// Each line contains the Quuppa tag followed by the corresponding building type
+			// "id":"01234567ac81", "type":"Official"
+			// Parse the id
+			// Parse the type 
+			// BuildingType bt = (BuildingType)System.Enum.Parse(typeof(Buildingtype), type);
+			// Add to the dictionary
+
+		return dict;
 	}
 }

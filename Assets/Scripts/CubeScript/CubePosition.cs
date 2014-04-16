@@ -16,15 +16,9 @@ public class CubePosition : MonoBehaviour
     public static event EventMove OnMove = new EventMove(() => { });
 	public static event EventMove OnMoveSecond = new EventMove(() => { });
     private bool b_fireEvent = false;
-	private Queue<Vector3> previousPositions = new Queue<Vector3>();
 	private CubeStacking cubeStacking;
 
     #endregion
-
-	public void Init ()
-	{
-
-	}
 
 	void Start () 
     {
@@ -59,13 +53,13 @@ public class CubePosition : MonoBehaviour
 			print (e.Message);
 		}
 
-		/*
+
 		if(y <= 0.40)						pos.y = 1;
 		else if (y > 0.40f && y <= 0.80f)	pos.y = 3;
 		else if (y > 0.80f) 				pos.y = 5;
-		*/
+
 		//Check y position
-		pos = CheckYComponent(prevPos, pos);
+		pos = CheckForValue (pos);
 
         // Store the value
 		prevPos = transform.position;
@@ -120,29 +114,30 @@ public class CubePosition : MonoBehaviour
 		}
 	}
 
-	Vector3 SolveAveragePosition(Vector3 currentPos)
+	List<Vector3>list = new List<Vector3>();
+	Vector3 CheckForValue (Vector3 value)
 	{
-		previousPositions.Enqueue(currentPos);
-
-		while (previousPositions.Count > 20){
-			previousPositions.Dequeue();
+		if (list.Count == 0)
+		{
+			list.Add (value);
+			return prevPos;
 		}
-
-		float sumX = 0.0f;
-		float sumY = 0.0f;
-		float sumZ = 0.0f;
-
-		foreach(Vector3 pos in previousPositions){
-			sumX += pos.x;
-			sumY += pos.y;
-			sumZ += pos.z;
+		for(int i = 0; i < list.Count; i++)
+		{
+			if(value != list[i])
+			{
+				list.Clear();
+				list.Add (value);
+				return prevPos;
+			}
 		}
-
-		float averageX = sumX / previousPositions.Count;
-		float averageY = sumY / previousPositions.Count;
-		float averageZ = sumZ / previousPositions.Count;
-
-		return new Vector3(averageX, averageY, averageZ);
+		list.Add (value);
+		if(list.Count == 3)
+		{
+			list.Clear();
+			return value;
+		}
+		return prevPos;
 	}
 
  	/*
@@ -173,22 +168,4 @@ public class CubePosition : MonoBehaviour
 		}
 		return input;
 	}
-
-	/*Vector2 GetCell (float x, float z)
-	{
-		Vector2 cell = new Vector2();
-		int i = 0;
-		// Values are {0.715f, 1.115f, 1.515f, 1.915f, 2.315f, 2.715f};
-		float [] values = GridManager.values;
-		int length = values.Length;
-		for(; i < length; i++)
-		{
-			if(x == values[i])cell.x = values[i];
-		}
-		for(i = 0; i < length; i++)
-		{
-			if(z == values[i])cell.y = values[i];
-		}
-		return cell;
-	}*/
 }

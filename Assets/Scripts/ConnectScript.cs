@@ -33,7 +33,6 @@ public class ConnectScript : MonoBehaviour {
 	private string st_urlPosition;				// The url request for position
 	private string st_urlAccel;					// The url request for acceleration
 	private Vector3 v_prevPosition = new Vector3();		// Store previous positions to discard noise
-	private Vector3 v_prevAccel = new Vector3();		// Store previous acceleration to discard noide
 	private bool b_continue = true;				// Used to define if the acceleration has changed to cancel useless calls
 
 	// All data are marked as const to make them immutable and static 
