@@ -24,7 +24,6 @@ public class CubePosition : MonoBehaviour
 
     #endregion
 
-
 	void Start () 
     {
 		cubeStacking = GameObject.Find("Scripts").GetComponent<CubeStacking>();
@@ -61,13 +60,13 @@ public class CubePosition : MonoBehaviour
 			print (e.Message);
 		}
 
-		/*
+
 		if(y <= 0.40)						pos.y = 1;
 		else if (y > 0.40f && y <= 0.80f)	pos.y = 3;
 		else if (y > 0.80f) 				pos.y = 5;
-		*/
+
 		//Check y position
-		pos = CheckYComponent(prevPos, pos);
+		pos = CheckForValue (pos);
 
         // Store the value
 		if(!b_cubeOnMove)
@@ -145,6 +144,32 @@ public class CubePosition : MonoBehaviour
 		{
 			return newPos;
 		}
+	}
+	
+	List<Vector3>list = new List<Vector3>();
+	Vector3 CheckForValue (Vector3 value)
+	{
+		if (list.Count == 0)
+		{
+			list.Add (value);
+			return prevPos;
+		}
+		for(int i = 0; i < list.Count; i++)
+		{
+			if(value != list[i])
+			{
+				list.Clear();
+				list.Add (value);
+				return prevPos;
+			}
+		}
+		list.Add (value);
+		if(list.Count == 3)
+		{
+			list.Clear();
+			return value;
+		}
+		return prevPos;
 	}
 
  	/*

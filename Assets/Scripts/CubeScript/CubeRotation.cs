@@ -7,12 +7,15 @@ using System.Collections;
 /// The script is added from the StartScript.cs
 /// The data comes from ConnectScript.cs
 /// </summary>
+using System.Collections.Generic;
+
+
 public class CubeRotation : MonoBehaviour {
 
 	public Material[] material; 
 	int i_prevIndex = -1;
 	int i_prevPolarity = -1;
-
+	Vector3 v_prevRotation;
 	/// <summary>
 	/// Initialized the object.
 	/// Method is called once from the StartScript.cs when creating the new object
@@ -80,5 +83,32 @@ public class CubeRotation : MonoBehaviour {
 		// Record values for next round
 		i_prevIndex = axis;
 		i_prevPolarity = polarity;
+	}
+
+	List<Vector3>list = new List<Vector3>();
+	Vector3 ?  CheckForValue (Vector3 value)
+	{
+		if (list.Count == 0)
+		{
+			list.Add (value);
+			return v_prevRotation;
+		}
+		for(int i = 0; i < list.Count; i++)
+		{
+			if(value != list[i])
+			{
+				list.Clear();
+				list.Add (value);
+				return v_prevRotation;
+			}
+		}
+		list.Add (value);
+		if(list.Count == 3)
+		{
+			list.Clear();
+			v_prevRotation = value;
+			return value;
+		}
+		return v_prevRotation;
 	}
 }
