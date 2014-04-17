@@ -5,26 +5,25 @@ using System.Collections.Generic;
 /// CubePosition.cs
 /// Script is added to each from the StartScript.cs
 /// </summary>
+using System.Collections;
+
+
 public class CubePosition : MonoBehaviour
 {
     #region MEMBERS
-    // Cache the transform for faster performance
-    private new Transform transform;
-
-    private Vector3 prevPos;
+	
     public delegate void EventMove();
     public static event EventMove OnMove = new EventMove(() => { });
 	public static event EventMove OnMoveSecond = new EventMove(() => { });
-    private bool b_fireEvent = false;
-	private Queue<Vector3> previousPositions = new Queue<Vector3>();
+    
+	// Cache the transform for faster performance
+	private new Transform transform;
+	private Vector3 prevPos;
+	//private bool b_fireEvent = false;
 	private CubeStacking cubeStacking;
 
     #endregion
 
-	public void Init ()
-	{
-
-	}
 
 	void Start () 
     {
@@ -42,6 +41,9 @@ public class CubePosition : MonoBehaviour
     /// </summary>
     public void PositionCube(float x, float y , float z)
     {
+		// If the cube is already on the move, we discard any other moves
+		// Next move will be considered once the cube has reached its destiantion
+		if(b_cubeOnMove)return;
 		Vector3 pos = new Vector3(x,y,z);
 		pos.x = CheckValue(x, Axis.X);
 		pos.z = CheckValue (z, Axis.Y);
@@ -68,13 +70,38 @@ public class CubePosition : MonoBehaviour
 		pos = CheckYComponent(prevPos, pos);
 
         // Store the value
-		prevPos = transform.position;
-			
-		transform.position = pos;
-		CheckPosition();
+		if(!b_cubeOnMove)
+			StartCoroutine(MoveCubeToPosition(pos));
+		//transform.position = pos;
+		//CheckPosition();
 
     }
-
+	private bool b_cubeOnMove = false;
+	/// <summary>
+	/// Moves the cube to position.
+	/// The cube interpolate from actual position to new position
+	/// Movemnt is done over 0.2s. No other movement is considered until this movement is done
+	/// </summary>
+	/// <returns>The cube to position.</returns>
+	/// <param name="position">Position.</param>
+	IEnumerator MoveCubeToPosition(Vector3 position)
+	{
+		b_cubeOnMove = true;
+		float ratio = 0;
+		float duration = 0.2f;
+		float multiplier = 1/duration;
+		while(transform.position != position)
+		{
+			ratio += Time.deltaTime * multiplier;
+			transform.position = Vector3.Lerp(transform.position, position, ratio);
+			yield return null;
+		}
+		b_cubeOnMove = false;
+		prevPos = transform.position;
+		OnMove();
+		OnMoveSecond();
+	}
+	/*
 	void CheckPosition() 
     {
         // Check if Cube has moved
@@ -89,7 +116,7 @@ public class CubePosition : MonoBehaviour
             OnMove();
 			OnMoveSecond();
         }  
-    }
+    }*/
 
 	/// <summary>
 	/// Gets the number of cubes on it's current position and places the cube on top of the pile
@@ -120,31 +147,6 @@ public class CubePosition : MonoBehaviour
 		}
 	}
 
-	Vector3 SolveAveragePosition(Vector3 currentPos)
-	{
-		previousPositions.Enqueue(currentPos);
-
-		while (previousPositions.Count > 20){
-			previousPositions.Dequeue();
-		}
-
-		float sumX = 0.0f;
-		float sumY = 0.0f;
-		float sumZ = 0.0f;
-
-		foreach(Vector3 pos in previousPositions){
-			sumX += pos.x;
-			sumY += pos.y;
-			sumZ += pos.z;
-		}
-
-		float averageX = sumX / previousPositions.Count;
-		float averageY = sumY / previousPositions.Count;
-		float averageZ = sumZ / previousPositions.Count;
-
-		return new Vector3(averageX, averageY, averageZ);
-	}
-
  	/*
 		The input value is checked against the array of known position for the play area grid
 		When a range is found to contain the input, the median value is returned.
@@ -173,22 +175,4 @@ public class CubePosition : MonoBehaviour
 		}
 		return input;
 	}
-
-	/*Vector2 GetCell (float x, float z)
-	{
-		Vector2 cell = new Vector2();
-		int i = 0;
-		// Values are {0.715f, 1.115f, 1.515f, 1.915f, 2.315f, 2.715f};
-		float [] values = GridManager.values;
-		int length = values.Length;
-		for(; i < length; i++)
-		{
-			if(x == values[i])cell.x = values[i];
-		}
-		for(i = 0; i < length; i++)
-		{
-			if(z == values[i])cell.y = values[i];
-		}
-		return cell;
-	}*/
 }

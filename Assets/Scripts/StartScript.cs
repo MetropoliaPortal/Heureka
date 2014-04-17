@@ -51,14 +51,11 @@ public class StartScript : MonoBehaviour
 			o.transform.localScale = new Vector3(2,2,2);						// The cube is scaled up to 2
 
 			CubePosition cp = o.AddComponent<CubePosition>();               	// Add components (could be replaced by prefab)
-			cp.Init();															// Calling the Init method from CubePosition
-
-			CubeRotation cr = o.AddComponent<CubeRotation>();					// Add CubeRotation to that object
-	        
+			CubeRotation cr = o.AddComponent<CubeRotation>();					// Add CubeRotation to that object	        
 			ConnectScript cs = o.AddComponent<ConnectScript>();					// Add ConnectScript to that object
-			cs.Init(cp, cr,arrGUID[i]); 
 
-			uvScript.Initialize(o);												// Initialize the UvSc for the current cube object
+			cs.Init(cp, cr,arrGUID[i]); 
+			uvScript.Init(o);													// Initialize the UvSc for the current cube object
 			                                  
 			/////////////////////////////////////////////
 			/// 

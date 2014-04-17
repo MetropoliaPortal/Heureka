@@ -33,8 +33,7 @@ public class ConnectScript : MonoBehaviour {
 	private string st_urlPosition;				// The url request for position
 	private string st_urlAccel;					// The url request for acceleration
 	private Vector3 v_prevPosition = new Vector3();		// Store previous positions to discard noise
-	private Vector3 v_prevAccel = new Vector3();		// Store previous acceleration to discard noide
-	private bool b_continue = true;				// Used to define if the acceleration has changed to cancel useless calls
+	//private Vector3 v_prevAccel = new Vector3();		// Store previous acceleration to discard noise
 
 	// All data are marked as const to make them immutable and static 
 	private const string s_positionX = "smoothedPositionX";	// string for X position parsing
@@ -81,8 +80,6 @@ public class ConnectScript : MonoBehaviour {
 				timer += Time.deltaTime;
 				yield return null;
 			}
-			// If acceleration has not changed, the cube was not moved, we quit this round of computation 
-			if(!b_continue)continue;
 
 			// Access the url for request
 			WWW www = new WWW(st_urlPosition);
@@ -90,6 +87,7 @@ public class ConnectScript : MonoBehaviour {
             
             if (www.error == null)
             {
+				/*
 				// Parse data
 				// "smoothedPositionX" 
                 int indexX = www.text.IndexOf(s_positionX) + s_positionX.Length + s_offsetExtraChar;
@@ -101,15 +99,18 @@ public class ConnectScript : MonoBehaviour {
 				// Get 4 values precision
                 string posX = www.text.Substring(indexX, s_offsetGetData);
                 string posY = www.text.Substring(indexY, s_offsetGetData);
-				string posZ = www.text.Substring(indexZ, s_offsetGetData);
+				string posZ = www.text.Substring(indexZ, s_offsetGetData);*/
 
-				// Try/Catch needed since some of the data come somtimes as 0 without any extra information
+				// Try/Catch needed since some of the data come sometimes as 0 without any extra information
 				// As a result, the parsed info contained a erroneous data like 0,0.2 instead of 0.000
 				try
 				{
-                	float x = float.Parse(posX);
+                	/*float x = float.Parse(posX);
                 	float y = float.Parse(posY);
-					float z = float.Parse(posZ);
+					float z = float.Parse(posZ);*/
+					float x = GetFloatFromJson(s_positionX, www.text);
+					float y = GetFloatFromJson(s_positionY, www.text);
+					float z = GetFloatFromJson(s_positionZ, www.text);
 					m_cubePosition.PositionCube(x, z, y);
 					v_prevPosition.x = x;
 					v_prevPosition.y = y;
@@ -126,6 +127,14 @@ public class ConnectScript : MonoBehaviour {
             }
         }
 	}
+	float GetFloatFromJson(string name, string file)
+	{
+		int index = file.IndexOf(name) + name.Length + s_offsetExtraChar;
+		string pos = name.Substring(index, s_offsetGetData);
+		return float.Parse(pos);
+	}
+
+
 	IEnumerator GetTagInfoFile()
 	{
 		while(true){
@@ -144,14 +153,10 @@ public class ConnectScript : MonoBehaviour {
 				string accel = wwwAccel.text;
 
 				int indexTag = accel.IndexOf (s_tagState);
-				indexTag += s_tagState.Length +3;
+				indexTag += s_tagState.Length + 3;
 				string tagSt = accel.Substring(indexTag,1);
-				if(tagSt == s_letter){
-					b_continue = false;
+				if(tagSt == s_letter)
 					continue;
-				}else{
-					b_continue = true;
-				}
 
 				int index = accel.IndexOf(s_acceleration) + s_acceleration.Length + 4 ;
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 /// <summary>
@@ -15,7 +15,7 @@ public class UvSc : MonoBehaviour {
 	/// The Cube object to be taken care is passed as parameter
 	/// </summary>
 	/// <param name="cubeObject">Cube object.</param>
-	public void Initialize (GameObject cubeObject) {
+	public void Init (GameObject cubeObject) {
         Mesh theMesh;
 		theMesh = cubeObject.GetComponent<MeshFilter>().mesh;
 

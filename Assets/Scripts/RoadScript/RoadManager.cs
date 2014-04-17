@@ -27,9 +27,6 @@ public class RoadManager : MonoBehaviour
     GameObject objRoadCenter;
 	Transform [][] roads = new Transform[4][];
 
-	private LayerMask m_layer;
-
-
 	public static event HandlerEvent OnRoadChange = new HandlerEvent(()=>{});
 
 
@@ -65,7 +62,6 @@ public class RoadManager : MonoBehaviour
 
 	void Awake() 
 	{
-		m_layer = LayerMask.NameToLayer("Road");
         objRoadEdge = new GameObject("EdgeRoadParent");         // Parent object for edge roads
         objRoadEdge.transform.position = Vector3.zero;          // Position at origin
 
