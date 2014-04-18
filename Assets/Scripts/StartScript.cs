@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 
+
 public enum BuildingType{
 	Official, Residential,Leisure, Shop
 }
@@ -30,6 +31,8 @@ public enum BuildingType{
 /// </summary>
 public class StartScript : MonoBehaviour 
 {
+#if DEBUG
+#elif PROD
 	IEnumerator Start () 
 	{
 		string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server, all tags are requested
@@ -71,7 +74,7 @@ public class StartScript : MonoBehaviour
 		Destroy (uvScript);
 		Destroy (this);
 	}
-	
+#endif
 	/// <summary>
 	/// The whole json files are given to the method
     /// The "id" tag is searched and the GUID is given to the list which is returned as array

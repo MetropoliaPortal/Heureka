@@ -30,7 +30,11 @@ public class CubePosition : MonoBehaviour
 		if(cubeStacking == null)
 			Debug.LogError("CubeStacking script is null");
         transform = base.transform;
-		PositionCube(0.7f,0.2f,0.7f);
+		MoveCubeInDebug(transform.position);
+		prevPos = transform.position;
+
+// Remove for debug purpose		PositionCube(0.7f,0.2f,0.7f);
+
         GridManager.obstacleList.Add(gameObject);
 	}
     
@@ -88,7 +92,8 @@ public class CubePosition : MonoBehaviour
 		b_cubeOnMove = true;
 		float ratio = 0;
 		float duration = 0.2f;
-		float multiplier = 1/duration;
+		float multiplier = 1 / duration;
+		prevPos = transform.position;
 		while(transform.position != position)
 		{
 			ratio += Time.deltaTime * multiplier;
@@ -96,6 +101,12 @@ public class CubePosition : MonoBehaviour
 			yield return null;
 		}
 		b_cubeOnMove = false;
+		int height = cubeStacking.UpdateOccupiedArray(prevPos, transform.position);
+		print (height);
+		float y = height * 2 - 1;
+		Vector3 pos = transform.position;
+		pos.y = y;
+		transform.position = pos;
 		prevPos = transform.position;
 		OnMove();
 		OnMoveSecond();
@@ -199,5 +210,31 @@ public class CubePosition : MonoBehaviour
 			}
 		}
 		return input;
+	}
+	//////////////////////////////////////////////////////////////
+	/// 
+	/// For debug purpose
+	/// 
+	/// //////////////////////////////////////////////////////////
+	public void MoveCubeInDebug(Vector3 position)
+	{
+		float [] values = {2,4,6,8,10,12};
+		float x = 0;
+		float z = 0;
+		float offset = 1f;
+		if(position.x < values[0] - 1)x = values[0];
+		if(position.x > values[values.Length - 1] + 1)x = values[values.Length - 1];
+		if(position.z < values[0] - 1)z = values[0];
+		if(position.z > values[values.Length - 1] + 1)z = values[values.Length - 1];
+
+		for (int i = 0; i < values.Length ; i++)
+		{
+			if(position.x > values[i] - 1 && position.x < values[i] + 1)
+				x = values[i];
+			if(position.z > values[i] - 1 && position.z < values[i] + 1)
+				z = values[i];
+		}
+		Vector3 vec = new Vector3(x,position.y,z);
+		if(!b_cubeOnMove)StartCoroutine(MoveCubeToPosition(new Vector3(x,1,z)));
 	}
 }

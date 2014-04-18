@@ -65,6 +65,7 @@
      <Compile Include="Assets\Scripts\RoadScript\RoadManager.cs" />
      <Compile Include="Assets\Scripts\StackPool.cs" />
      <Compile Include="Assets\Scripts\StartScript.cs" />
+     <Compile Include="Assets\Scripts\TestCode\MovementTestCode.cs" />
      <Compile Include="Assets\Scripts\TestCode\TestCode.cs" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Resources\Textures\RimLight.shader" />

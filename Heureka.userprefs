@@ -1,12 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\ConnectScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CubeScript\CubePosition.cs">
     <Files>
-      <File FileName="..\New Unity Project 4\Assets\RayScript.cs" Line="5" Column="33" />
-      <File FileName="Assets\Scripts\CubeScript\CubePosition.cs" Line="22" Column="37" />
-      <File FileName="Assets\Scripts\StartScript.cs" Line="58" Column="33" />
-      <File FileName="Assets\Scripts\RoadScript\RoadManager.cs" Line="64" Column="3" />
-      <File FileName="Assets\Scripts\ConnectScript.cs" Line="36" Column="4" />
+      <File FileName="Assets\Scripts\CubeScript\CubePosition.cs" Line="232" Column="69" />
+      <File FileName="Assets\Scripts\CubeScript\UvSc.cs" Line="12" Column="22" />
+      <File FileName="Assets\Scripts\TestCode\MovementTestCode.cs" Line="37" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
