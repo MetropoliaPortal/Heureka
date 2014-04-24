@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Text;
 using System.Collections.Generic;
+using System.IO;
+using System;
 
 
 public enum BuildingType{
@@ -31,8 +33,14 @@ public enum BuildingType{
 /// </summary>
 public class StartScript : MonoBehaviour 
 {
-#if DEBUG
-#elif PROD
+	// DEBUG
+	// This is just when running in debug mode without Quuppa system
+	void Start()
+	{
+		GetFileBuilding();
+	}
+/*
+ * this part is when using Quuppa System
 	IEnumerator Start () 
 	{
 		string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server, all tags are requested
@@ -40,41 +48,36 @@ public class StartScript : MonoBehaviour
 		yield return www;
 		if(www.error != null)print (www.error);
 		string [] arrGUID = FindAllGUID(www.text);                              // All GUID are stored in array
-		// Dictionary<string, BuildingType>dict;
+	 	Dictionary<string, BuildingType>dict;
 
 		/////////////////////////////////////////////
 		/// 
 		/// Here the file for building type attribution is accessed
 		/// 
 		/////////////////////////////////////////////
-		// dict = GetFileBuilding();
+	 	dict = GetFileBuilding();
 
 		UvSc uvScript = gameObject.AddComponent<UvSc>();						// Add UvSc.cs to that object
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
 		{
-     		GameObject o = GameObject.CreatePrimitive(PrimitiveType.Cube);  	// Create a new cube
-			o.transform.localScale = new Vector3(2,2,2);						// The cube is scaled up to 2
+     		GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);  	// Create a new cube
+			obj.transform.localScale = new Vector3(2,2,2);						// The cube is scaled up to 2
 
-			CubePosition cp = o.AddComponent<CubePosition>();               	// Add components (could be replaced by prefab)
-			CubeRotation cr = o.AddComponent<CubeRotation>();					// Add CubeRotation to that object
-			ConnectScript cs = o.AddComponent<ConnectScript>();					// Add ConnectScript to that object
+			CubePosition cubePosition = obj.AddComponent<CubePosition>();       // Add components (could be replaced by prefab)
+			CubeRotation cubeRotation = obj.AddComponent<CubeRotation>();		// Add CubeRotation to that object
+			ConnectScript connectScript = obj.AddComponent<ConnectScript>();	// Add ConnectScript to that object
 
-			cs.Init(cp, cr,arrGUID[i]); 
-			uvScript.Init(o);													// Initialize the UvSc for the current cube object
-			                                  
-			/////////////////////////////////////////////
-			/// 
-			/// Here the file for building type attribution is read
-			/// BuildingType type = GetBuildingTypeFromTag(cs.tagQuuppa);
-			/// 
-			/////////////////////////////////////////////
-			cr.Init(arrGUID[i]/*, dict[arrGUID[i]]*/);												// initialize the CubeRotation on that object
+			connectScript.Init(cubePosition, cubeRotation,arrGUID[i]); 
+			uvScript.Init(obj);													// Initialize the UvSc for the current cube object
+
+			cubeRotation.Init(arrGUID[i], dict[arrGUID[i]]);					// initialize the CubeRotation on that object passing id and building type
 		}
 		// Remove the objects as there are no longer useful
 		Destroy (uvScript);
 		Destroy (this);
 	}
-#endif
+*/	
+
 	/// <summary>
 	/// The whole json files are given to the method
     /// The "id" tag is searched and the GUID is given to the list which is returned as array
@@ -101,19 +104,49 @@ public class StartScript : MonoBehaviour
 	}
 	Dictionary<string, BuildingType> GetFileBuilding()
 	{
-		string file = null;
 		// Dictionary for Key-tag / Value- Building type
 		Dictionary<string, BuildingType>dict = new Dictionary<string, BuildingType>();
-		// Get the file from location
-		// while not the end of the file
-			// Read each line of the file
-			// Each line contains the Quuppa tag followed by the corresponding building type
-			// "id":"01234567ac81", "type":"Official"
-			// Parse the id
-			// Parse the type 
-			// BuildingType bt = (BuildingType)System.Enum.Parse(typeof(Buildingtype), type);
-			// Add to the dictionary
+		// Data needed for parsing
+		string id = "id";	string token = ",";		int offset = 1;		int tagLength = 12;
 
+		// Get the file from location
+		try
+		{
+			// The url needs to be changed while on build mode
+			// url should be tagFile.txt only.
+			string url = @"C:\Users\Lucas\Desktop\tagFile.txt";		// This one when in Debug mode with no QuuppaSystem
+																	// The file text is to be kept on the desktop, could be in Resources folder
+			string urlBuild = @"..\tagFile.txt";					// This is when building the project
+																	// The file is kept in the same folder as the build exe.
+			using (StreamReader sr = new StreamReader(urlBuild))
+			{
+				string file = sr.ReadToEnd();
+				while(true)
+				{
+					// Read each line of the file
+					// Each line contains the Quuppa tag followed by the corresponding building type
+					// id:01234567ac81,Official
+
+					int index = file.IndexOf(id);				// Get the index of "id"
+					if(index < 0) break;						// if "id" not found break loop			
+					index += id.Length + offset;				// move the index to the starting of the id
+					string tagQuuppa = file.Substring(index, tagLength);	// get the id string
+					file = file.Substring(index +tagLength + 1);				// Remove the used part of the file including the middle coma 
+					index = file.IndexOf(token);				// get the index of the end of line coma 
+					string type = file.Substring(0,index);		// isolate the string containing the type
+					file = file.Substring(index + 1);			// remove the used part of the file including the final coma
+
+					BuildingType bt = (BuildingType)System.Enum.Parse(typeof(BuildingType), type);// Parse the type 
+
+					dict.Add (tagQuuppa, bt);					// Add to the dictionary
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			print(e.Message);
+		}
+		// Return the dictionary with all matching id and type
 		return dict;
 	}
 }

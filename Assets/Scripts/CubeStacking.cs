@@ -15,7 +15,7 @@ public class CubeStacking : MonoBehaviour {
 			usedCell.Add (i,0);
 		}
 	}
-
+	void Start(){}
 	/// <summary>
 	/// Decreases the value of old position in the array
 	/// Increases the value of new position in the array

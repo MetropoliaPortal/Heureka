@@ -102,7 +102,6 @@ public class CubePosition : MonoBehaviour
 		}
 		b_cubeOnMove = false;
 		int height = cubeStacking.UpdateOccupiedArray(prevPos, transform.position);
-		print (height);
 		float y = height * 2 - 1;
 		Vector3 pos = transform.position;
 		pos.y = y;
@@ -134,7 +133,7 @@ public class CubePosition : MonoBehaviour
 	/// <returns>Position with possibly adjusted Y value.</returns>
 	/// <param name="oldPos">Old position.</param>
 	/// <param name="newPos">New position.</param>
-	Vector3 CheckYComponent(Vector3 oldPos, Vector3 newPos)
+	/*Vector3 CheckYComponent(Vector3 oldPos, Vector3 newPos)
 	{
 		if( oldPos != newPos)
 		{
@@ -155,7 +154,7 @@ public class CubePosition : MonoBehaviour
 		{
 			return newPos;
 		}
-	}
+	}*/
 	
 	List<Vector3>list = new List<Vector3>();
 	Vector3 CheckForValue (Vector3 value)
