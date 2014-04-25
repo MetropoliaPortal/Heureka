@@ -67,7 +67,8 @@ public class GridManager : MonoBehaviour
 		{
 			for (int j = 0; j < valuesY.Length; j++)
 			{ 
-				int key = (int)(valuesX[i] * 1000f + valuesY[j]*10f); 
+				//int key = (int)(valuesX[i] * 1000f + valuesY[j]*10f); 
+				int key = (int)(valuesX[i] * 1000f + valuesY[j]*10f);
 				int xTemp = x * (i + 1);
 				int zTemp = z * (j + 1);
 				Vector3 value = new Vector3(xTemp,1,zTemp);
@@ -192,8 +193,12 @@ public class GridManager : MonoBehaviour
     {
 		for (int i = 0; i < obstacleList.Count ; i++)
 		{
+
 			//Might throw a keynotfound -exception sometimes because transforms position might be momentarily off
 			Vector3 vec = obstacleList[i].transform.position;
+
+			//Debug.Log(vec.x +", " +vec.z);
+
 			int key = (int)vec.x * 100 + (int)vec.z;
 			Node[] cn = dict[key].node;
 			for(int j = 0; j < cn.Length; j++)

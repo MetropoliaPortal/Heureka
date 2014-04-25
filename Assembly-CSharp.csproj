@@ -39,10 +39,10 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -51,27 +51,22 @@
      <Compile Include="Assets\Scripts\AStar\Node.cs" />
      <Compile Include="Assets\Scripts\AStar\PriorityQueue.cs" />
      <Compile Include="Assets\Scripts\Agent\CarScript.cs" />
+     <Compile Include="Assets\Scripts\Agent\PathManager.cs" />
      <Compile Include="Assets\Scripts\Agent\WaypointScript.cs" />
-     <Compile Include="Assets\Scripts\ConnectScript.cs" />
-     <Compile Include="Assets\Scripts\CubeScript\CubePosition.cs" />
-     <Compile Include="Assets\Scripts\CubeScript\CubeRotation.cs" />
-     <Compile Include="Assets\Scripts\CubeScript\UvSc.cs" />
-     <Compile Include="Assets\Scripts\CubeStacking.cs" />
-     <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\Global\BackgroundTextureScript.cs" />
-     <Compile Include="Assets\Scripts\Global\TimerScript.cs" />
-     <Compile Include="Assets\Scripts\Manager.cs" />
-     <Compile Include="Assets\Scripts\PathManager.cs" />
+     <Compile Include="Assets\Scripts\Cube\CubePosition.cs" />
+     <Compile Include="Assets\Scripts\Cube\CubeRotation.cs" />
+     <Compile Include="Assets\Scripts\Cube\CubeStacking.cs" />
+     <Compile Include="Assets\Scripts\Cube\UvSc.cs" />
+     <Compile Include="Assets\Scripts\Debug\MovementTest.cs" />
+     <Compile Include="Assets\Scripts\GameManager\GameManager.cs" />
+     <Compile Include="Assets\Scripts\GameManager\Manager.cs" />
+     <Compile Include="Assets\Scripts\Global\ScreenTexture.cs" />
+     <Compile Include="Assets\Scripts\Global\StackPool.cs" />
+     <Compile Include="Assets\Scripts\Global\Timer.cs" />
+     <Compile Include="Assets\Scripts\Quuppa\QuuppaConnection.cs" />
+     <Compile Include="Assets\Scripts\Quuppa\QuuppaStart.cs" />
      <Compile Include="Assets\Scripts\RoadScript\RoadManager.cs" />
-     <Compile Include="Assets\Scripts\StackPool.cs" />
-     <Compile Include="Assets\Scripts\StartScript.cs" />
-     <Compile Include="Assets\Scripts\TestCode\MovementTestCode.cs" />
-     <Compile Include="Assets\Scripts\TestCode\TestCode.cs" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
-     <None Include="Assets\Resources\Textures\RimLight.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
+     <None Include="Assets\Resources\Shaders\RimLight.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
