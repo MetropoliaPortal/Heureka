@@ -88,27 +88,10 @@ public class ConnectScript : MonoBehaviour {
             
             if (www.error == null)
             {
-				/*
-				// Parse data
-				// "smoothedPositionX" 
-                int indexX = www.text.IndexOf(s_positionX) + s_positionX.Length + s_offsetExtraChar;
-				// "smoothedPositionY"
-                int indexY = www.text.IndexOf(s_positionY) + s_positionY.Length + s_offsetExtraChar;
-				// s_positionZ = "smoothedPositionZ"
-				int indexZ = www.text.IndexOf(s_positionZ) + s_positionY.Length + s_offsetExtraChar;
-
-				// Get 4 values precision
-                string posX = www.text.Substring(indexX, s_offsetGetData);
-                string posY = www.text.Substring(indexY, s_offsetGetData);
-				string posZ = www.text.Substring(indexZ, s_offsetGetData);*/
-
 				// Try/Catch needed since some of the data come sometimes as 0 without any extra information
 				// As a result, the parsed info contained a erroneous data like 0,0.2 instead of 0.000
 				try
 				{
-                	/*float x = float.Parse(posX);
-                	float y = float.Parse(posY);
-					float z = float.Parse(posZ);*/
 					float x = GetFloatFromJson(s_positionX, www.text);
 					float y = GetFloatFromJson(s_positionY, www.text);
 					float z = GetFloatFromJson(s_positionZ, www.text);

@@ -118,7 +118,7 @@ public class StartScript : MonoBehaviour
 																	// The file text is to be kept on the desktop, could be in Resources folder
 			string urlBuild = @"..\tagFile.txt";					// This is when building the project
 																	// The file is kept in the same folder as the build exe.
-			using (StreamReader sr = new StreamReader(urlBuild))
+			using (StreamReader sr = new StreamReader(url))
 			{
 				string file = sr.ReadToEnd();
 				while(true)
