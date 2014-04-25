@@ -157,10 +157,14 @@ public class CubePosition : MonoBehaviour
 		float x = 0;
 		float z = 0;
 		float offset = 1f;
-		if(position.x < values[0] - 1)x = values[0];
-		if(position.x > values[values.Length - 1] + 1)x = values[values.Length - 1];
-		if(position.z < values[0] - 1)z = values[0];
-		if(position.z > values[values.Length - 1] + 1)z = values[values.Length - 1];
+		if(position.x < values[0] - 1)
+			x = values[0];
+		if(position.x > values[values.Length - 1] + 1)
+			x = values[values.Length - 1];
+		if(position.z < values[0] - 1)
+			z = values[0];
+		if(position.z > values[values.Length - 1] + 1)
+			z = values[values.Length - 1];
 
 		for (int i = 0; i < values.Length ; i++)
 		{
@@ -170,7 +174,9 @@ public class CubePosition : MonoBehaviour
 				z = values[i];
 		}
 		Vector3 vec = new Vector3(x,position.y,z);
-		if(!b_cubeOnMove)StartCoroutine(MoveCubeToPosition(new Vector3(x,1,z)));
+
+		if(!b_cubeOnMove)
+			StartCoroutine(MoveCubeToPosition(new Vector3(x,1,z)));
 	}
 
 	#endregion

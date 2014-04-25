@@ -57,15 +57,15 @@
      <Compile Include="Assets\Scripts\Cube\CubeRotation.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeStacking.cs" />
      <Compile Include="Assets\Scripts\Cube\UvSc.cs" />
-     <Compile Include="Assets\Scripts\Debug\MovementTest.cs" />
+     <Compile Include="Assets\Scripts\Debug\DebugManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\Manager.cs" />
+     <Compile Include="Assets\Scripts\GameManager\RoadManager.cs" />
      <Compile Include="Assets\Scripts\Global\ScreenTexture.cs" />
      <Compile Include="Assets\Scripts\Global\StackPool.cs" />
      <Compile Include="Assets\Scripts\Global\Timer.cs" />
      <Compile Include="Assets\Scripts\Quuppa\QuuppaConnection.cs" />
      <Compile Include="Assets\Scripts\Quuppa\QuuppaStart.cs" />
-     <Compile Include="Assets\Scripts\RoadScript\RoadManager.cs" />
      <None Include="Assets\Resources\Shaders\RimLight.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,22 +6,20 @@ using System.IO;
 using System;
 
 
-public enum BuildingType
-{
+public enum BuildingType{
 	Official, Residential,Leisure, Shop
 }
-
 /// <summary>
 /// Script is attached to an empty game object
 /// Purpose is to fetch from server how many tags are active
 /// This avoids manipulation of the software if a tag or a cube goes broken.
 /// The object is used on start of the program and destroy at the end of the Start
 /// 
-/// 	StartScript.cs -------------|
+/// 	QuuppaStart.cs -------------|
 /// 		|						|->UvSc.cs modifies the Material uv map of the Cube object
 ///    	Cube object-----------------|
 /// 		|
-/// 		|-> ConnectScript.cs
+/// 		|-> QuuppaConnection.cs
 /// 		|		|
 /// 		|		|-> Sends info to CubePosition -> process and modify Transform of the Cube object
 /// 		|		|
@@ -33,17 +31,12 @@ public enum BuildingType
 /// 
 /// 
 /// </summary>
-public class StartScript : MonoBehaviour 
+public class QuuppaStart : MonoBehaviour 
 {
-	// DEBUG
-	// This is just when running in debug mode without Quuppa system
-	void Start()
-	{
-		GetFileBuilding();
-	}
-/*
- * this part is when using Quuppa System
-	IEnumerator Start () 
+	public GameObject cube;
+
+  //this part is when using Quuppa System
+	public IEnumerator StartQuuppa () 
 	{
 		string url = "192.168.123.124:8080/qpe/getHAIPLocation";                // url for the server, all tags are requested
 		WWW www = new WWW(url);                                                 // GET request
@@ -62,23 +55,35 @@ public class StartScript : MonoBehaviour
 		UvSc uvScript = gameObject.AddComponent<UvSc>();						// Add UvSc.cs to that object
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
 		{
+			/*
      		GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);  	// Create a new cube
 			obj.transform.localScale = new Vector3(2,2,2);						// The cube is scaled up to 2
 
 			CubePosition cubePosition = obj.AddComponent<CubePosition>();       // Add components (could be replaced by prefab)
 			CubeRotation cubeRotation = obj.AddComponent<CubeRotation>();		// Add CubeRotation to that object
-			ConnectScript connectScript = obj.AddComponent<ConnectScript>();	// Add ConnectScript to that object
+			QuuppaConnection connectScript = obj.AddComponent<QuuppaConnection>();	// Add ConnectScript to that object
 
-			connectScript.Init(cubePosition, cubeRotation,arrGUID[i]); 
+			connectScript.Initialize(cubePosition, cubeRotation,arrGUID[i]); 
 			uvScript.Init(obj);													// Initialize the UvSc for the current cube object
 
-			cubeRotation.Init(arrGUID[i], dict[arrGUID[i]]);					// initialize the CubeRotation on that object passing id and building type
+			cubeRotation.Initialize(arrGUID[i], dict[arrGUID[i]]);					// initialize the CubeRotation on that object passing id and building type
+			*/
+
+			GameObject obj = (GameObject)MonoBehaviour.Instantiate(cube);
+			QuuppaConnection connectScript = obj.GetComponent<QuuppaConnection>();
+			CubePosition cubePosition = obj.GetComponent<CubePosition>();
+			CubeRotation cubeRotation = obj.GetComponent<CubeRotation>();
+			connectScript.Initialize(cubePosition, cubeRotation,arrGUID[i]);
+			uvScript.Init(obj);
+
+			cubeRotation.Initialize(arrGUID[i], dict[arrGUID[i]]);	
+
 		}
 		// Remove the objects as there are no longer useful
 		Destroy (uvScript);
 		Destroy (this);
 	}
-*/	
+
 
 	/// <summary>
 	/// The whole json files are given to the method
@@ -104,7 +109,9 @@ public class StartScript : MonoBehaviour
 		}
 		return list.ToArray ();                     // Return the list
 	}
-	Dictionary<string, BuildingType> GetFileBuilding()
+
+
+	public Dictionary<string, BuildingType> GetFileBuilding()
 	{
 		// Dictionary for Key-tag / Value- Building type
 		Dictionary<string, BuildingType>dict = new Dictionary<string, BuildingType>();
@@ -117,11 +124,11 @@ public class StartScript : MonoBehaviour
 			// The url needs to be changed while on build mode
 			// url should be tagFile.txt only.
 			string url = @"tagFile.txt";
-			//string url = @"C:\Users\Lucas\Desktop\tagFile.txt";		// This one when in Debug mode with no QuuppaSystem
+			//string url = @"C:\Users\Lucas\Desktop\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
 																	// The file text is to be kept on the desktop, could be in Resources folder
 			string urlBuild = @"..\tagFile.txt";					// This is when building the project
 																	// The file is kept in the same folder as the build exe.
-			using (StreamReader sr = new StreamReader(urlBuild))
+			using (StreamReader sr = new StreamReader(url))
 			{
 				string file = sr.ReadToEnd();
 				while(true)

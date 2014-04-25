@@ -1,14 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MovementTest : MonoBehaviour {
-
+public class DebugManager : MonoBehaviour 
+{
+	public bool IsDebugMode;
 	CubePosition cubePosition;
 	CubeRotation cubeRotation;
 
 	public Collider[] colliders;
-	
-	// Update is called once per frame
+
+	void Start()
+	{
+		QuuppaStart quuppaStart = GameObject.Find("GameManager").GetComponent<QuuppaStart>();
+
+		if(IsDebugMode)
+		{
+			quuppaStart.GetFileBuilding();
+		}
+		else
+		{
+			quuppaStart.StartQuuppa();
+		}
+	}
+
 	void Update () 
 	{
 		if(Input.GetMouseButtonDown(0))

@@ -76,7 +76,8 @@ public class GameManager : MonoBehaviour
 public enum State
 {
     StartMenu = 1,
-    Tutorial = 2,
+	GUIMenu = 2,
     Running = 4,
     Postgame = 8,
+	AddTag = 16
 }

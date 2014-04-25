@@ -17,7 +17,8 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(CubePosition))]
 [RequireComponent(typeof(CubeRotation))]
-public class QuuppaConnection : MonoBehaviour {
+public class QuuppaConnection : MonoBehaviour 
+{
 
 	/// <summary>
 	/// The Quuppa tag
@@ -55,10 +56,10 @@ public class QuuppaConnection : MonoBehaviour {
 
 	/// <summary>
 	/// Initializes this instance.
-	/// The method is called from the StartScript.cs. 
+	/// The method is called from the QuuppaStart.cs. 
 	/// The other needed components are passed as parameters
 	/// </summary>
-	public void Init (CubePosition cubePosition, CubeRotation cubeRotation, string tagQuuppa) 
+	public void Initialize (CubePosition cubePosition, CubeRotation cubeRotation, string tagQuuppa) 
 	{
 		this.tagQuuppa = tagQuuppa;
 		m_cubePosition = cubePosition;
@@ -88,27 +89,10 @@ public class QuuppaConnection : MonoBehaviour {
             
             if (www.error == null)
             {
-				/*
-				// Parse data
-				// "smoothedPositionX" 
-                int indexX = www.text.IndexOf(s_positionX) + s_positionX.Length + s_offsetExtraChar;
-				// "smoothedPositionY"
-                int indexY = www.text.IndexOf(s_positionY) + s_positionY.Length + s_offsetExtraChar;
-				// s_positionZ = "smoothedPositionZ"
-				int indexZ = www.text.IndexOf(s_positionZ) + s_positionY.Length + s_offsetExtraChar;
-
-				// Get 4 values precision
-                string posX = www.text.Substring(indexX, s_offsetGetData);
-                string posY = www.text.Substring(indexY, s_offsetGetData);
-				string posZ = www.text.Substring(indexZ, s_offsetGetData);*/
-
 				// Try/Catch needed since some of the data come sometimes as 0 without any extra information
 				// As a result, the parsed info contained a erroneous data like 0,0.2 instead of 0.000
 				try
 				{
-                	/*float x = float.Parse(posX);
-                	float y = float.Parse(posY);
-					float z = float.Parse(posZ);*/
 					float x = GetFloatFromJson(s_positionX, www.text);
 					float y = GetFloatFromJson(s_positionY, www.text);
 					float z = GetFloatFromJson(s_positionZ, www.text);
@@ -135,7 +119,8 @@ public class QuuppaConnection : MonoBehaviour {
 		string pos = name.Substring(index, s_offsetGetData);
 		return float.Parse(pos);
 	}
-	
+
+
 	IEnumerator GetTagInfoFile()
 	{
 		while(true){

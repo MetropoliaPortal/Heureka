@@ -191,21 +191,22 @@ public class GridManager : MonoBehaviour
     /// </summary>
     void CalculateObstacles()
     {
+
 		for (int i = 0; i < obstacleList.Count ; i++)
 		{
 
 			//Might throw a keynotfound -exception sometimes because transforms position might be momentarily off
 			Vector3 vec = obstacleList[i].transform.position;
 
-			//Debug.Log(vec.x +", " +vec.z);
-
 			int key = (int)vec.x * 100 + (int)vec.z;
 			Node[] cn = dict[key].node;
 			for(int j = 0; j < cn.Length; j++)
 			{
 				cn[j].bObstacle = true;
+				Debug.Log( "obstacle: " +cn[j].position);
 			}
 		}
+
     }
     
     /// <summary>
@@ -315,15 +316,6 @@ public class GridManager : MonoBehaviour
 	/// <summary>
 	/// Check the neighbours inside the grid.
 	/// </summary>
-	/// <param name='row'>
-	/// Row.
-	/// </param>
-	/// <param name='column'>
-	/// Column.
-	/// </param>
-	/// <param name='neighbors'>
-	/// Neighbors.
-	/// </param>
     void AssignNeighbour(int row, int column, List<Node> neighbors)
     {
 		if (row >= 0 && column >= 0 && row < numOfRows && column < numOfColumns)

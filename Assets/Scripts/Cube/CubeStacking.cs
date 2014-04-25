@@ -62,18 +62,20 @@ public class CubeStacking : MonoBehaviour {
 	{
 		// Convert old position to key
 		int i = Mathf.RoundToInt (oldPos.x) * 100 + Mathf.RoundToInt(oldPos.z);
-		//int i = Mathf.RoundToInt (oldPos.x) * 1000 + Mathf.RoundToInt(oldPos.z) * 10;
-
 		// Decrease by 1
-		usedCell[i] -= 1;
-		// Make sure the value is not negative
-		if(usedCell[i] < 0) usedCell[i] = 0;
-		// Convert new position to key
-		i = Mathf.RoundToInt(newPos.x) * 100 + Mathf.RoundToInt(newPos.z);
-		//i = Mathf.RoundToInt(newPos.x) * 1000 + Mathf.RoundToInt(newPos.z) * 10;
-
-		// Increase by 1
-		usedCell[i] += 1;
+		try{
+			usedCell[i] -= 1;
+			// Make sure the value is not negative
+			if(usedCell[i] < 0) usedCell[i] = 0;
+			// Convert new position to key
+			i = Mathf.RoundToInt(newPos.x) * 100 + Mathf.RoundToInt(newPos.z);
+			// Increase by 1
+			usedCell[i] += 1;
+		}
+		catch(Exception )
+		{
+			return 1;
+		}
 		// return the new value
 		return usedCell[i];
 	}
