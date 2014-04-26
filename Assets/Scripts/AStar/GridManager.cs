@@ -203,7 +203,7 @@ public class GridManager : MonoBehaviour
 			for(int j = 0; j < cn.Length; j++)
 			{
 				cn[j].bObstacle = true;
-				Debug.Log( "obstacle: " +cn[j].position);
+				//Debug.Log( "obstacle: " +cn[j].position);
 			}
 		}
 
