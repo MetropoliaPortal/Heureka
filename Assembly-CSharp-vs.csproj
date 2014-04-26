@@ -39,10 +39,10 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -58,12 +58,12 @@
      <Compile Include="Assets\Scripts\Cube\CubeStacking.cs" />
      <Compile Include="Assets\Scripts\Cube\UvSc.cs" />
      <Compile Include="Assets\Scripts\Debug\DebugManager.cs" />
+     <Compile Include="Assets\Scripts\Debug\GizmosDrawing.cs" />
      <Compile Include="Assets\Scripts\GameManager\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\Manager.cs" />
      <Compile Include="Assets\Scripts\GameManager\RoadManager.cs" />
      <Compile Include="Assets\Scripts\Global\ScreenTexture.cs" />
      <Compile Include="Assets\Scripts\Global\StackPool.cs" />
-     <Compile Include="Assets\Scripts\Global\Timer.cs" />
      <Compile Include="Assets\Scripts\Quuppa\QuuppaConnection.cs" />
      <Compile Include="Assets\Scripts\Quuppa\QuuppaStart.cs" />
      <None Include="Assets\Resources\Shaders\RimLight.shader" />
