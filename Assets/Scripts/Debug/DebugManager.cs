@@ -77,7 +77,6 @@ public class DebugManager : MonoBehaviour
 	{
 		if(Input.GetMouseButtonDown(1))
 		{
-
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast (ray, out hit))
@@ -86,10 +85,10 @@ public class DebugManager : MonoBehaviour
 				{
 					cubeRotation = hit.collider.gameObject.GetComponent<CubeRotation>();
 
-					if(Input.GetKey(KeyCode.Z) && Input.GetKey(KeyCode.LeftControl))
-						cubeRotation.ProcessRotation(new Vector3(0,0,-65f));
-					else if(Input.GetKey(KeyCode.Z))
-						cubeRotation.ProcessRotation(new Vector3(0,0,65f));
+					if(Input.GetKey(KeyCode.Z) && Input.GetKey(KeyCode.LeftControl)){
+						cubeRotation.ProcessRotation(new Vector3(0,0,-65f));}
+					else if(Input.GetKey(KeyCode.Z)){
+						cubeRotation.ProcessRotation(new Vector3(0,0,65f));}
 
 
 					else if(Input.GetKey(KeyCode.X) && Input.GetKey(KeyCode.LeftControl))

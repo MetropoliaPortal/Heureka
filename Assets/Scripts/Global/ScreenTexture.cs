@@ -14,15 +14,12 @@ public class ScreenTexture : MonoBehaviour
 		mat2 = GameObject.Find ("Screen2").renderer.material;
 		SetValue ();
 	}
-	
-	// Update is called once per frame
-	void OnGUI () 
-	{
-		GUI.Box (new Rect(0,0,100,50), value.ToString());
-	}
+
 	public void SetValue()
 	{
 		if(++value == textures.Length)value = 0;
+		// Here the url should be changed to a local one to the folder
+		// something like @"../ScreenInfo.txt"
 		System.IO.File.WriteAllText(@"C:\Documents\Info.txt",value.ToString());
 		mat1.mainTexture = textures[value];
 		mat2.mainTexture = textures[value];
