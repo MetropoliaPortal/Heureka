@@ -17,6 +17,9 @@ public class CubeRotation : MonoBehaviour
 	int i_prevIndex = -1;
 	int i_prevPolarity = -1;
 	Vector3 v_prevRotation;
+
+	Shader currentShader;
+
 	/// <summary>
 	/// Initialized the object.
 	/// Method is called once from the StartScript.cs when creating the new object
@@ -28,6 +31,8 @@ public class CubeRotation : MonoBehaviour
 		string tempType = type.ToString ();				// Convert type to string
 		string url = "Textures/" + tempType;			// Append type to url
 		materials = Resources.LoadAll<Material>(url);	// Get corresponding materials from Resources folder
+
+		currentShader = renderer.material.shader;		// use shader which is saved to cube prefab
 
 	}
 
@@ -82,6 +87,7 @@ public class CubeRotation : MonoBehaviour
 			break;
 		}
 		renderer.material = materials[textureIndex];
+		renderer.material.shader = currentShader;
 
 		//Debug.Log("curtex indx: " +textureIndex);
 		Debug.Log("current texture: " +materials[textureIndex].name);
