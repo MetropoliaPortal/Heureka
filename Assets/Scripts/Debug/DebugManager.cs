@@ -37,6 +37,8 @@ public class DebugManager : MonoBehaviour
 					SetColliders(false);
 				}
 			}
+
+
 		}
 		if(Input.GetMouseButton(0) && cubePosition!= null)
 		{
@@ -75,33 +77,31 @@ public class DebugManager : MonoBehaviour
 	/// </summary>
 	private void CheckIfRotate()
 	{
-		if(Input.GetMouseButtonDown(1))
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		if(Physics.Raycast (ray, out hit))
 		{
-			RaycastHit hit;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if(Physics.Raycast (ray, out hit))
+			if(hit.collider.tag == "Obstacle")
 			{
-				if(hit.collider.tag == "Obstacle")
-				{
-					cubeRotation = hit.collider.gameObject.GetComponent<CubeRotation>();
+				cubeRotation = hit.collider.gameObject.GetComponent<CubeRotation>();
 
-					if(Input.GetKey(KeyCode.Z) && Input.GetKey(KeyCode.LeftControl)){
-						cubeRotation.ProcessRotation(new Vector3(0,0,-65f));}
-					else if(Input.GetKey(KeyCode.Z)){
-						cubeRotation.ProcessRotation(new Vector3(0,0,65f));}
+				if(Input.GetKey(KeyCode.Q) ){
+					cubeRotation.ProcessRotation(new Vector3(0,0,-65f));}
+				else if(Input.GetKey(KeyCode.W)){
+					cubeRotation.ProcessRotation(new Vector3(0,0,65f));}
 
 
-					else if(Input.GetKey(KeyCode.X) && Input.GetKey(KeyCode.LeftControl))
-						cubeRotation.ProcessRotation(new Vector3(-65f,0,0));
-					else if(Input.GetKey(KeyCode.X))
-						cubeRotation.ProcessRotation(new Vector3(65f,0,0));
+				else if(Input.GetKey(KeyCode.E))
+					cubeRotation.ProcessRotation(new Vector3(-65f,0,0));
+				else if(Input.GetKey(KeyCode.R))
+					cubeRotation.ProcessRotation(new Vector3(65f,0,0));
 
-					else if(Input.GetKey(KeyCode.Y) && Input.GetKey(KeyCode.LeftControl))
-						cubeRotation.ProcessRotation(new Vector3(0,-65f,0));
-					else if(Input.GetKey(KeyCode.Y))
-						cubeRotation.ProcessRotation(new Vector3(0,65f,0));
-				}
+				else if(Input.GetKey(KeyCode.T))
+					cubeRotation.ProcessRotation(new Vector3(0,-65f,0));
+				else if(Input.GetKey(KeyCode.Y))
+					cubeRotation.ProcessRotation(new Vector3(0,65f,0));
 			}
 		}
+
 	}
 }
