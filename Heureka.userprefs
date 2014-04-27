@@ -1,17 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Global\Timer.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Cube\CubeRotation.cs">
     <Files>
-      <File FileName="Assets\Scripts\Global\Timer.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GameManager\Manager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Cube\CubeRotation.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Cube\CubePosition.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Debug\DebugManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Debug\DebugManager.cs" Line="93" Column="30" />
       <File FileName="Assets\Scripts\Cube\CubeStacking.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Quuppa\QuuppaConnection.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\AStar\GridManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\AStar\Node.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\AStar\AStar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Debug\GizmosDrawing.cs" Line="8" Column="24" />
+      <File FileName="Assets\Scripts\Global\ScreenTexture.cs" Line="28" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
