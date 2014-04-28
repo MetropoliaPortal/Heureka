@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/// /////////////////////////////////////////////////////
+/// 
+/// I don't really quite get the point of this here
+/// Is it meant to be debug only or also in the final build
+/// Since the QuuppaStart is now running based on this class, I would opt for the second
+/// Then the naming of this class is confusing
+/// 
+/// ///////////////////////////////////////////////77
 public class DebugManager : MonoBehaviour 
 {
 	public bool IsDebugMode;
@@ -13,14 +22,12 @@ public class DebugManager : MonoBehaviour
 	{
 		QuuppaStart quuppaStart = GameObject.Find("GameManager").GetComponent<QuuppaStart>();
 
-		if(IsDebugMode)
-		{
+#if UNITY_EDITOR
 			quuppaStart.GetFileBuilding();
-		}
-		else
-		{
+#endif
+#if UNITY_STANDALONE_Linux
 			quuppaStart.StartQuuppa();
-		}
+#endif
 	}
 
 	void Update () 
@@ -86,10 +93,8 @@ public class DebugManager : MonoBehaviour
 					cubeRotation = hit.collider.gameObject.GetComponent<CubeRotation>();
 
 					if(Input.GetKey(KeyCode.Z) && Input.GetKey(KeyCode.LeftControl)){
-						print("Here");
 						cubeRotation.ProcessRotation(new Vector3(0,0,-65f));}
 					else if(Input.GetKey(KeyCode.Z)){
-						print("There");
 						cubeRotation.ProcessRotation(new Vector3(0,0,65f));}
 
 

@@ -15,7 +15,6 @@ public class Manager : GameManager
 	private int i_minute, i_second;
 	private Rect r_rect;
 	private Rect r_restartRect;
-	private float timer;
 	private GameManager m_manager; 
 	//private string urlDEBUG = @"C:\Users\Lucas\Desktop\tagFile.txt";
 	private string urlDEBUG = @"tagFile.txt";
@@ -38,8 +37,6 @@ public class Manager : GameManager
 		float midWidth = Screen.width / 2f - size / 2f;
 		r_rect = new Rect(midWidth, 0, size, size / 2f);
 		r_restartRect = new Rect(midWidth, Screen.height / 2 - size/4, size, size / 2);
-		timer = 5f;
-
 	}
 
 
@@ -137,7 +134,6 @@ public class Manager : GameManager
 	{
 		float halfWidth = Screen.width / 2f;
 		float halfHeight = Screen.height / 2f;
-		int amountButton = 3;
 		float sizeBox = halfWidth / 2;
 		Rect rect = new Rect(halfWidth - sizeBox / 2, halfHeight - sizeBox / 2, sizeBox, sizeBox);
 		
@@ -210,8 +206,6 @@ public class Manager : GameManager
 	private void GUITagError()
 	{
 		float halfWidth = Screen.width / 2f;
-		float halfHeight = Screen.height / 2f;
-		int amountButton = 3;
 		float sizeBox = halfWidth / 2;
 		float height = 50f; 
 		if(GUI.Button (new Rect(0, sizeBox / 2 - 25, sizeBox, height), "Id must be 12 characters"))
@@ -221,17 +215,6 @@ public class Manager : GameManager
 	}
 	#endregion
 
-	#region UPDATE_METHODS
-	// Update the timer and change state if less than 0
-	private void UpdateTimer()
-	{
-		timer -= Time.deltaTime;
-		if(timer <= 0)
-		{
-			e_state = State.Postgame;
-		}
-	}
-	#endregion
 
 	// The method is called via InvokeRepeating
 	// It simply does the timer's work

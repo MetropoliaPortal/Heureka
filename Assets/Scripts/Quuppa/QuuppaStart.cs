@@ -46,29 +46,13 @@ public class QuuppaStart : MonoBehaviour
 	 	Dictionary<string, BuildingType>dict;
 
 		/////////////////////////////////////////////
-		/// 
-		/// Here the file for building type attribution is accessed
-		/// 
+		/// Here the file for building type attribution is accessed 
 		/////////////////////////////////////////////
 	 	dict = GetFileBuilding();
 
 		UvSc uvScript = gameObject.AddComponent<UvSc>();						// Add UvSc.cs to that object
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
 		{
-			/*
-     		GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);  	// Create a new cube
-			obj.transform.localScale = new Vector3(2,2,2);						// The cube is scaled up to 2
-
-			CubePosition cubePosition = obj.AddComponent<CubePosition>();       // Add components (could be replaced by prefab)
-			CubeRotation cubeRotation = obj.AddComponent<CubeRotation>();		// Add CubeRotation to that object
-			QuuppaConnection connectScript = obj.AddComponent<QuuppaConnection>();	// Add ConnectScript to that object
-
-			connectScript.Initialize(cubePosition, cubeRotation,arrGUID[i]); 
-			uvScript.Init(obj);													// Initialize the UvSc for the current cube object
-
-			cubeRotation.Initialize(arrGUID[i], dict[arrGUID[i]]);					// initialize the CubeRotation on that object passing id and building type
-			*/
-
 			GameObject obj = (GameObject)MonoBehaviour.Instantiate(cube);
 			QuuppaConnection connectScript = obj.GetComponent<QuuppaConnection>();
 			CubePosition cubePosition = obj.GetComponent<CubePosition>();
@@ -121,13 +105,20 @@ public class QuuppaStart : MonoBehaviour
 		// Get the file from location
 		try
 		{
+
+#if UNITY_EDITOR
 			// The url needs to be changed while on build mode
 			// url should be tagFile.txt only.
-			string url = @"tagFile.txt";
-			//string url = @"C:\Users\Lucas\Desktop\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
-																	// The file text is to be kept on the desktop, could be in Resources folder
-			string urlBuild = @"..\tagFile.txt";					// This is when building the project
-																	// The file is kept in the same folder as the build exe.
+			string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			url += @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
+			// When debugging on your computer you need to change that path
+#endif
+#if UNITY_STANDALONE_LINUX
+			// The file text is to be kept on the desktop, could be in Resources folder
+			string url = @"..\tagFile.txt";					// This is when building the project
+			// The file is kept in the same folder as the build exe.
+#endif																	
+
 			using (StreamReader sr = new StreamReader(url))
 			{
 				string file = sr.ReadToEnd();

@@ -156,7 +156,6 @@ public class CubePosition : MonoBehaviour
 		float [] values = {2,4,6,8,10,12};
 		float x = 0;
 		float z = 0;
-		float offset = 1f;
 		if(position.x < values[0] - 1)
 			x = values[0];
 		if(position.x > values[values.Length - 1] + 1)
@@ -176,9 +175,9 @@ public class CubePosition : MonoBehaviour
 		Vector3 vec = new Vector3(x,position.y,z);
 
 		if(!b_cubeOnMove)
-			StartCoroutine(MoveCubeToPosition(new Vector3(x,1,z)));
+			StartCoroutine(MoveCubeToPosition(vec));
 	}
-
+	 
 	#endregion
 
 	#region NOT IN USE

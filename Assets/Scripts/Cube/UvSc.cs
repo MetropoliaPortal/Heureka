@@ -13,7 +13,8 @@ public class UvSc : MonoBehaviour {
 	void Start () {
 		Mesh theMesh;
 		theMesh = GetComponent<MeshFilter>().mesh;
-		
+
+
 		// Now store a local reference for the UVs
 		Vector2[] theUVs = new Vector2[theMesh.uv.Length];
 		theUVs = theMesh.uv;
@@ -58,7 +59,7 @@ public class UvSc : MonoBehaviour {
 	public void Init (GameObject cubeObject) {
         Mesh theMesh;
 		theMesh = cubeObject.GetComponent<MeshFilter>().mesh;
-
+		
         // Now store a local reference for the UVs
         Vector2[] theUVs = new Vector2[theMesh.uv.Length];
         theUVs = theMesh.uv;
