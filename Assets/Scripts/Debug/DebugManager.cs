@@ -18,7 +18,7 @@ public class DebugManager : MonoBehaviour
 
 	public Collider[] colliders;
 
-	void Start()
+	void Awake()
 	{
 		QuuppaStart quuppaStart = GameObject.Find("GameManager").GetComponent<QuuppaStart>();
 		SetLights();

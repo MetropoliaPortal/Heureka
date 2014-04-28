@@ -7,6 +7,8 @@ using System;
 /// It controlled most of the GUI (Start, Quit, Timer, file maintenance)
 /// </summary>
 using System.IO;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 
 public class Manager : GameManager
@@ -16,18 +18,11 @@ public class Manager : GameManager
 	private Rect r_rect;
 	private Rect r_restartRect;
 	private GameManager m_manager; 
-	//private string urlDEBUG = @"C:\Users\Lucas\Desktop\tagFile.txt";
-	private string urlDEBUG = @"tagFile.txt";
+	private List<string> m_tagList = new List<string>();
 
 	void Awake()
 	{
 		e_state = State.GUIMenu;
-		//string url = @"..\tagFile.txt";
-
-		if(!File.Exists (urlDEBUG))
-		{
-			File.Create(urlDEBUG);
-		}
 	}
 	void Start () 
 	{
@@ -72,6 +67,7 @@ public class Manager : GameManager
 	}
 	#region GUI_METHODS
 	// The main GUI for resuming or quitting the game
+	private string[] st_frontString = {"Resume","Modify Tag","Quit"};
 	private void GUIMainBoard()
 	{
 		float halfWidth = Screen.width / 2;
@@ -82,16 +78,16 @@ public class Manager : GameManager
 
 		GUI.BeginGroup(rect);
 		// Resume button
-		if(GUI.Button (new Rect(0,0,sizeBox , sizeBox / amountButton),"Resume"))
+		if(GUI.Button (new Rect(0,0,sizeBox , sizeBox / amountButton),st_frontString[0]))
 		{
 			e_state = State.StartMenu;
 		}
 		// Quit button
-		if(GUI.Button (new Rect(0, sizeBox / amountButton,sizeBox , sizeBox / amountButton),"Add Tag"))
+		if(GUI.Button (new Rect(0, sizeBox / amountButton,sizeBox , sizeBox / amountButton),st_frontString[1]))
 		{
 			e_state = State.AddTag;
 		}
-		if(GUI.Button (new Rect(0,sizeBox / amountButton * 2,sizeBox, sizeBox/ amountButton),"Quit"))
+		if(GUI.Button (new Rect(0,sizeBox / amountButton * 2,sizeBox, sizeBox/ amountButton),st_frontString[2]))
 		{
 			Application.Quit ();
 		}
@@ -99,11 +95,12 @@ public class Manager : GameManager
 	}
 
 	// If the game is over, display commands to restart and start the game
+	private string[] st_startRestart = {"RESTART", "START"};
 	private void GUICommand()
 	{
 		if(e_state == State.Postgame)
 		{
-			if(GUI.Button (r_restartRect, "RESTART"))
+			if(GUI.Button (r_restartRect, st_startRestart[0]))
 			{
 				GC.Collect ();
 				i_minute = minutes;
@@ -114,7 +111,7 @@ public class Manager : GameManager
 		}
 		else if(e_state == State.StartMenu)
 		{
-			if(GUI.Button (r_restartRect, "START"))
+			if(GUI.Button (r_restartRect, st_startRestart[1]))
 			{
 				e_state = State.Running;
 				InvokeRepeating("DecreaseTimer",1.0f,1.0f);
@@ -140,9 +137,11 @@ public class Manager : GameManager
 		GUI.BeginGroup(rect);
 		switch(e_tagState)
 		{
+
 		case TagState.Error:
 			GUITagError ();
 			break;
+
 		case TagState.Front:
 			// Button Add
 			if(GUI.Button (new Rect(0,0,sizeBox, sizeBox / 2),st_Add))
@@ -155,6 +154,7 @@ public class Manager : GameManager
 				e_tagState = TagState.Remove;
 			}
 			break;
+
 		case TagState.Add:
 			// TextField id,
 			st_id = GUI.TextField(new Rect(0,0,sizeBox / 2,20),st_id);
@@ -169,53 +169,138 @@ public class Manager : GameManager
 				// Check if tag is valid
 				// Write on file
 				if(st_id.Length != 12)
-					e_tagState = TagState.Error;
-				else 
 				{
-					using (StreamWriter sw = File.AppendText(urlDEBUG))
-					{
-						string newTag = "id:"+st_id+","+selectionStrings[selectionGridInt]+",";
-						sw.WriteLine(newTag); 
-					}
-					e_tagState = TagState.Front;
+					i_errorIndex = 0;
+					e_prevState = e_tagState;
+					e_tagState = TagState.Error;
+					break;
 				}
+				e_tagState = TagState.Confirm;
+				i_confirmIndex = 0;
 			}
 			if(GUI.Button(new Rect(sizeBox / 2,sizeBox - sizeBox / 2, sizeBox / 2, sizeBox / 2),st_Cancel))
 			{
 				e_tagState = TagState.Front;
 			}
 			break;
+
 		case TagState.Remove:
-			st_id = GUI.TextField(new Rect(),st_id);
-			if(GUI.Button (new Rect(),st_Add))
+			st_id = GUI.TextField(new Rect(0,0,sizeBox / 2,20),st_id);
+			if(GUI.Button (new Rect(0,sizeBox - sizeBox / 2, sizeBox / 2, sizeBox / 2),st_Remove))
 			{
 				// Check if tag is valid
-				// Remove from file and rewrite file
-				e_tagState = TagState.Front;
+				if(!m_tagList.Contains(st_id))
+				{
+					i_errorIndex = 1;
+					e_prevState = e_tagState;
+					e_tagState = TagState.Error;
+					break;
+				}
+				e_tagState = TagState.Confirm;
+				i_confirmIndex = 1;
 			}
-			if(GUI.Button(new Rect(),st_Cancel))
+			if(GUI.Button(new Rect(sizeBox / 2,sizeBox - sizeBox / 2, sizeBox / 2, sizeBox / 2),st_Cancel))
 			{
 				e_tagState = TagState.Front;
 			}
-			break;	
-		}
+			break;
 
+		case TagState.Confirm:
+			GUITagConfirm();
+			break;
+		}
 		GUI.EndGroup();
 	}
-
+	private string[]s_errorMessages = {"Id must be 12 characters", "Tag GUID does not exist"};
+	private int i_errorIndex = -1;
+	private TagState e_prevState;
 	private void GUITagError()
 	{
 		float halfWidth = Screen.width / 2f;
 		float sizeBox = halfWidth / 2;
 		float height = 50f; 
-		if(GUI.Button (new Rect(0, sizeBox / 2 - 25, sizeBox, height), "Id must be 12 characters"))
+		if(GUI.Button (new Rect(0, sizeBox / 2 - 25, sizeBox, height), s_errorMessages[i_errorIndex]))
 		{
-			e_tagState = TagState.Add;
+			e_tagState = e_prevState;
 		}
 	}
+	private string[]st_confirmMessages = {"Are you sure \nyou want to add the tag?", "Are you sure \nyou want to remove the tag?"};
+	private int i_confirmIndex = -1;
+	private void GUITagConfirm()
+	{
+		float halfWidth = Screen.width / 2f;
+		float sizeBox = halfWidth / 2;
+		float height = 50f; 
+		GUI.Box (new Rect(0, sizeBox / 2 - 25, sizeBox, height), st_confirmMessages[i_confirmIndex]);
+
+		if(GUI.Button (new Rect(0, sizeBox / 2 + 25, sizeBox / 2, height), "Yes"))
+		{
+			if(i_confirmIndex == 0) AddTag();
+			else if (i_confirmIndex == 1) RemoveTag();
+		}
+		if(GUI.Button (new Rect(sizeBox / 2, sizeBox / 2 + 25, sizeBox / 2, height), st_Cancel))
+		{
+			e_tagState = e_prevState;
+		}
+	}
+
+	private void RemoveTag()
+	{
+
+		////////////////////////////////////////////////
+		/// Access file
+		/// ////////////////////////////////////////////
+		#if UNITY_EDITOR
+		// The url needs to be changed while on build mode
+		// url should be tagFile.txt only.
+		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+		url = url + @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
+		// When debugging on your computer you need to change that path
+		#endif
+		#if UNITY_STANDALONE_LINUX
+		// The file text is to be kept on the desktop, could be in Resources folder
+		string url = @"..\tagFile.txt";					// This is when building the project
+		// The file is kept in the same folder as the build exe.
+		#endif																	
+		
+		string file= File.ReadAllText(url); 
+		string endtoken = ";";
+		int startIndex = file.IndexOf (st_id); 	// Find index of the tag
+		startIndex -= 3;						// remove the "id:" part
+		string temp = file.Substring(startIndex);// remove all parts before tag and place it in temp
+		int endIndex = temp.IndexOf(endtoken);	
+		file = file.Remove(startIndex , endIndex + 1);
+		file = Regex.Replace(file, @"^\s+$[\r\n]*", "", RegexOptions.Multiline);
+		File.WriteAllText(url,file);
+		
+		// Remove from file and rewrite file
+		e_tagState = TagState.Front;
+	}
+	private void AddTag()
+	{
+		#if UNITY_EDITOR
+		// The url needs to be changed while on build mode
+		// url should be tagFile.txt only.
+		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+		url = url + @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
+		// When debugging on your computer you need to change that path
+		#endif
+		#if UNITY_STANDALONE_LINUX
+		// The file text is to be kept on the desktop, could be in Resources folder
+		string url = @"..\tagFile.txt";					// This is when building the project
+		// The file is kept in the same folder as the build exe.
+		#endif
+		using (StreamWriter sw = File.AppendText(url))
+		{
+			string newTag = "id:"+st_id+","+selectionStrings[selectionGridInt]+";";
+			sw.WriteLine(newTag); 
+			AddToTagList(newTag);
+		}
+		e_tagState = TagState.Front;
+	}
 	#endregion
-
-
+	
+	
 	// The method is called via InvokeRepeating
 	// It simply does the timer's work
 	private void DecreaseTimer()
@@ -235,13 +320,18 @@ public class Manager : GameManager
 			i_second = 59;
 		}
 	}
+	public void AddToTagList(string quuppaTag)
+	{
+		m_tagList.Add (quuppaTag);
+	}
 
 	enum TagState
 	{
 		Front,
 		Add,
 		Remove,
-		Error
+		Error,
+		Confirm
 	}
 }
 

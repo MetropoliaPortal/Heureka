@@ -100,7 +100,7 @@ public class QuuppaStart : MonoBehaviour
 		// Dictionary for Key-tag / Value- Building type
 		Dictionary<string, BuildingType>dict = new Dictionary<string, BuildingType>();
 		// Data needed for parsing
-		string id = "id";	string token = ",";		int offset = 1;		int tagLength = 12;
+		string id = "id";	/*string token = ",";*/ string endToken = ";";		int offset = 1;		int tagLength = 12;
 
 		// Get the file from location
 		try
@@ -123,6 +123,7 @@ public class QuuppaStart : MonoBehaviour
 			{
 				string file = sr.ReadToEnd();
 				if(file.Length == 0)return null;
+				Manager manager = GetComponent<Manager>();
 				while(true)
 				{
 					// Read each line of the file
@@ -130,19 +131,19 @@ public class QuuppaStart : MonoBehaviour
 					// id:01234567ac81,Official
 
 					int index = file.IndexOf(id);				// Get the index of "id"
-					print (index);
 					if(index < 0) break;						// if "id" not found break loop			
 
 					index += id.Length + offset;				// move the index to the starting of the id
 					string tagQuuppa = file.Substring(index, tagLength);	// get the id string
 					file = file.Substring(index +tagLength + 1);				// Remove the used part of the file including the middle coma 
-					index = file.IndexOf(token);				// get the index of the end of line coma 
+					index = file.IndexOf(endToken);				// get the index of the end of line coma 
 					string type = file.Substring(0,index);		// isolate the string containing the type
 					file = file.Substring(index + 1);			// remove the used part of the file including the final coma
 
 					BuildingType bt = (BuildingType)System.Enum.Parse(typeof(BuildingType), type);// Parse the type 
 
 					dict.Add (tagQuuppa, bt);					// Add to the dictionary
+					manager.AddToTagList(tagQuuppa);
 				}
 			}
 		}
