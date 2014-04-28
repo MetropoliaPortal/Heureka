@@ -51,8 +51,19 @@ public class QuuppaStart : MonoBehaviour
 	 	dict = GetFileBuilding();
 
 		UvSc uvScript = gameObject.AddComponent<UvSc>();						// Add UvSc.cs to that object
+		string tagInfo = "192.168.123.124:8080/qpe/getTagInfo?tag=";
+		string token = "batteryAlarm\": \"";
+		// Reference to the QuuppaDeficientTag script
+		// The component is used to remove deficient tag and cubes from the game
+		// The reference is set to null, if no tag is deficient the reference is not used
+		Manager manager = null;											
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
 		{
+			string urlInfo = tagInfo + arrGUID[i];				// Get the url for tag info
+			WWW info = new WWW(urlInfo);						// Connect to server
+			yield return info;					
+			if(info.error != null) continue;					// an error occured, we skip the creation of the cube as the tag is probably faulty or old
+			// Creating the cube and adding components
 			GameObject obj = (GameObject)MonoBehaviour.Instantiate(cube);
 			QuuppaConnection connectScript = obj.GetComponent<QuuppaConnection>();
 			CubePosition cubePosition = obj.GetComponent<CubePosition>();
@@ -60,8 +71,25 @@ public class QuuppaStart : MonoBehaviour
 			connectScript.Initialize(cubePosition, cubeRotation,arrGUID[i]);
 			uvScript.Init(obj);
 
-			cubeRotation.Initialize(arrGUID[i], dict[arrGUID[i]]);	
+			cubeRotation.Initialize(arrGUID[i], dict[arrGUID[i]]);
 
+
+			string str = info.text;			
+			int index = str.IndexOf(token);
+			index += token.Length;
+			char c = urlInfo[index + 1];
+			if(c == 'l') // Battery is low, inform user
+			{
+				// Access manager and pas GameObject and string 
+				if(manager == null)manager = GetComponent<Manager>();
+				manager.AddDeficientTag(arrGUID[i], obj);
+			}
+			// The qdt reference is not null so we have some low battery tag
+			// The coroutine to remove tags is started
+			if(!manager.IsDeficientTagEmpty())
+			{
+				StartCoroutine(manager.QuuppaDeficientRemoval());
+			}
 		}
 		// Remove the objects as there are no longer useful
 		Destroy (uvScript);

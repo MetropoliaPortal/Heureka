@@ -1,25 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
-using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+using UnityEngine;
+
 /// <summary>
 /// Manager class. 
 /// Is attached to the Scripts object 
 /// It controlled most of the GUI (Start, Quit, Timer, file maintenance)
 /// </summary>
-using System.IO;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
-
 public class Manager : GameManager
 {
+	#region MEMBERS
 	public int minutes = 0; 
 	private int i_minute, i_second;
 	private Rect r_rect;
 	private Rect r_restartRect;
 	private GameManager m_manager; 
 	private List<string> m_tagList = new List<string>();
-
+	#endregion
+	
+	#region UNITY_METHODS
 	void Awake()
 	{
 		e_state = State.GUIMenu;
@@ -58,13 +60,15 @@ public class Manager : GameManager
 
 		else if((e_state & (State.Postgame | State.StartMenu)) > 0 )
 		{
-			GUICommand ();
+			GUIStartGame ();
 		}
-		else if(e_state == State.AddTag)
+		else if(e_state == State.TagMaintainance)
 		{
-			GUIAddTag();
+			GUIMaintainanceTag();
 		}
 	}
+	#endregion
+
 	#region GUI_METHODS
 	// The main GUI for resuming or quitting the game
 	private string[] st_frontString = {"Resume","Modify Tag","Quit"};
@@ -85,7 +89,7 @@ public class Manager : GameManager
 		// Quit button
 		if(GUI.Button (new Rect(0, sizeBox / amountButton,sizeBox , sizeBox / amountButton),st_frontString[1]))
 		{
-			e_state = State.AddTag;
+			e_state = State.TagMaintainance;
 		}
 		if(GUI.Button (new Rect(0,sizeBox / amountButton * 2,sizeBox, sizeBox/ amountButton),st_frontString[2]))
 		{
@@ -96,7 +100,7 @@ public class Manager : GameManager
 
 	// If the game is over, display commands to restart and start the game
 	private string[] st_startRestart = {"RESTART", "START"};
-	private void GUICommand()
+	private void GUIStartGame()
 	{
 		if(e_state == State.Postgame)
 		{
@@ -127,7 +131,8 @@ public class Manager : GameManager
 	private string st_Add = "Add Tag";
 	private string st_Remove = "Remove Tag";
 	private string st_Cancel = "Cancel";
-	private void GUIAddTag()
+
+	private void GUIMaintainanceTag()
 	{
 		float halfWidth = Screen.width / 2f;
 		float halfHeight = Screen.height / 2f;
@@ -176,7 +181,7 @@ public class Manager : GameManager
 					break;
 				}
 				e_tagState = TagState.Confirm;
-				i_confirmIndex = 0;
+				e_confirmState = ConfirmState.Add;
 			}
 			if(GUI.Button(new Rect(sizeBox / 2,sizeBox - sizeBox / 2, sizeBox / 2, sizeBox / 2),st_Cancel))
 			{
@@ -197,7 +202,7 @@ public class Manager : GameManager
 					break;
 				}
 				e_tagState = TagState.Confirm;
-				i_confirmIndex = 1;
+				e_confirmState = ConfirmState.Remove;
 			}
 			if(GUI.Button(new Rect(sizeBox / 2,sizeBox - sizeBox / 2, sizeBox / 2, sizeBox / 2),st_Cancel))
 			{
@@ -208,6 +213,28 @@ public class Manager : GameManager
 		case TagState.Confirm:
 			GUITagConfirm();
 			break;
+		
+		case TagState.Deficient:
+			GUIRemoveDeficientTag();
+			break;
+		}
+		
+		GUI.EndGroup();
+	}
+	#endregion
+
+	#region GUI_MAINTENANCE_TAG
+	private void GUIRemoveDeficientTag()
+	{
+		GUI.BeginGroup(new Rect());
+		GUI.Box (new Rect(), "Do you wish to remove the tag "+st_id+"?");
+		if(GUI.Button (new Rect(), "Yes"))
+		{
+			i_removeTag = 0;
+		}
+		if(GUI.Button (new Rect(), "No"))
+		{
+			i_removeTag = 1;
 		}
 		GUI.EndGroup();
 	}
@@ -224,42 +251,89 @@ public class Manager : GameManager
 			e_tagState = e_prevState;
 		}
 	}
+
 	private string[]st_confirmMessages = {"Are you sure \nyou want to add the tag?", "Are you sure \nyou want to remove the tag?"};
-	private int i_confirmIndex = -1;
+	private ConfirmState e_confirmState = ConfirmState.None;
 	private void GUITagConfirm()
 	{
 		float halfWidth = Screen.width / 2f;
 		float sizeBox = halfWidth / 2;
 		float height = 50f; 
-		GUI.Box (new Rect(0, sizeBox / 2 - 25, sizeBox, height), st_confirmMessages[i_confirmIndex]);
+		GUI.Box (new Rect(0, sizeBox / 2 - 25, sizeBox, height), st_confirmMessages[((int)e_confirmState)]);
 
 		if(GUI.Button (new Rect(0, sizeBox / 2 + 25, sizeBox / 2, height), "Yes"))
 		{
-			if(i_confirmIndex == 0) AddTag();
-			else if (i_confirmIndex == 1) RemoveTag();
+			if(e_confirmState == ConfirmState.Add) AddTag();
+			else if (e_confirmState == ConfirmState.Remove) RemoveTag();
 		}
 		if(GUI.Button (new Rect(sizeBox / 2, sizeBox / 2 + 25, sizeBox / 2, height), st_Cancel))
 		{
 			e_tagState = e_prevState;
 		}
 	}
+	#endregion
 
-	private void RemoveTag()
+	#region METHODS
+	private Dictionary<string, GameObject>m_deficientTag = null;
+	/// <summary>
+	/// Adds the deficient tag to the list.
+	/// </summary>
+	/// <param name="obj">Object.</param>
+	public void AddDeficientTag(string quuppaTag,GameObject obj)
+	{
+		if(m_deficientTag == null)m_deficientTag = new Dictionary<string,GameObject>();
+		m_deficientTag.Add (quuppaTag, obj);
+	}
+	/// <summary>
+	/// Determines whether deficient tags have been found
+	/// </summary>
+	/// <returns><c>true</c> if the list is empty <c>false</c> if the list contains deficient tag(s)</returns>
+	public bool IsDeficientTagEmpty()
+	{
+		return m_deficientTag.Count == 0;
+	}
+	
+	private int i_removeTag = -1;
+	public IEnumerator QuuppaDeficientRemoval()
+	{
+		// Set the main game state
+		e_state = State.TagMaintainance;
+		// Set the GUI state
+		e_tagState = TagState.Deficient;
+		
+		foreach(KeyValuePair<string , GameObject> kvp in m_deficientTag)
+		{
+			// for each deficient tag
+			// Get the cube
+			GameObject obj = kvp.Value;
+			st_id = kvp.Key;
+			// Change it to red
+			obj.renderer.material.color = Color.red;
+			while(i_removeTag == -1)yield return null;
+			// Remove the tag and cube
+			if(i_removeTag == 0)
+			{
+				Destroy (obj);
+				m_tagList.Remove(st_id);
+			}
+			i_removeTag = -1;
+		}
+	} 
+	// Look for the tag in file, remove tag if existing and remove from the tag list
+	private void RemoveTag( /*string tagID*/)
 	{
 
 		////////////////////////////////////////////////
 		/// Access file
 		/// ////////////////////////////////////////////
 		#if UNITY_EDITOR
-		// The url needs to be changed while on build mode
-		// url should be tagFile.txt only.
 		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 		url = url + @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
 		// When debugging on your computer you need to change that path
 		#endif
 		#if UNITY_STANDALONE_LINUX
 		// The file text is to be kept on the desktop, could be in Resources folder
-		string url = @"..\tagFile.txt";					// This is when building the project
+		string url = @"..\tagFile.txt";				
 		// The file is kept in the same folder as the build exe.
 		#endif																	
 		
@@ -276,6 +350,7 @@ public class Manager : GameManager
 		// Remove from file and rewrite file
 		e_tagState = TagState.Front;
 	}
+
 	private void AddTag()
 	{
 		#if UNITY_EDITOR
@@ -298,8 +373,6 @@ public class Manager : GameManager
 		}
 		e_tagState = TagState.Front;
 	}
-	#endregion
-	
 	
 	// The method is called via InvokeRepeating
 	// It simply does the timer's work
@@ -320,19 +393,38 @@ public class Manager : GameManager
 			i_second = 59;
 		}
 	}
+
 	public void AddToTagList(string quuppaTag)
 	{
 		m_tagList.Add (quuppaTag);
 	}
+	public bool ListContainsTag(string quuppaTag)
+	{
+		return m_tagList.Contains (quuppaTag);
+	}
+	public void SetTagRemoval(string quuppaTag)
+	{
+		st_id = quuppaTag;
+		e_tagState = TagState.Remove;
+		e_confirmState = ConfirmState.Remove;
+	}
+	#endregion
 
+	#region ENUM
 	enum TagState
 	{
 		Front,
 		Add,
 		Remove,
 		Error,
-		Confirm
+		Confirm,
+		Deficient
 	}
+	enum ConfirmState
+	{
+		None, Add, Remove
+	}
+	#endregion
 }
 
 

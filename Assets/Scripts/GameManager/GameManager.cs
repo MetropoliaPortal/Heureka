@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 
@@ -79,5 +79,5 @@ public enum State
 	GUIMenu = 2,
     Running = 4,
     Postgame = 8,
-	AddTag = 16
+	TagMaintainance = 16
 }
