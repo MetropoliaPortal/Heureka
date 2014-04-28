@@ -174,7 +174,7 @@ public class Manager : GameManager
 				{
 					using (StreamWriter sw = File.AppendText(urlDEBUG))
 					{
-						string newTag = "id:"+st_id+","+selectionStrings[selectionGridInt];
+						string newTag = "id:"+st_id+","+selectionStrings[selectionGridInt]+",";
 						sw.WriteLine(newTag); 
 					}
 					e_tagState = TagState.Front;

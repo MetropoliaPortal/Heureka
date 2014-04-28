@@ -122,6 +122,7 @@ public class QuuppaStart : MonoBehaviour
 			using (StreamReader sr = new StreamReader(url))
 			{
 				string file = sr.ReadToEnd();
+				if(file.Length == 0)return null;
 				while(true)
 				{
 					// Read each line of the file
@@ -129,7 +130,9 @@ public class QuuppaStart : MonoBehaviour
 					// id:01234567ac81,Official
 
 					int index = file.IndexOf(id);				// Get the index of "id"
+					print (index);
 					if(index < 0) break;						// if "id" not found break loop			
+
 					index += id.Length + offset;				// move the index to the starting of the id
 					string tagQuuppa = file.Substring(index, tagLength);	// get the id string
 					file = file.Substring(index +tagLength + 1);				// Remove the used part of the file including the middle coma 

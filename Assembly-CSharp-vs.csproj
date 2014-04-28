@@ -58,7 +58,6 @@
      <Compile Include="Assets\Scripts\Cube\CubeStacking.cs" />
      <Compile Include="Assets\Scripts\Cube\UvSc.cs" />
      <Compile Include="Assets\Scripts\Debug\DebugManager.cs" />
-     <Compile Include="Assets\Scripts\Debug\GizmosDrawing.cs" />
      <Compile Include="Assets\Scripts\GameManager\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\Manager.cs" />
      <Compile Include="Assets\Scripts\GameManager\RoadManager.cs" />
