@@ -1,13 +1,16 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameManager\Manager.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Cube\CubePosition.cs">
     <Files>
-      <File FileName="Assets\Scripts\GameManager\Manager.cs" Line="72" Column="28" />
-      <File FileName="Assets\Scripts\Cube\CubePosition.cs" Line="158" Column="15" />
-      <File FileName="Assets\Scripts\Quuppa\QuuppaStart.cs" Line="91" Column="27" />
-      <File FileName="Assets\Scripts\Debug\DebugManager.cs" Line="21" Column="12" />
+      <File FileName="Assets\Scripts\Cube\CubePosition.cs" Line="173" Column="35" />
+      <File FileName="Assets\Scripts\GameManager\Manager.cs" Line="431" Column="1" />
+      <File FileName="Assets\Scripts\Cube\CubePosition.cs" Line="158" Column="3" />
+      <File FileName="Assets\Scripts\Quuppa\QuuppaStart.cs" Line="186" Column="1" />
+      <File FileName="Assets\Scripts\Debug\DebugManager.cs" Line="135" Column="1" />
       <File FileName="Assets\Scripts\Quuppa\QuuppaConnection.cs" Line="69" Column="77" />
-      <File FileName="Assets\Scripts\GameManager\GameManager.cs" Line="76" Column="1" />
+      <File FileName="Assets\Scripts\GameManager\GameManager.cs" Line="83" Column="2" />
+      <File FileName="Assets\Scripts\Cube\CubeRotation.cs" Line="29" Column="84" />
+      <File FileName="Assets\Scripts\Cube\CubeStacking.cs" Line="31" Column="67" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

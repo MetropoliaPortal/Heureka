@@ -71,6 +71,8 @@ public class CubePosition : MonoBehaviour
 	private bool b_cubeOnMove = false;
 	IEnumerator MoveCubeToPosition(Vector3 position)
 	{
+		Debug.Log(position);
+
 		b_cubeOnMove = true;
 		float ratio = 0;
 		float duration = 0.2f;
@@ -91,6 +93,7 @@ public class CubePosition : MonoBehaviour
 		prevPos = transform.position;
 		OnMove();
 		OnMoveSecond();
+
 	}
 
 	/// <summary>
@@ -153,6 +156,8 @@ public class CubePosition : MonoBehaviour
 	
 	public void MoveCubeInDebug(Vector3 position)
 	{
+		position.y++;
+
 		float [] values = {2,4,6,8,10,12};
 		float x = 0;
 		float z = 0;
@@ -173,6 +178,7 @@ public class CubePosition : MonoBehaviour
 				z = values[i];
 		}
 		Vector3 vec = new Vector3(x,position.y,z);
+
 
 		if(!b_cubeOnMove)
 			StartCoroutine(MoveCubeToPosition(vec));

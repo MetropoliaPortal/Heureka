@@ -26,7 +26,7 @@ public class CubeRotation : MonoBehaviour
 	/// </summary>
 	/// <param name="tagQuuppa">Quuppa tag quuppa.</param>
 	/// <param name="type">The type of building, Official by default</param>
-	public void Initialize (string tagQuuppa, BuildingType type = BuildingType.Official) 
+	public void Initialize (string tagQuuppa, BuildingType type = BuildingType.Leisure) 
 	{
 		string tempType = type.ToString ();				// Convert type to string
 		string url = "Textures/" + tempType;			// Append type to url

@@ -24,7 +24,7 @@ public class CarScript : MonoBehaviour {
 		transform = base.transform;
 		mat = renderer.material;
 		// Get the main waypoint object
-		GameObject waypoints = GameObject.Find ("Wp");
+		GameObject waypoints = GameObject.Find ("WayPoints");
 		// get all children waypoints
 		List<Transform>list = new List<Transform>();
 		foreach(Transform t in waypoints.transform)

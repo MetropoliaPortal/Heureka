@@ -23,7 +23,8 @@ public class DebugManager : MonoBehaviour
 		QuuppaStart quuppaStart = GameObject.Find("GameManager").GetComponent<QuuppaStart>();
 		SetLights();
 #if UNITY_EDITOR
-			quuppaStart.GetFileBuilding();
+		quuppaStart.GetFileBuilding();
+		Debug.Log("Unity editor");
 #endif
 #if UNITY_STANDALONE_Linux
 			quuppaStart.StartQuuppa();

@@ -28,7 +28,7 @@ public class CubeStacking : MonoBehaviour
 		occupiedArray[(int)oldPos.x, (int)oldPos.z] -= 1;
 		occupiedArray[(int)newPos.x, (int)newPos.z] += 1;
 
-		//Debug.Log("new: " +occupiedArray[(int)newPos.x, (int)newPos.z]);
+		Debug.Log("new: " +occupiedArray[(int)newPos.x, (int)newPos.z]);
 
 		return occupiedArray[(int)newPos.x, (int)newPos.z];
 	}
