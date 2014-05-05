@@ -1,10 +1,48 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class CubeStacking : MonoBehaviour 
 {
+	public void CompareStackedCubes (Transform t) 
+	{
+		List<Transform> ts = new List<Transform>();
+	
+		foreach(GameObject o in GridManager.obstacleList) 
+		{
+			Vector3 otherCubePos = o.transform.position;
+			if( otherCubePos.x == t.position.x && otherCubePos.z == t.position.z )
+			{
+				ts.Add( o.transform );
+			}
+		}
 
+		//Sort array from smallest to largest
+		Transform[] transformArray = ts.ToArray();
+		System.Array.Sort(transformArray, delegate(Transform first, Transform second){
+			return (second.GetComponent<CubePosition>().PositionYQuuppa.CompareTo(first.GetComponent<CubePosition>().PositionYQuuppa));
+		});
+
+		for (int i = 0; i < transformArray.Length; i++)
+		{
+			Vector3 pos = transformArray[i].position;
+
+			float newY;
+			if(i == 0)
+				newY = (i + 1);
+			else
+				newY = (i + i + 1);
+
+			transformArray[i].position = new Vector3(pos.x, newY , pos.z);
+		}
+	}
+}
+
+#region NOT IN USE
+
+/*
 	private int[,] occupiedArray;
 
 	void Start () 
@@ -22,19 +60,19 @@ public class CubeStacking : MonoBehaviour
 			}
 		}
 	}
+	*/
 
+/*
 	public int UpdateOccupiedArray (Vector3 oldPos, Vector3 newPos) 
 	{
 		occupiedArray[(int)oldPos.x, (int)oldPos.z] -= 1;
 		occupiedArray[(int)newPos.x, (int)newPos.z] += 1;
 
-		Debug.Log("new: " +occupiedArray[(int)newPos.x, (int)newPos.z]);
+		//Debug.Log("new: " +occupiedArray[(int)newPos.x, (int)newPos.z]);
 
 		return occupiedArray[(int)newPos.x, (int)newPos.z];
 	}
-}
-
-#region NOT IN USE
+	*/
 
 /*
 public class CubeStacking : MonoBehaviour {

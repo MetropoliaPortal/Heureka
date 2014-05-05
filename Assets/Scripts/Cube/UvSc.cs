@@ -10,6 +10,7 @@ using System.Collections;
 public class UvSc : MonoBehaviour {
 
 	// DEBUGGING PURPOSE
+	/*
 	void Start () {
 		Mesh theMesh;
 		theMesh = GetComponent<MeshFilter>().mesh;
@@ -50,13 +51,14 @@ public class UvSc : MonoBehaviour {
 		// Assign the mesh its new UVs
 		theMesh.uv = theUVs;
 	}
+	*/
 	/// <summary>
 	/// Initialize the specified cubeObject.
 	/// The method is called from the StartScript.cs
 	/// The Cube object to be taken care is passed as parameter
 	/// </summary>
 	/// <param name="cubeObject">Cube object.</param>
-	public void Init (GameObject cubeObject) {
+	public void Initialize (GameObject cubeObject) {
         Mesh theMesh;
 		theMesh = cubeObject.GetComponent<MeshFilter>().mesh;
 		

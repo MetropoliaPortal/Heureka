@@ -13,10 +13,14 @@ using System.Collections.Generic;
 public class CubeRotation : MonoBehaviour 
 {
 
+	public int category;
+
 	public Material[] materials; 
 	int i_prevIndex = -1;
 	int i_prevPolarity = -1;
 	Vector3 v_prevRotation;
+	Queue<int> v_prevRotations = new Queue<int> ();
+
 
 	Shader currentShader;
 
@@ -29,10 +33,9 @@ public class CubeRotation : MonoBehaviour
 	public void Initialize (string tagQuuppa, BuildingType type = BuildingType.Leisure) 
 	{
 		string tempType = type.ToString ();				// Convert type to string
-		string url = "Textures/" + tempType;			// Append type to url
+		string url = "Materials/" + tempType;			// Append type to url
 		materials = Resources.LoadAll<Material>(url);	// Get corresponding materials from Resources folder
-
-		currentShader = renderer.material.shader;		// use shader which is saved to cube prefab
+		//currentShader = renderer.material.shader;		// use shader which is saved to cube prefab
 
 	}
 
@@ -48,7 +51,7 @@ public class CubeRotation : MonoBehaviour
 
 		for(; axis < 3 ; axis++)						// For loop iterates through the 
 		{
-			if(Mathf.Abs(acceleration[axis]) > 60)break;// If the value is greater than 60, we found the axis getting acceleration
+			if(Mathf.Abs(acceleration[axis]) > 50)break;// If the value is greater than 60, we found the axis getting acceleration
 														// Since the axis may receive positive or negative accelration we use the absolut value
 		}
 		if(axis == 3) return;							// if we did not find any axis with value matching our request we quit the method
@@ -59,10 +62,39 @@ public class CubeRotation : MonoBehaviour
 
 		polarity = (acceleration[axis] >= 0) ? 1: -1;
 
-		if(polarity != i_prevPolarity || axis != i_prevIndex)	// if the polarity or the axis have changed from previous, we swap the texture
+		if(ComparePreviousRotations(axis, polarity))
+			SwapTexture(axis, polarity);
+
+		/*
+		if(polarity == i_prevPolarity || axis == i_prevIndex)	// if the polarity or the axis have changed from previous, we swap the texture
 		{
 			SwapTexture(axis, polarity);
 		}
+		*/
+
+		// Record values for next round
+		i_prevIndex = axis;
+		i_prevPolarity = polarity;
+	}
+
+	private bool ComparePreviousRotations(int axis, int polarity)
+	{
+		if (v_prevRotations.Count < 5) 
+		{
+			v_prevRotations.Enqueue (axis * polarity);
+		} 
+		else 
+		{
+			v_prevRotations.Dequeue();
+		}
+
+		foreach (int i in v_prevRotations) 
+		{
+			if( i != axis * polarity)
+				return false;
+		}
+
+		return true;
 	}
 
 	/// <summary>
@@ -86,24 +118,24 @@ public class CubeRotation : MonoBehaviour
 			textureIndex = polarity > 0 ? 4 : 5;
 			break;
 		}
-		renderer.material = materials[textureIndex];
-		renderer.material.shader = currentShader;
-
-		//Debug.Log("curtex indx: " +textureIndex);
-		Debug.Log("current texture: " +materials[textureIndex].name);
-
-		// Record values for next round
-		i_prevIndex = axis;
-		i_prevPolarity = polarity;
+		if(renderer.material != materials[textureIndex])
+			renderer.material = materials[textureIndex];
+		//renderer.material.shader = currentShader;
 	}
-
-
 
 	#region Debug
 
 	void Start()
 	{
-		Initialize("0202020");
+		if(category == 0)
+			Initialize("0202020", BuildingType.Leisure);
+		else if (category == 1)
+			Initialize("0202020", BuildingType.Official);
+		else if (category == 2)
+			Initialize("0202020", BuildingType.Residential);
+		else if (category == 3)
+			Initialize("0202020", BuildingType.Shop);
+
 		renderer.material = materials[0];
 	}
 

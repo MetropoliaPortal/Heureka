@@ -28,14 +28,13 @@ public class QuuppaConnection : MonoBehaviour
 	/// <summary>
 	/// The frequency of the calls for the request to the server 
 	/// </summary>
-	public float callFrequency = 0.2f;
+	public float callFrequency = 0.00f;
 	
 	private CubePosition m_cubePosition;		// Reference to the CubePosition script attached to that object
 	private CubeRotation m_rotation;			// Reference to the CubeRotation script attached to that object
 	private string st_urlPosition;				// The url request for position
 	private string st_urlAccel;					// The url request for acceleration
 	private Vector3 v_prevPosition = new Vector3();		// Store previous positions to discard noise
-	//private Vector3 v_prevAccel = new Vector3();		// Store previous acceleration to discard noise
 
 	// All data are marked as const to make them immutable and static 
 	private const string s_positionX = "smoothedPositionX";	// string for X position parsing
@@ -61,6 +60,7 @@ public class QuuppaConnection : MonoBehaviour
 	/// </summary>
 	public void Initialize (CubePosition cubePosition, CubeRotation cubeRotation, string tagQuuppa) 
 	{
+
 		this.tagQuuppa = tagQuuppa;
 		m_cubePosition = cubePosition;
 		m_rotation = cubeRotation;
@@ -86,8 +86,12 @@ public class QuuppaConnection : MonoBehaviour
 			// Access the url for request
 			WWW www = new WWW(st_urlPosition);
 			yield return www;
-            
-            if (www.error == null)
+
+			if(www.error != null)
+			{
+				Debug.LogError("Error with HAIP file connection: " +www.error);
+			}
+           	else
             {
 				// Try/Catch needed since some of the data come sometimes as 0 without any extra information
 				// As a result, the parsed info contained a erroneous data like 0,0.2 instead of 0.000
@@ -116,7 +120,8 @@ public class QuuppaConnection : MonoBehaviour
 	float GetFloatFromJson(string name, string file)
 	{
 		int index = file.IndexOf(name) + name.Length + s_offsetExtraChar;
-		string pos = name.Substring(index, s_offsetGetData);
+		string pos = file.Substring(index, s_offsetGetData);
+
 		return float.Parse(pos);
 	}
 
@@ -133,16 +138,25 @@ public class QuuppaConnection : MonoBehaviour
 
 			WWW wwwAccel = new WWW(st_urlAccel);
 			yield return wwwAccel;
-			Vector3 acceleration = new Vector3();
-			if (wwwAccel.error == null)
+
+
+			if( wwwAccel.error != null)
 			{
+				Debug.LogError("Error with tagInfoFile connection: " +wwwAccel.error +", url: " +st_urlAccel);
+			}
+			else
+			{
+				Vector3 acceleration = new Vector3();
+
 				string accel = wwwAccel.text;
 
 				int indexTag = accel.IndexOf (s_tagState);
 				indexTag += s_tagState.Length + 3;
 				string tagSt = accel.Substring(indexTag,1);
-				if(tagSt == s_letter)
-					continue;
+
+				//this is apparently not working as intented
+				//if(tagSt == s_letter)
+					//continue;
 
 				int index = accel.IndexOf(s_acceleration) + s_acceleration.Length + 4 ;
 
@@ -167,6 +181,7 @@ public class QuuppaConnection : MonoBehaviour
 					acceleration.x = float.Parse(accelX);
 					acceleration.y = float.Parse (accelY);
 					acceleration.z = float.Parse (accelZ);
+
 					m_rotation.ProcessRotation(acceleration);
 				}
 				catch(Exception e)

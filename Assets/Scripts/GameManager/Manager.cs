@@ -43,6 +43,9 @@ public class Manager : GameManager
 		// Press G to bring up GUI
 		// Mainly for quitting the game
 		if(Input.GetKeyDown (KeyCode.G)) e_state = State.GUIMenu;
+
+		if(Input.GetKeyDown (KeyCode.F))
+			Screen.fullScreen = !Screen.fullScreen;
 	}
 
 	void OnGUI()
@@ -322,20 +325,17 @@ public class Manager : GameManager
 	// Look for the tag in file, remove tag if existing and remove from the tag list
 	private void RemoveTag( /*string tagID*/)
 	{
-
-		////////////////////////////////////////////////
-		/// Access file
-		/// ////////////////////////////////////////////
 		#if UNITY_EDITOR
 		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 		url = url + @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
 		// When debugging on your computer you need to change that path
-		#endif
-		#if UNITY_STANDALONE_LINUX
+		#elif UNITY_STANDALONE_LINUX
+
 		// The file text is to be kept on the desktop, could be in Resources folder
 		string url = @"..\tagFile.txt";				
 		// The file is kept in the same folder as the build exe.
-		#endif																	
+		#endif		
+
 		
 		string file= File.ReadAllText(url); 
 		string endtoken = ";";
@@ -353,18 +353,24 @@ public class Manager : GameManager
 
 	private void AddTag()
 	{
+		/*
 		#if UNITY_EDITOR
 		// The url needs to be changed while on build mode
 		// url should be tagFile.txt only.
 		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 		url = url + @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
 		// When debugging on your computer you need to change that path
-		#endif
-		#if UNITY_STANDALONE_LINUX
+		#elif UNITY_STANDALONE_LINUX
 		// The file text is to be kept on the desktop, could be in Resources folder
 		string url = @"..\tagFile.txt";					// This is when building the project
 		// The file is kept in the same folder as the build exe.
 		#endif
+		|*/
+
+		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+		url += @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
+
+
 		using (StreamWriter sw = File.AppendText(url))
 		{
 			string newTag = "id:"+st_id+","+selectionStrings[selectionGridInt]+";";

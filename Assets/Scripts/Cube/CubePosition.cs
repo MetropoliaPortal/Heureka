@@ -18,7 +18,15 @@ public class CubePosition : MonoBehaviour
     
 	// Cache the transform for faster performance
 	private new Transform transform;
-	private Vector3 prevPos;
+	//private Vector3 prevPos;
+	private float positionYQuuppa;
+	public float PositionYQuuppa
+	{
+		get
+		{
+			return positionYQuuppa;
+		}
+	}
 	//private bool b_fireEvent = false;
 	private CubeStacking cubeStacking;
 
@@ -26,21 +34,15 @@ public class CubePosition : MonoBehaviour
 
 	void Start () 
     {
-		//cubeStacking = GameObject.Find("Scripts").GetComponent<CubeStacking>();
 		cubeStacking = GameObject.Find("Cubes").GetComponent<CubeStacking>();
 
 		if(cubeStacking == null)
 			Debug.LogError("CubeStacking script is null");
         transform = base.transform;
-		MoveCubeInDebug(transform.position);
-		prevPos = transform.position;
-
-		//Debug
-		//PositionCube(0.7f,0.2f,0.7f); 
 
         GridManager.obstacleList.Add(gameObject);
 	}
-
+	
 	public void PositionCube(float x, float y , float z)
 	{
 		// If the cube is already on the move, we discard any other moves
@@ -63,6 +65,9 @@ public class CubePosition : MonoBehaviour
 			print (e.Message);
 		}
 
+		//save the y position from quuppa to separate variable
+		positionYQuuppa = y;
+
 		// Store the value
 		if(!b_cubeOnMove)
 			StartCoroutine(MoveCubeToPosition(pos));	
@@ -71,56 +76,33 @@ public class CubePosition : MonoBehaviour
 	private bool b_cubeOnMove = false;
 	IEnumerator MoveCubeToPosition(Vector3 position)
 	{
-		Debug.Log(position);
 
 		b_cubeOnMove = true;
 		float ratio = 0;
 		float duration = 0.2f;
 		float multiplier = 1 / duration;
+	
+		//2D coordinates to disable effect to Y coordinate
+		Vector2 cube2dPos = new Vector2 (transform.position.x, transform.position.z);
+		Vector2 targetPos = new Vector2 (position.x, position.z);
 
-		while(transform.position != position)
+		while (cube2dPos != targetPos)
 		{
 			ratio += Time.deltaTime * multiplier;
-			transform.position = Vector3.Lerp(transform.position, position, ratio);
+			cube2dPos = Vector2.Lerp(cube2dPos, targetPos, ratio);
+			transform.position = new Vector3(cube2dPos.x, transform.position.y, cube2dPos.y);
 			yield return null;
 		}
+
+		//make sure transform is on the exactly correct position
+		transform.position = new Vector3 (targetPos.x, position.y, targetPos.y);
+
 		b_cubeOnMove = false;
 
-		Vector3 pos = transform.position;
-		pos = CheckYComponent(prevPos, pos);
-		transform.position = pos;
+		cubeStacking.CompareStackedCubes (transform);
 
-		prevPos = transform.position;
 		OnMove();
 		OnMoveSecond();
-
-	}
-
-	/// <summary>
-	/// Gets the number of cubes on it's current position and places the cube on top of the pile
-	/// </summary>
-	/// <returns>Position with possibly adjusted Y value.</returns>
-	Vector3 CheckYComponent(Vector3 oldPos, Vector3 newPos)
-	{
-		if( oldPos != newPos)
-		{
-			int yLevel = cubeStacking.UpdateOccupiedArray(oldPos, newPos);
-			Vector3 p = newPos;
-
-			if 		(yLevel == 1)	p.y = 1;
-			else if (yLevel == 2)	p.y = 3;
-			else if (yLevel == 3) 	p.y = 5;
-			else
-			{
-				Debug.LogError("too high y level: " +yLevel);
-			}
-
-			return p;
-		}
-		else
-		{
-			return newPos;
-		}
 	}
 
  	/*
@@ -157,7 +139,7 @@ public class CubePosition : MonoBehaviour
 	public void MoveCubeInDebug(Vector3 position)
 	{
 		position.y++;
-
+	
 		float [] values = {2,4,6,8,10,12};
 		float x = 0;
 		float z = 0;
@@ -172,16 +154,15 @@ public class CubePosition : MonoBehaviour
 
 		for (int i = 0; i < values.Length ; i++)
 		{
-			if(position.x > values[i] - 1 && position.x < values[i] + 1)
+			if(position.x >= values[i] - 1 && position.x <= values[i] + 1)
 				x = values[i];
-			if(position.z > values[i] - 1 && position.z < values[i] + 1)
+			if(position.z >= values[i] - 1 && position.z <= values[i] + 1)
 				z = values[i];
 		}
-		Vector3 vec = new Vector3(x,position.y,z);
-
+		Vector3 targetPos = new Vector3(x,position.y,z);
 
 		if(!b_cubeOnMove)
-			StartCoroutine(MoveCubeToPosition(vec));
+			StartCoroutine(MoveCubeToPosition(targetPos));
 	}
 	 
 	#endregion
@@ -233,9 +214,9 @@ public class CubePosition : MonoBehaviour
 		//CheckPosition();
 		
 	}
-	*/
+
 	
-	/*
+
 	private bool b_cubeOnMove = false;
 	/// <summary>
 	/// Moves the cube to position.
@@ -274,8 +255,8 @@ public class CubePosition : MonoBehaviour
 		OnMove();
 		OnMoveSecond();
 	}
-	*/
 
+	*/
 	/*
 	void CheckPosition() 
     {
@@ -291,9 +272,9 @@ public class CubePosition : MonoBehaviour
             OnMove();
 			OnMoveSecond();
         }  
-    }*/
+    }
 
-	/*
+
 	List<Vector3>list = new List<Vector3>();
 	Vector3 CheckForValue (Vector3 value)
 	{
