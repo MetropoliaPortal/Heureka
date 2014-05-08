@@ -25,6 +25,8 @@ public class Manager : GameManager
 	void Awake()
 	{
 		e_state = State.GUIMenu;
+
+		//Screen.SetResolution(3840, 1200, false);
 	}
 	void Start () 
 	{
@@ -325,6 +327,7 @@ public class Manager : GameManager
 	// Look for the tag in file, remove tag if existing and remove from the tag list
 	private void RemoveTag( /*string tagID*/)
 	{
+		/*
 		#if UNITY_EDITOR
 		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 		url = url + @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
@@ -334,7 +337,11 @@ public class Manager : GameManager
 		// The file text is to be kept on the desktop, could be in Resources folder
 		string url = @"..\tagFile.txt";				
 		// The file is kept in the same folder as the build exe.
-		#endif		
+		#endif	
+		*/
+
+		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+		url = url + @"\tagFile.txt";	// This one when in Debug mode with no QuuppaSystem
 
 		
 		string file= File.ReadAllText(url); 
