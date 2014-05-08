@@ -22,7 +22,7 @@ public class CubeStacking : MonoBehaviour
 		//Sort array from smallest to largest
 		Transform[] transformArray = ts.ToArray();
 		System.Array.Sort(transformArray, delegate(Transform first, Transform second){
-			return (second.GetComponent<CubePosition>().PositionYQuuppa.CompareTo(first.GetComponent<CubePosition>().PositionYQuuppa));
+			return (first.GetComponent<CubePosition>().PositionYQuuppa.CompareTo(second.GetComponent<CubePosition>().PositionYQuuppa));
 		});
 
 		for (int i = 0; i < transformArray.Length; i++)

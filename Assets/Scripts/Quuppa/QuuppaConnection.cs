@@ -52,6 +52,8 @@ public class QuuppaConnection : MonoBehaviour
 	private const string s_letter = "d";					// string for d letter to avoid creation of new string each round
 															// defining whether the tag state is default or triggered
 
+	private string tagState;
+
 
 	/// <summary>
 	/// Initializes this instance.
@@ -60,7 +62,6 @@ public class QuuppaConnection : MonoBehaviour
 	/// </summary>
 	public void Initialize (CubePosition cubePosition, CubeRotation cubeRotation, string tagQuuppa) 
 	{
-
 		this.tagQuuppa = tagQuuppa;
 		m_cubePosition = cubePosition;
 		m_rotation = cubeRotation;
@@ -83,6 +84,9 @@ public class QuuppaConnection : MonoBehaviour
 				yield return null;
 			}
 
+			if(tagState == s_letter)
+				continue;
+
 			// Access the url for request
 			WWW www = new WWW(st_urlPosition);
 			yield return www;
@@ -100,6 +104,7 @@ public class QuuppaConnection : MonoBehaviour
 					float x = GetFloatFromJson(s_positionX, www.text);
 					float y = GetFloatFromJson(s_positionY, www.text);
 					float z = GetFloatFromJson(s_positionZ, www.text);
+
 					m_cubePosition.PositionCube(x, z, y);
 					v_prevPosition.x = x;
 					v_prevPosition.y = y;
@@ -128,7 +133,8 @@ public class QuuppaConnection : MonoBehaviour
 
 	IEnumerator GetTagInfoFile()
 	{
-		while(true){
+		while(true)
+		{
 			float timer  = 0;
 			while(timer < callFrequency)
 			{
@@ -152,10 +158,10 @@ public class QuuppaConnection : MonoBehaviour
 
 				int indexTag = accel.IndexOf (s_tagState);
 				indexTag += s_tagState.Length + 3;
-				string tagSt = accel.Substring(indexTag,1);
+				tagState = accel.Substring(indexTag,1);
 
 				//this is apparently not working as intented
-				//if(tagSt == s_letter)
+				//if(tagState == s_letter)
 					//continue;
 
 				int index = accel.IndexOf(s_acceleration) + s_acceleration.Length + 4 ;

@@ -15,7 +15,6 @@ public class UvSc : MonoBehaviour {
 		Mesh theMesh;
 		theMesh = GetComponent<MeshFilter>().mesh;
 
-
 		// Now store a local reference for the UVs
 		Vector2[] theUVs = new Vector2[theMesh.uv.Length];
 		theUVs = theMesh.uv;
@@ -61,7 +60,6 @@ public class UvSc : MonoBehaviour {
 	/// The method is called from the StartScript.cs
 	/// The Cube object to be taken care is passed as parameter
 	/// </summary>
-	/// <param name="cubeObject">Cube object.</param>
 	public void Initialize (GameObject cubeObject) 
 	{
 
@@ -73,6 +71,7 @@ public class UvSc : MonoBehaviour {
         theUVs = theMesh.uv;
 
         // set UV co-ordinates
+		/*
 
 		// Top
 		theUVs[8] = new Vector2(0.0f, 0.0f);
@@ -102,5 +101,6 @@ public class UvSc : MonoBehaviour {
         theUVs[19] = new Vector2(1f, 1f);
         // Assign the mesh its new UVs
         theMesh.uv = theUVs;
+        */
 	}
 }

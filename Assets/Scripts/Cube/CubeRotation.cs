@@ -21,9 +21,6 @@ public class CubeRotation : MonoBehaviour
 	Vector3 v_prevRotation;
 	Queue<int> v_prevRotations = new Queue<int> ();
 
-
-	Shader currentShader;
-
 	/// <summary>
 	/// Initialized the object.
 	/// Method is called once from the StartScript.cs when creating the new object
@@ -35,7 +32,6 @@ public class CubeRotation : MonoBehaviour
 		string tempType = type.ToString ();				// Convert type to string
 		string url = "Materials/" + tempType;			// Append type to url
 		materials = Resources.LoadAll<Material>(url);	// Get corresponding materials from Resources folder
-		//currentShader = renderer.material.shader;		// use shader which is saved to cube prefab
 
 	}
 
@@ -51,7 +47,7 @@ public class CubeRotation : MonoBehaviour
 
 		for(; axis < 3 ; axis++)						// For loop iterates through the 
 		{
-			if(Mathf.Abs(acceleration[axis]) > 50)break;// If the value is greater than 60, we found the axis getting acceleration
+			if(Mathf.Abs(acceleration[axis]) > 30)break;// If the value is greater than 60, we found the axis getting acceleration
 														// Since the axis may receive positive or negative accelration we use the absolut value
 		}
 		if(axis == 3) return;							// if we did not find any axis with value matching our request we quit the method
@@ -73,13 +69,13 @@ public class CubeRotation : MonoBehaviour
 		*/
 
 		// Record values for next round
-		i_prevIndex = axis;
-		i_prevPolarity = polarity;
+		//i_prevIndex = axis;
+		//i_prevPolarity = polarity;
 	}
 
 	private bool ComparePreviousRotations(int axis, int polarity)
 	{
-		if (v_prevRotations.Count < 5) 
+		if (v_prevRotations.Count < 3) 
 		{
 			v_prevRotations.Enqueue (axis * polarity);
 		} 
@@ -120,7 +116,6 @@ public class CubeRotation : MonoBehaviour
 		}
 		if(renderer.material != materials[textureIndex])
 			renderer.material = materials[textureIndex];
-		//renderer.material.shader = currentShader;
 	}
 
 	#region Debug

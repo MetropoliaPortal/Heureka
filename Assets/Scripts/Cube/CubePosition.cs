@@ -15,6 +15,7 @@ public class CubePosition : MonoBehaviour
     public delegate void EventMove();
     public static event EventMove OnMove = new EventMove(() => { });
 	public static event EventMove OnMoveSecond = new EventMove(() => { });
+	
     
 	// Cache the transform for faster performance
 	private new Transform transform;
@@ -41,6 +42,11 @@ public class CubePosition : MonoBehaviour
         transform = base.transform;
 
         GridManager.obstacleList.Add(gameObject);
+	}
+
+	void Update()
+	{
+		cubeStacking.CompareStackedCubes (transform);
 	}
 	
 	public void PositionCube(float x, float y , float z)

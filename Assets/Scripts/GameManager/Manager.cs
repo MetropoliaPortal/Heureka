@@ -37,9 +37,7 @@ public class Manager : GameManager
 		r_rect = new Rect(midWidth, 0, size, size / 2f);
 		r_restartRect = new Rect(midWidth, Screen.height / 2 - size/4, size, size / 2);
 	}
-
-
-	// Update is called once per frame
+	
 	void Update () 
 	{
 		// Press G to bring up GUI

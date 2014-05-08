@@ -67,10 +67,8 @@ public class QuuppaStart : MonoBehaviour
 		// The reference is set to null, if no tag is deficient the reference is not used
 		Manager manager = null;		
 
-
 		for (int i = 0 ; i < arrGUID.Length; i++)                               // Using how many GUID were found to create as many cubes
 		{
-
 			string urlInfo = tagInfo + arrGUID[i];				// Get the url for tag info
 			WWW info = new WWW(urlInfo);						// Connect to server
 			yield return info;					
@@ -97,7 +95,6 @@ public class QuuppaStart : MonoBehaviour
 				print(e.Message);
 				Debug.LogError("Missing key: " +arrGUID[i]);
 			}
-			//cubeRotation.Initialize(arrGUID[i]);
 
 			/*
 			string str = info.text;			

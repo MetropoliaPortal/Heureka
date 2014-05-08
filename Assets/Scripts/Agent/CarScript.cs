@@ -63,7 +63,8 @@ public class CarScript : MonoBehaviour {
 			if(++i_index == m_path.Length)i_index = 0;
 		}
 	}
-	void LateUpdate(){
+	void LateUpdate()
+	{
 		Vector3 direction = (m_path[i_index].position - transform.position);
 		GetDirection(direction);
 	}
