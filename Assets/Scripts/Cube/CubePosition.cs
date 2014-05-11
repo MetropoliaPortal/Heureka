@@ -30,6 +30,7 @@ public class CubePosition : MonoBehaviour
 	}
 	//private bool b_fireEvent = false;
 	private CubeStacking cubeStacking;
+	private string tagState;
 
     #endregion
 
@@ -107,8 +108,7 @@ public class CubePosition : MonoBehaviour
 
 		cubeStacking.CompareStackedCubes (transform);
 
-		OnMove();
-		OnMoveSecond();
+
 	}
 
  	/*
@@ -138,6 +138,22 @@ public class CubePosition : MonoBehaviour
 			}
 		}
 		return input;
+	}
+
+	/// <summary>
+	/// Fire OnMove events when tag state is set back to d
+	/// </summary>
+	public void SetTagState(string c)
+	{
+		if( tagState != c )
+		{
+			tagState = c;
+			if( tagState == "d" )
+			{
+				OnMove();
+				OnMoveSecond();
+			}
+		}
 	}
 	
 	#region DEBUG
@@ -210,18 +226,12 @@ public class CubePosition : MonoBehaviour
 		//Check y position
 		pos = CheckForValue (pos);
 
-		
-		
-		
 		// Store the value
 		if(!b_cubeOnMove)
 			StartCoroutine(MoveCubeToPosition(pos));
 		//transform.position = pos;
 		//CheckPosition();
-		
 	}
-
-	
 
 	private bool b_cubeOnMove = false;
 	/// <summary>

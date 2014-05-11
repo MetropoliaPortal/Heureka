@@ -159,10 +159,8 @@ public class QuuppaConnection : MonoBehaviour
 				int indexTag = accel.IndexOf (s_tagState);
 				indexTag += s_tagState.Length + 3;
 				tagState = accel.Substring(indexTag,1);
-
-				//this is apparently not working as intented
-				//if(tagState == s_letter)
-					//continue;
+				// set tag state in cubeposition
+				m_cubePosition.SetTagState( tagState );
 
 				int index = accel.IndexOf(s_acceleration) + s_acceleration.Length + 4 ;
 

@@ -19,7 +19,9 @@ public class CubeRotation : MonoBehaviour
 	int i_prevIndex = -1;
 	int i_prevPolarity = -1;
 	Vector3 v_prevRotation;
-	Queue<int> v_prevRotations = new Queue<int> ();
+	private Queue<int> v_prevRotations = new Queue<int> ();
+
+	private ParticleSystem particleSystem;
 
 	/// <summary>
 	/// Initialized the object.
@@ -32,7 +34,7 @@ public class CubeRotation : MonoBehaviour
 		string tempType = type.ToString ();				// Convert type to string
 		string url = "Materials/" + tempType;			// Append type to url
 		materials = Resources.LoadAll<Material>(url);	// Get corresponding materials from Resources folder
-
+		particleSystem = GetComponent<ParticleSystem>();
 	}
 
 	/// <summary>
@@ -115,7 +117,10 @@ public class CubeRotation : MonoBehaviour
 			break;
 		}
 		if(renderer.material != materials[textureIndex])
+		{
 			renderer.material = materials[textureIndex];
+			particleSystem.Emit(120);
+		}
 	}
 
 	#region Debug
