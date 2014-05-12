@@ -1,24 +1,25 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class WaypointScript : MonoBehaviour {
-
-	public Transform[]connections;
+public class WaypointScript : MonoBehaviour 
+{
+	public Transform[] connections;
 	public int indexArray;
 	public bool isDynamic = false;
 
-	private RoadManager m_manager;
+	private RoadManager roadManager;
 	private Transform [][] m_roads;
 
 	void Awake()
 	{
-		m_manager = GameObject.Find ("RoadManager").GetComponent<RoadManager>();
+		roadManager = GameObject.Find ("RoadManager").GetComponent<RoadManager>();
 		if(isDynamic)
 		{
 			m_roads = new Transform[3][];
 		}
-		else{
+		else
+		{
 			m_roads = new Transform[2][];
 		}
 		for (int i = 0; i < connections.Length; i++ )
@@ -33,9 +34,10 @@ public class WaypointScript : MonoBehaviour {
 		RoadManager.OnRoadChange += UpdatePath;
 	}
 
-	public Transform [] GetPath(CarScript sc)
+	public Transform [] GetPath(CarMovement sc)
 	{	
 		int r = Random.Range(0,m_roads.Length);
+
 		if(r == 2)
 		{
 			sc.DynamicRoadOn = true;
@@ -47,13 +49,15 @@ public class WaypointScript : MonoBehaviour {
 
 		return m_roads[r];
 	}
-	private  void UpdatePath()
+
+	private void UpdatePath()
 	{
 		if(isDynamic)
 		{
-			m_roads[2] = m_manager.GetDynamicPath(indexArray);
+			m_roads[2] = roadManager.GetDynamicPath(indexArray);
 		}
 	}
+
 	public Transform[] GetDynamicPath()
 	{
 		return m_roads[2];

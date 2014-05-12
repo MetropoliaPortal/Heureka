@@ -4,59 +4,76 @@ using System.Collections;
 public class CarSprite : MonoBehaviour 
 {
 
-	public Sprite front, back, sideLeft, sideRight; 
+	public Sprite leftDown, rightUp, leftUp, rightDown; 
 	private SpriteRenderer spriteRenderer;
+	private CarMovement carMovement;
 	
 	void Start () 
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
+		carMovement = transform.parent.gameObject.GetComponent<CarMovement>();
 	}
 
 	// Apply the corresponding srpite based on direction
 	public void GetDirection( Transform[] m_path, int i_index )
 	{
-		Vector3 direction = (m_path[i_index].position - transform.position);
+		Vector3 pathPoint = m_path[i_index].position;
+		Vector3 dir = (pathPoint - transform.parent.position);
+		dir.Normalize();
 
-		// Get all four directions
 		Vector3 [] directions = {Vector3.right, Vector3.left, Vector3.forward, Vector3.back};
-		int ind = -1;
-		Vector3 d = direction.normalized;
+		int correspondingDir = -1;
+		float smallestDotOffset = 1;
+
 		// Check current direction against all directions to find which has dot close to 1
 		for(int i = 0; i < directions.Length; i++ )
 		{
-			float dot =  d.x * directions[i].x + d.z * directions[i].z;
-			if(dot >= 1 - 0.25f && dot <= 1 + 0.25f)
+			float dot =  Vector3.Dot(dir, directions[i]);
+
+			if( Mathf.Abs( 1 - dot ) < smallestDotOffset )
 			{
-				ind = i;
-				break;
+				correspondingDir = i;
+				smallestDotOffset = Mathf.Abs( 1 - dot );
 			}
 		}
-		if(ind != -1)
-		{
-			Vector3 dir = directions[ind];
-			Vector3 targetPoint = m_path[i_index].position;
-			float dot = Vector3.Dot(dir, direction);
-			Vector3 a = -dot * dir;
-			
-			Vector3 closest = targetPoint + a;
-			Vector3 v = new Vector3(directions[ind].z, directions[ind].y, -directions[ind].x);
-			Vector3 b =closest + v * 0.2f;
-			b.y = 0.3f;
-			transform.position = b;
-		}
-		switch(ind)
+
+		switch(correspondingDir)
 		{
 		case 0:
-			spriteRenderer.sprite = sideRight;
+			if(spriteRenderer.sprite != rightDown)
+			{
+				Vector3 adjustedPos = Vector3.zero;
+				adjustedPos.z -= 1.0f;
+				transform.localPosition = adjustedPos;
+				spriteRenderer.sprite = rightDown;
+			}
 			break;
 		case 1 :
-			spriteRenderer.sprite = sideLeft;
+			if(spriteRenderer.sprite != leftUp)
+			{
+				Vector3 adjustedPos = Vector3.zero;
+				adjustedPos.z -= 0.5f;
+				transform.localPosition = adjustedPos;
+				spriteRenderer.sprite = leftUp;
+			}
 			break;
 		case 2:
-			spriteRenderer.sprite = back;
+			if(spriteRenderer.sprite != rightUp)
+			{
+				Vector3 adjustedPos = Vector3.zero;
+				adjustedPos.x += 0.5f;
+				transform.localPosition = adjustedPos;
+				spriteRenderer.sprite = rightUp;
+			}
 			break;
 		case 3:
-			spriteRenderer.sprite = front;
+			if(spriteRenderer.sprite != leftDown)
+			{
+				Vector3 adjustedPos = Vector3.zero;
+				adjustedPos.x -= 0.5f;
+				transform.localPosition = adjustedPos;
+				spriteRenderer.sprite = leftDown;
+			}
 			break;
 		}
 	}

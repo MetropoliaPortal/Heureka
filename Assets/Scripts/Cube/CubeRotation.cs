@@ -14,14 +14,14 @@ public class CubeRotation : MonoBehaviour
 {
 
 	public int category;
+	public GameObject particleEffect;
+	private ParticleSystem particleSystem;
 
 	public Material[] materials; 
 	int i_prevIndex = -1;
 	int i_prevPolarity = -1;
 	Vector3 v_prevRotation;
 	private Queue<int> v_prevRotations = new Queue<int> ();
-
-	private ParticleSystem particleSystem;
 
 	/// <summary>
 	/// Initialized the object.
@@ -34,7 +34,11 @@ public class CubeRotation : MonoBehaviour
 		string tempType = type.ToString ();				// Convert type to string
 		string url = "Materials/" + tempType;			// Append type to url
 		materials = Resources.LoadAll<Material>(url);	// Get corresponding materials from Resources folder
-		particleSystem = GetComponent<ParticleSystem>();
+
+		//Instantiate particle effect
+		GameObject go = (GameObject)Instantiate( particleEffect, transform.position, Quaternion.identity );
+		particleSystem = go.GetComponent<ParticleSystem>();
+		go.transform.parent = transform;
 	}
 
 	/// <summary>
@@ -44,35 +48,23 @@ public class CubeRotation : MonoBehaviour
 	/// <param name="acceleration">The Vector3 containing the 3 acceleration values from the tag</param>
 	public void ProcessRotation (Vector3 acceleration)
 	{
-		int axis = 0;									// Define which axis is receiving acceleration
-		int polarity = 0;								// polarity indicates whether the axis is up or down
+		// Define which axis is receiving acceleration
+		int axis = 0;	
+		// polarity indicates whether the axis is up or down
+		int polarity = 0;								
 
-		for(; axis < 3 ; axis++)						// For loop iterates through the 
+		for(; axis < 3 ; axis++)						
 		{
-			if(Mathf.Abs(acceleration[axis]) > 30)break;// If the value is greater than 60, we found the axis getting acceleration
-														// Since the axis may receive positive or negative accelration we use the absolut value
+			if(Mathf.Abs(acceleration[axis]) > 30)break;
+														
 		}
-		if(axis == 3) return;							// if we did not find any axis with value matching our request we quit the method
-		 												// this means the cube is not totally resting flat, to avoid flickering of texture we return
-														// The latest texture should remain on
-		//polarity = (axis >> 31 != 0) ? 1: -1; 				// We found an axis being greater than 60 we need to know if the value is positive or negative
-														// we check the 32nd bit to be 1 or 0. 
+		if(axis == 3) return;						
 
 		polarity = (acceleration[axis] >= 0) ? 1: -1;
 
 		if(ComparePreviousRotations(axis, polarity))
 			SwapTexture(axis, polarity);
 
-		/*
-		if(polarity == i_prevPolarity || axis == i_prevIndex)	// if the polarity or the axis have changed from previous, we swap the texture
-		{
-			SwapTexture(axis, polarity);
-		}
-		*/
-
-		// Record values for next round
-		//i_prevIndex = axis;
-		//i_prevPolarity = polarity;
 	}
 
 	private bool ComparePreviousRotations(int axis, int polarity)
@@ -103,22 +95,25 @@ public class CubeRotation : MonoBehaviour
 	{
 		// The switch case uses the value of the axis, then once inside the statement, we check if the polarity is positive or negative
 		// This will define what texture is to be applied
-		int textureIndex = -1;
+		int materialIdx = -1;
 		switch(axis)
 		{
 		case 0:
-			textureIndex = polarity > 0 ? 0 : 1; 
+			materialIdx = polarity > 0 ? 0 : 1; 
 			break;
 		case 1:
-			textureIndex = polarity > 0 ? 2 : 3; 
+			materialIdx = polarity > 0 ? 2 : 3; 
 			break;
 		case 2:
-			textureIndex = polarity > 0 ? 4 : 5;
+			materialIdx = polarity > 0 ? 4 : 5;
 			break;
 		}
-		if(renderer.material != materials[textureIndex])
+	
+		string matName = renderer.material.name.Replace(" (Instance)","");
+
+		if( matName != materials[materialIdx].name )
 		{
-			renderer.material = materials[textureIndex];
+			renderer.material = materials[materialIdx];
 			particleSystem.Emit(120);
 		}
 	}
