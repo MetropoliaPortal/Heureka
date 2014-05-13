@@ -12,9 +12,8 @@ using System.Collections.Generic;
 
 public class CubeRotation : MonoBehaviour 
 {
-
-	public int category;
 	public GameObject particleEffect;
+	public int category;
 	private ParticleSystem particleSystem;
 
 	public Material[] materials; 

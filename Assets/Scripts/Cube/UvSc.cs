@@ -2,16 +2,15 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// UvSc.cs
 /// The component is created from the StartScript.cs
 /// It only contains one method to modify the UV map of the material
 /// once all cubes are taken care, the UvSc object is removed from the game
 /// </summary>
-public class UvSc : MonoBehaviour {
+public class UvSc : MonoBehaviour 
+{
 
-	// DEBUGGING PURPOSE
-
-	void Start () {
+	void Start () 
+	{
 		Mesh theMesh;
 		theMesh = GetComponent<MeshFilter>().mesh;
 
@@ -20,7 +19,6 @@ public class UvSc : MonoBehaviour {
 		theUVs = theMesh.uv;
 		
 		// set UV co-ordinates
-		
 		// Top
 		theUVs[4] = new Vector2(0.0f, 1.0f);
 		theUVs[5] = new Vector2(0.33f, 1.0f);
@@ -62,7 +60,6 @@ public class UvSc : MonoBehaviour {
 	/// </summary>
 	public void Initialize (GameObject cubeObject) 
 	{
-
         Mesh theMesh;
 		theMesh = cubeObject.GetComponent<MeshFilter>().mesh;
 		
