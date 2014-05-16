@@ -3,17 +3,9 @@ using System.Collections;
 
 public class DebugInput : MonoBehaviour 
 {
-	public bool IsDebugMode;
 	CubePosition cubePosition;
 	CubeRotation cubeRotation;
-
-	public Collider[] colliders;
-
-	void Awake()
-	{
-		//SetLights();
-	}
-
+	
 	void Update () 
 	{
 		if(Input.GetMouseButtonDown(0))
@@ -25,7 +17,6 @@ public class DebugInput : MonoBehaviour
 				if(hit.collider.tag == "Obstacle")
 				{
 					cubePosition = hit.collider.gameObject.GetComponent<CubePosition>();
-					SetColliders(false);
 				}
 			}
 		}
@@ -43,41 +34,12 @@ public class DebugInput : MonoBehaviour
 				RaycastHit hit;
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				Physics.Raycast (ray, out hit);
-				SetColliders(true);
 				cubePosition.MoveCubeInDebug(hit.point);
 				cubePosition = null;
 			}
 		}
 
 		CheckIfRotate();
-	}
-
-	void SetColliders(bool value)
-	{
-		for(int i = 0; i < colliders.Length; i++)
-		{
-			colliders[i].enabled = value;
-		}
-	}
-	private void SetLights()
-	{
-		Light [] lights = new Light[5];
-		Transform [] trs = new Transform[5]; 
-		GameObject obj = new GameObject("Light");
-		obj.transform.position = new Vector3(0,0,0);
-		for (int i = 0 ; i < 5 ; i++)
-		{
-			GameObject go = new GameObject("The Light");
-			lights[i] = go.AddComponent<Light>();
-			lights[i].intensity = 2f;
-			trs[i] = go.transform;
-		}
-		trs[0].position = new Vector3(0,5,0);
-		trs[1].position = new Vector3(0,5,12);
-		trs[2].position = new Vector3(12,5,0);
-		trs[3].position = new Vector3(12,5,12);
-		trs[4].position = new Vector3(6,5,6);
-		for(int i = 0; i < 5 ; i++){trs[i].parent = obj.transform;}
 	}
 
 	/// <summary>
@@ -109,6 +71,5 @@ public class DebugInput : MonoBehaviour
 					cubeRotation.ProcessRotation(new Vector3(0,65f,0));
 			}
 		}
-
 	}
 }

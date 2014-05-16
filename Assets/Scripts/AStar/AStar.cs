@@ -4,14 +4,8 @@ using System.Collections.Generic;
 
 public class AStar
 {
-    #region List fields
-
-    public static PriorityQueue closedList, openList;
-    #endregion
-
-    /// <summary>
-    /// Calculate the final path in the path finding
-    /// </summary>
+    private static PriorityQueue closedList, openList;
+	
     private static List<Node> CalculatePath(Node node)
     {
         List<Node> list = new List<Node>();
@@ -24,10 +18,7 @@ public class AStar
         list.Reverse();
         return list;
     }
-
-    /// <summary>
-    /// Find the path between start node and goal node using AStar Algorithm
-    /// </summary>
+	
     public static List<Node> FindPath(Node start, Node goal, bool pathForRoad)
     {
 
@@ -50,8 +41,6 @@ public class AStar
 		}else if ( start.position.z < 0.5f || start.position.z > (GridManager.instance.numOfRows - 1) ) {
 			discardX = true;
 		}
-
-
 		
         while (openList.Length != 0)
         {

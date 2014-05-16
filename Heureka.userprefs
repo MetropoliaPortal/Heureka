@@ -1,11 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="..\LastPlanets\Assets\DirectionLine.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameManager\TagManager.cs">
     <Files>
-      <File FileName="..\LastPlanets\Assets\_Scripts\LevelEditor\LevelEditorGUI.cs" Line="86" Column="1" />
-      <File FileName="..\LastPlanets\Assets\DirectionLine.cs" Line="37" Column="54" />
-      <File FileName="..\LastPlanets\Assets\_Scripts\LevelGeneration\ObjectForXml.cs" Line="26" Column="2" />
-      <File FileName="..\LastPlanets\Assets\_Scripts\LevelGeneration\XmlHandler.cs" Line="42" Column="1" />
+      <File FileName="Assets\Scripts\GameManager\CubeCreator.cs" Line="15" Column="44" />
+      <File FileName="Assets\Scripts\Quuppa\QuuppaStart.cs" Line="27" Column="1" />
+      <File FileName="Assets\Scripts\GameManager\TagManager.cs" Line="37" Column="33" />
+      <File FileName="Assets\Scripts\Quuppa\TagInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Cube\CubeTexture.cs" Line="21" Column="26" />
+      <File FileName="Assets\Scripts\GameManager\QuuppaGUIStateManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GameManager\TagMaintenanceGUI.cs" Line="223" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

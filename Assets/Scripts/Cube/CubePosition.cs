@@ -31,12 +31,13 @@ public class CubePosition : MonoBehaviour
 	//private bool b_fireEvent = false;
 	private CubeStacking cubeStacking;
 	private string tagState;
+	private Vector3 _previousPosition;
 
     #endregion
 
 	void Start () 
     {
-		cubeStacking = GameObject.Find("Cubes").GetComponent<CubeStacking>();
+		cubeStacking = GameObject.Find("GameManager").GetComponent<CubeStacking>();
 
 		if(cubeStacking == null)
 			Debug.LogError("CubeStacking script is null");
@@ -45,7 +46,7 @@ public class CubePosition : MonoBehaviour
         GridManager.obstacleList.Add(gameObject);
 	}
 
-	void Update()
+	void LateUpdate()
 	{
 		cubeStacking.CompareStackedCubes (transform);
 	}
@@ -55,6 +56,7 @@ public class CubePosition : MonoBehaviour
 		// If the cube is already on the move, we discard any other moves
 		// Next move will be considered once the cube has reached its destiantion
 		if(b_cubeOnMove)return;
+
 		Vector3 pos = new Vector3(x,y,z);
 		pos.x = CheckValue(x, Axis.X);
 		pos.z = CheckValue (z, Axis.Y);
@@ -66,27 +68,28 @@ public class CubePosition : MonoBehaviour
 		try
 		{
 			pos = GridManager.gridDict[key];
+
+			//save the y position from quuppa to separate variable
+			positionYQuuppa = y;
+
+			// Store the value
+			if(!b_cubeOnMove)
+				StartCoroutine(MoveCubeToPosition(pos));
+
+			_previousPosition = pos;
 		}
 		catch(System.Exception e)
 		{
 			print (e.Message);
 		}
-
-		//save the y position from quuppa to separate variable
-		positionYQuuppa = y;
-
-		// Store the value
-		if(!b_cubeOnMove)
-			StartCoroutine(MoveCubeToPosition(pos));	
 	}
     
 	private bool b_cubeOnMove = false;
 	IEnumerator MoveCubeToPosition(Vector3 position)
 	{
-
 		b_cubeOnMove = true;
 		float ratio = 0;
-		float duration = 0.2f;
+		float duration = 0.6f;
 		float multiplier = 1 / duration;
 	
 		//2D coordinates to disable effect to Y coordinate
@@ -105,9 +108,6 @@ public class CubePosition : MonoBehaviour
 		transform.position = new Vector3 (targetPos.x, position.y, targetPos.y);
 
 		b_cubeOnMove = false;
-
-		cubeStacking.CompareStackedCubes (transform);
-
 
 	}
 
@@ -185,138 +185,10 @@ public class CubePosition : MonoBehaviour
 
 		if(!b_cubeOnMove)
 			StartCoroutine(MoveCubeToPosition(targetPos));
+
+		OnMove ();
+		OnMoveSecond ();
 	}
 	 
-	#endregion
-
-	#region NOT IN USE
-
-	/*
-	/// <summary>
-	/// Position the cube on the center of the four squares it occupies
-	/// Constrain the cube within the boundaries of the game
-	/// </summary>
-	public void PositionCube(float x, float y , float z)
-	{
-		// If the cube is already on the move, we discard any other moves
-		// Next move will be considered once the cube has reached its destiantion
-		if(b_cubeOnMove)return;
-		Vector3 pos = new Vector3(x,y,z);
-		pos.x = CheckValue(x, Axis.X);
-		pos.z = CheckValue (z, Axis.Y);
-		
-		// Convert to game grid
-		// The key is defined to be unique
-		int key = (int)(pos.x * 1000f + pos.z*10f);
-		// The dictionary contains the equivalent vector 3 in game grid
-		try
-		{
-			pos = GridManager.gridDict[key];
-		}
-		catch(System.Exception e)
-		{
-			print (e.Message);
-		}
-		
-
-		if(y <= 0.40)						pos.y = 1;
-		else if (y > 0.40f && y <= 0.80f)	pos.y = 3;
-		else if (y > 0.80f) 				pos.y = 5;
-
-		//Check y position
-		pos = CheckForValue (pos);
-
-		// Store the value
-		if(!b_cubeOnMove)
-			StartCoroutine(MoveCubeToPosition(pos));
-		//transform.position = pos;
-		//CheckPosition();
-	}
-
-	private bool b_cubeOnMove = false;
-	/// <summary>
-	/// Moves the cube to position.
-	/// The cube interpolate from actual position to new position
-	/// Movemnt is done over 0.2s. No other movement is considered until this movement is done
-	/// </summary>
-	/// <returns>The cube to position.</returns>
-	/// <param name="position">Position.</param>
-	IEnumerator MoveCubeToPosition(Vector3 position)
-	{
-		b_cubeOnMove = true;
-		float ratio = 0;
-		float duration = 0.2f;
-		float multiplier = 1 / duration;
-		
-		
-		prevPos = transform.position;
-
-		while(transform.position != position)
-		{
-			ratio += Time.deltaTime * multiplier;
-			transform.position = Vector3.Lerp(transform.position, position, ratio);
-			yield return null;
-		}
-		b_cubeOnMove = false;
-
-		int height = cubeStacking.UpdateOccupiedArray(prevPos, transform.position);
-		float y = height * 2 - 1;
-		Vector3 pos = transform.position;
-		pos.y = y;
-		transform.position = pos;
-
-		
-		
-		prevPos = transform.position;
-		OnMove();
-		OnMoveSecond();
-	}
-
-	*/
-	/*
-	void CheckPosition() 
-    {
-        // Check if Cube has moved
-        if (prevPos != transform.position)
-        {
-            b_fireEvent = true;
-
-        }
-        else if (prevPos == transform.position && b_fireEvent == true)
-        {
-            b_fireEvent = false;
-            OnMove();
-			OnMoveSecond();
-        }  
-    }
-
-
-	List<Vector3>list = new List<Vector3>();
-	Vector3 CheckForValue (Vector3 value)
-	{
-		if (list.Count == 0)
-		{
-			list.Add (value);
-			return prevPos;
-		}
-		for(int i = 0; i < list.Count; i++)
-		{
-			if(value != list[i])
-			{
-				list.Clear();
-				list.Add (value);
-				return prevPos;
-			}
-		}
-		list.Add (value);
-		if(list.Count == 3)
-		{
-			list.Clear();
-			return value;
-		}
-		return prevPos;
-	}
-	*/
-
 	#endregion
 }

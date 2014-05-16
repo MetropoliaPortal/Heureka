@@ -54,17 +54,15 @@ public class QuuppaConnection : MonoBehaviour
 
 	private string tagState;
 
-
-	/// <summary>
-	/// Initializes this instance.
-	/// The method is called from the QuuppaStart.cs. 
-	/// The other needed components are passed as parameters
-	/// </summary>
-	public void Initialize (CubePosition cubePosition, CubeRotation cubeRotation, string tagQuuppa) 
+	//quuppa debug
+	private int errorAmount = 0;
+	private int successAmount = 0;
+	
+	public void Initialize (string tag) 
 	{
-		this.tagQuuppa = tagQuuppa;
-		m_cubePosition = cubePosition;
-		m_rotation = cubeRotation;
+		tagQuuppa = tag;
+		m_cubePosition = GetComponent<CubePosition>();
+		m_rotation = GetComponent<CubeRotation>();
 
         st_urlPosition = "192.168.123.124:8080/qpe/getHAIPLocation?tag=" + this.tagQuuppa;
 		st_urlAccel = "192.168.123.124:8080/qpe/getTagInfo?tag=" + this.tagQuuppa;
@@ -84,8 +82,8 @@ public class QuuppaConnection : MonoBehaviour
 				yield return null;
 			}
 
-			if(tagState == s_letter)
-				continue;
+			//if(tagState == s_letter)
+				//continue;
 
 			// Access the url for request
 			WWW www = new WWW(st_urlPosition);
@@ -148,10 +146,15 @@ public class QuuppaConnection : MonoBehaviour
 
 			if( wwwAccel.error != null)
 			{
-				Debug.LogError("Error with tagInfoFile connection: " +wwwAccel.error +", url: " +st_urlAccel);
+				Debug.LogError("Error with tagInfoFile connection: " +wwwAccel.error +", tag: " +tagQuuppa);
+				errorAmount++;
+
+				//print ("errors " +tagQuuppa +": " +errorAmount);
+				//print ("successes: " +successAmount);
 			}
 			else
 			{
+				successAmount++;
 				Vector3 acceleration = new Vector3();
 
 				string accel = wwwAccel.text;

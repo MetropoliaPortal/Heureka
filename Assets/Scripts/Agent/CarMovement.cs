@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class CarMovement : MonoBehaviour 
 {
-	
 	public float speed = 4f;							
 	public float height = 1.0f;	
 
@@ -24,42 +23,46 @@ public class CarMovement : MonoBehaviour
 
 	private int i_index = 0;	
 						
-
+	private List<Transform>list;
 	private CarSprite carSprite;
 
 	void Start () 
 	{
 		trans = base.transform;
-		// Get the transformoint object
 		GameObject waypoints = GameObject.Find ("WayPoints");
-		// get all children waypoints
-		List<Transform>list = new List<Transform>();
+		list = new List<Transform>();
 		foreach(Transform t in waypoints.transform)
 		{
 			list.Add (t);
 		}
 
-		Transform start = list[Random.Range(0,list.Count)];
-		WaypointScript ws = start.GetComponent<WaypointScript>();
-
-		// Get a random item for the connection array of the waypoint
-		m_path = ws.GetPath(this);
-		i_index  = 0;
-		
-		// Place the agent at start position and get the initial direction
-		Vector3 pos = new Vector3(start.position.x, height, start.position.z);
-		transform.position = pos;
+		RepositionCar ();
 
 		carSprite = GetComponentsInChildren<CarSprite>()[0];
 		
 		// Subscribe to event on movement of the cube
 		CubePosition.OnMoveSecond += UpdatePath;
 	}
+
+	// Get a random item for the connection array of the waypoint
+	// Place the agent at start position and get the initial direction
+	private void RepositionCar()
+	{
+		Transform start = list[Random.Range(0,list.Count)];
+		WaypointScript ws = start.GetComponent<WaypointScript>();
+
+		m_path = ws.GetPath(this);
+		i_index  = 0;
+
+		Vector3 pos = new Vector3(start.position.x, height, start.position.z);
+		transform.position = pos;
+	}
 	
 	void Update () 
 	{
 		Vector3 pathPos = m_path[i_index].position;
 		pathPos.y = height;
+		//pathPos.z -= 0.4f;
 
 		Vector3 direction = (pathPos - transform.position);
 
@@ -92,97 +95,10 @@ public class CarMovement : MonoBehaviour
 	}
 	
 	// Update path is called by the event of the Cube hen moved
-	void UpdatePath()
+	// If not on a Dynamic road quit the method
+	private void UpdatePath()
 	{
-		Debug.Log("updating path");
-		// If not on a Dynamic road quit the method
 		if(DynamicRoadOn == false)return;
-		
-		// Current direction of the agen
-		Vector3 direction = (m_path[i_index].position - transform.position).normalized;
-		// get the new dynamic path
-		m_path = ws.GetDynamicPath();
-		// Get closest node of the path
-		float distance = Mathf.Infinity;
-		int ind = 0;
-		Vector3 position = trans.position;
-		for(int i = 0 ; i < m_path.Length; i++)
-		{
-			float dist = (position - m_path[i].position).sqrMagnitude;
-			if(dist < distance)
-			{
-				distance = dist;
-				ind = i;
-			}
-		}
-		
-		// Get direction to check if found node is ahead or behind
-		float dot = Vector3.Dot (direction, (transform.position - m_path[ind].position).normalized);
-		// if behind get next node
-		if(dot < 0 )ind++;
-		// Throw raycast downward to check if the agent is still on road.
-		RaycastHit hit;
-		Ray ray = new Ray(trans.position, Vector3.down);
-		if(Physics.Raycast(ray, out hit))
-		{
-			// if the ray hits the ground the agent is repositioned on the nearest node
-			if(hit.collider.name == "Ground")
-			{
-				Vector3 pos = m_path[ind].position;
-				trans.position = new Vector3(pos.x, height, pos.z);
-			}
-		}
+		RepositionCar();
 	}
-	
-	/*
-	// Apply the corresponding texture based on direction
-	void GetDirection(Vector3 direction)
-	{
-		// Get all four directions
-		Vector3 [] directions = {Vector3.right, Vector3.left,Vector3.forward, Vector3.back};
-		int ind = -1;
-		Vector3 d = direction.normalized;
-		// Check current direction against all directions to find which has dot close to 1
-		for(int i = 0; i < directions.Length; i++ )
-		{
-			float dot =  d.x * directions[i].x + d.z * directions[i].z;
-			if(dot >= 1 - 0.25f && dot <= 1 + 0.25f)
-			{
-				ind = i;
-				break;
-			}
-		}
-		if(ind != -1)
-		{
-			Vector3 dir = directions[ind];
-			Vector3 targetPoint = m_path[i_index].position;
-			float dot = Vector3.Dot(dir, direction);
-			Vector3 a = -dot * dir;
-			
-			Vector3 closest = targetPoint + a;
-			Vector3 v = new Vector3(directions[ind].z, directions[ind].y, -directions[ind].x);
-			Vector3 b =closest + v * 0.2f;
-			b.y = 0.3f;
-			transform.position = b;
-		}
-		switch(ind){
-		case 0:
-			//print ("Right");
-			mat.mainTexture = sideRight;
-			break;
-		case 1 :
-			//print ("Left");
-			mat.mainTexture = sideLeft;
-			break;
-		case 2:
-			//print ("Up");
-			mat.mainTexture = back;
-			break;
-		case 3:
-			//print ("Down");
-			mat.mainTexture = front;
-			break;
-		}
-	}
-	*/
 }

@@ -13,7 +13,7 @@ public class WaypointScript : MonoBehaviour
 
 	void Awake()
 	{
-		roadManager = GameObject.Find ("RoadManager").GetComponent<RoadManager>();
+		roadManager = GameObject.Find ("GameManager").GetComponent<RoadManager>();
 		if(isDynamic)
 		{
 			m_roads = new Transform[3][];
