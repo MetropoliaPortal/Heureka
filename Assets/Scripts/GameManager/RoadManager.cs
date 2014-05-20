@@ -5,30 +5,24 @@ using System.Linq;
 using System;
 public delegate void HandlerEvent();
 /// <summary>
-/// Class is attached to empty game object to create and take care of the roads and cars
+/// Class is attached to empty game object to create and take care of the roads
 /// </summary>
 public class RoadManager : MonoBehaviour 
 {
-	private Transform startPos, endPos;
+	public List<Node> PathList = new List<Node>();
+	public Transform[] Waypoints;
+	public GameObject RoadPrefab;
 	private Node startNode;
 	private Node goalNode;
-	public GameObject wp;
-	
-	public List<Node> pathArray = new List<Node>();
-	public Transform[] waypoints;
-
-	public GameObject road;
-	public GameObject car;
-
-    StackPool m_roadStack;
-	StackPool carStack;
-	int i;
-    GameObject objRoadEdge;
-    GameObject objRoadCenter;
-	Transform [][] roads = new Transform[4][];
+    private StackPool roadStack;
+	private int i;
+	private GameObject roadContainer;
+	private Vector3 [][] roads = new Vector3[4][];
 
 	public static event HandlerEvent OnRoadChange = new HandlerEvent(()=>{});
 
+	// The boolean to set for redrawing
+	private bool b_redraw = false;
 
 	#region Singleton implementation
 	// s_Instance is used to cache the instance found in the scene so we don't have to look it up every time.
@@ -62,18 +56,14 @@ public class RoadManager : MonoBehaviour
 
 	void Awake() 
 	{
-        objRoadEdge = new GameObject("EdgeRoadParent");         // Parent object for edge roads
-        objRoadEdge.transform.position = Vector3.zero;          // Position at origin
+        roadContainer = new GameObject("Roads");
+        roadContainer.transform.position = Vector3.zero;
+		roadContainer.transform.parent = GameObject.Find("DynamicObjects").transform;
 
-        objRoadCenter = new GameObject("CenterRoadParent");     // Parent object for center roads
-        objRoadCenter.transform.position = Vector3.zero;        // Position at origin
-
-        m_roadStack = new StackPool(                                // Create stack for center roads, 
-            road,                                               // road prefab
-            objRoadCenter.transform);                           // Parent object
+        roadStack = new StackPool( RoadPrefab, roadContainer.transform );                        
 
         DrawEdgeRoads();  
-        DrawCenterRoads();                                      // Draw center roads
+        DrawCenterRoads();
         CubePosition.OnMove += SetRedrawRoad;                   // Register the method to redraw the road		
 	}
 	// LateUpdate is called once all update are done
@@ -86,8 +76,7 @@ public class RoadManager : MonoBehaviour
 			b_redraw = false;
 		}
 	}
-	// The boolean to set for redrawing
-	private bool b_redraw = false;
+
 	// The method used to subscribe to the movement of the cubes
 	private void SetRedrawRoad()
 	{
@@ -119,37 +108,37 @@ public class RoadManager : MonoBehaviour
 		DrawCenterRoads ();
 	}
 
-    void DeleteRoad()
+    private void DeleteRoad()
     {
         // This does not delete them anymore, it just deactivates them and stores them back on the stack
         // Only the two roads in the middle are concerned anymore
         GameObject[] roads = GameObject.FindGameObjectsWithTag("Road");
         for (int i = 0; i < roads.Length; i++)
         {
-            m_roadStack.Push(roads[i]);
+            roadStack.Push(roads[i]);
         }	
     }
 
-	void DrawCenterRoads()
+	private void DrawCenterRoads()
     {
 		// Get dynamic paths and store in array
 		RaycastHit hit;
-		if (Physics.Linecast(waypoints[1].position, waypoints[5].position, out hit/*,m_layer*/))
+		if (Physics.Linecast(Waypoints[1].position, Waypoints[5].position, out hit/*,m_layer*/))
 		{
-            roads[0] = DrawRoadAStar(waypoints[1].position, waypoints[5].position);
+            roads[0] = DrawRoadAStar(Waypoints[1].position, Waypoints[5].position);
 		}
 		else
 		{
-			roads[0] = DrawStraightRoad(waypoints[1].position, waypoints[5].position);
+			roads[0] = DrawStraightRoad(Waypoints[1].position, Waypoints[5].position);
 		}
 
-		if (Physics.Linecast(waypoints[3].position, waypoints[7].position,out hit/*,m_layer*/))
+		if (Physics.Linecast(Waypoints[3].position, Waypoints[7].position,out hit/*,m_layer*/))
 		{
-			roads[1] = DrawRoadAStar(waypoints[3].position, waypoints[7].position);
+			roads[1] = DrawRoadAStar(Waypoints[3].position, Waypoints[7].position);
 		}
 		else
 		{
-			roads[1] = DrawStraightRoad(waypoints[3].position, waypoints[7].position);
+			roads[1] = DrawStraightRoad(Waypoints[3].position, Waypoints[7].position);
 		}
 
 		// Store reverse array.
@@ -159,21 +148,11 @@ public class RoadManager : MonoBehaviour
 		OnRoadChange();
 	}
 
-	void CopyArray(Transform [] source, Transform[]target)
-	{
-		target = null;
-		int l = source.Length;
-		target = new Transform[source.Length];
-		for(int i = 0; i < l; i++)
-		{
-			target[i] = source[i];
-		}
-	}
-	Transform[] ReverseArray(Transform[]arr)
+	private Vector3[] ReverseArray(Vector3[]arr)
 	{
 		int index = 0;
 		int length = arr.Length;
-		Transform[] tr = new Transform[length];
+		Vector3[] tr = new Vector3[length];
 		for(int i = length - 1; i >= 0; i--)
 		{
 			tr[index] = arr[i];
@@ -181,59 +160,57 @@ public class RoadManager : MonoBehaviour
 		}
 		return tr;
 	}
-	Transform[] DrawRoadAStar(Vector3 start, Vector3 end) 
+
+	private Vector3[] DrawRoadAStar(Vector3 start, Vector3 end) 
 	{
 
 		//startNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(start)));
 		//goalNode = new Node(GridManager.instance.GetGridCellCenter(GridManager.instance.GetGridIndex(end)));
 		startNode = new Node(start);
 		goalNode = new Node(end);
-		pathArray = AStar.FindPath(startNode, goalNode, true);
-		List<Transform> arrayRoad = new List<Transform>();
+		PathList = AStar.FindPath(startNode, goalNode, true);
+		List<Vector3> arrayRoad = new List<Vector3>();
 		
 		// Place first
 		Vector3 pos = start;
 		pos.y = 0.01f;
-		//GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
-		GameObject o = m_roadStack.Pop();
+		GameObject o = roadStack.Pop();
 		o.transform.position = pos;
         o.tag = "Road";
 
-		arrayRoad.Add(o.transform);
+		arrayRoad.Add(o.transform.position);
 		
-		for (int i = 0; i < pathArray.Count; i++)
+		for (int i = 0; i < PathList.Count; i++)
 		{
-			pos = pathArray[i].position;
+			pos = PathList[i].position;
 			pos.y = 0.01f;
-			//o = (GameObject)Instantiate(road, pos, Quaternion.identity);
-			o = m_roadStack.Pop();
+			o = roadStack.Pop();
 			o.transform.position = pos;
-			arrayRoad.Add(o.transform);
-			pathArray[i].isRoad = true;
+			arrayRoad.Add(o.transform.position);
+			PathList[i].isRoad = true;
 		}
 		return arrayRoad.ToArray();
 	}
 	
-	Transform[] DrawStraightRoad(Vector3 start, Vector3 end,string tag = "Road") 
+	private Vector3[] DrawStraightRoad(Vector3 start, Vector3 end,string tag = "Road") 
 	{
 
 		Vector3 first = start;
-		List<Transform> arrayRoad = new List<Transform>();
+		List<Vector3> arrayRoad = new List<Vector3>();
 		while (first != end)
 		{
 			Vector3 pos = first;
 			pos.y = 0.01f;
-			//GameObject o = (GameObject)Instantiate(road, pos, Quaternion.identity);
-			GameObject o = m_roadStack.Pop();
+			GameObject o = roadStack.Pop();
 			o.transform.position = pos;
             o.tag = tag;
-			arrayRoad.Add(o.transform);
+			arrayRoad.Add(o.transform.position);
 			first = Vector3.MoveTowards(first, end, 1.0f);
 		}
 		return arrayRoad.ToArray();
 	}
 
-	public Transform[]GetDynamicPath(int index)
+	public Vector3[] GetDynamicPath(int index)
 	{
 		if(index < roads.Length)
 			return roads[index];

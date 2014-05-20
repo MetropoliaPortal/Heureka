@@ -21,7 +21,7 @@ public class CubeCreator : MonoBehaviour
 		CubeTexture textureScript = cube.GetComponent<CubeTexture>();
 		QuuppaConnection connectScript = cube.GetComponent<QuuppaConnection>();
 		connectScript.Initialize( quuppaId );
-		textureScript.Initialize( type );
+		//textureScript.Initialize( type );
 	
 		return cube.GetComponent<TagInfo>();
 	}

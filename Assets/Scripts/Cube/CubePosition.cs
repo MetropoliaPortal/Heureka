@@ -11,55 +11,36 @@ using System.Collections;
 public class CubePosition : MonoBehaviour
 {
     #region MEMBERS
-	
     public delegate void EventMove();
     public static event EventMove OnMove = new EventMove(() => { });
-	public static event EventMove OnMoveSecond = new EventMove(() => { });
-	
-    
+	public int ComparePreviousAmount = 4;
+
 	// Cache the transform for faster performance
 	private new Transform transform;
-	//private Vector3 prevPos;
-	private float positionYQuuppa;
-	public float PositionYQuuppa
-	{
-		get
-		{
-			return positionYQuuppa;
-		}
-	}
-	//private bool b_fireEvent = false;
-	private CubeStacking cubeStacking;
-	private string tagState;
-	private Vector3 _previousPosition;
+	private bool isMoving = false;
 
+
+	private string tagState;
+	private Queue<int> previousPositions = new Queue<int> ();
+	private TagInfo tagInfo;
     #endregion
 
 	void Start () 
     {
-		cubeStacking = GameObject.Find("GameManager").GetComponent<CubeStacking>();
-
-		if(cubeStacking == null)
-			Debug.LogError("CubeStacking script is null");
         transform = base.transform;
-
         GridManager.obstacleList.Add(gameObject);
+		tagInfo = GetComponent<TagInfo>();
+		tagInfo.positionChanged += SolvePosition;
 	}
 
-	void LateUpdate()
-	{
-		cubeStacking.CompareStackedCubes (transform);
-	}
-	
-	public void PositionCube(float x, float y , float z)
+	private void SolvePosition(Vector3 pos)
 	{
 		// If the cube is already on the move, we discard any other moves
 		// Next move will be considered once the cube has reached its destiantion
-		if(b_cubeOnMove)return;
+		if(isMoving)return;
 
-		Vector3 pos = new Vector3(x,y,z);
-		pos.x = CheckValue(x, Axis.X);
-		pos.z = CheckValue (z, Axis.Y);
+		pos.x = CheckValue(pos.x, Axis.X);
+		pos.z = CheckValue (pos.z, Axis.Y);
 		
 		// Convert to game grid
 		// The key is defined to be unique
@@ -69,30 +50,26 @@ public class CubePosition : MonoBehaviour
 		{
 			pos = GridManager.gridDict[key];
 
-			//save the y position from quuppa to separate variable
-			positionYQuuppa = y;
-
-			// Store the value
-			if(!b_cubeOnMove)
-				StartCoroutine(MoveCubeToPosition(pos));
-
-			_previousPosition = pos;
+			if( Helpers.ComparePreviousValues( previousPositions, key, ComparePreviousAmount) )
+			{
+				StartCoroutine(MoveToPosition(pos));		
+			}
 		}
 		catch(System.Exception e)
 		{
-			print (e.Message);
+			Debug.LogError (e.Message);
 		}
 	}
-    
-	private bool b_cubeOnMove = false;
-	IEnumerator MoveCubeToPosition(Vector3 position)
+
+	//2D coordinates to disable effect to Y coordinate
+	//after lerp, makes sure transform is on the exactly correct position
+	private IEnumerator MoveToPosition(Vector3 position)
 	{
-		b_cubeOnMove = true;
+		isMoving = true;
 		float ratio = 0;
 		float duration = 0.6f;
 		float multiplier = 1 / duration;
-	
-		//2D coordinates to disable effect to Y coordinate
+
 		Vector2 cube2dPos = new Vector2 (transform.position.x, transform.position.z);
 		Vector2 targetPos = new Vector2 (position.x, position.z);
 
@@ -104,11 +81,10 @@ public class CubePosition : MonoBehaviour
 			yield return null;
 		}
 
-		//make sure transform is on the exactly correct position
 		transform.position = new Vector3 (targetPos.x, position.y, targetPos.y);
 
-		b_cubeOnMove = false;
-
+		isMoving = false;
+		OnMove ();
 	}
 
  	/*
@@ -140,26 +116,10 @@ public class CubePosition : MonoBehaviour
 		return input;
 	}
 
-	/// <summary>
-	/// Fire OnMove events when tag state is set back to d
-	/// </summary>
-	public void SetTagState(string c)
+	public void MoveInDebug(Vector3 position)
 	{
-		if( tagState != c )
-		{
-			tagState = c;
-			if( tagState == "d" )
-			{
-				OnMove();
-				OnMoveSecond();
-			}
-		}
-	}
-	
-	#region DEBUG
-	
-	public void MoveCubeInDebug(Vector3 position)
-	{
+		if(isMoving)return;
+
 		position.y++;
 	
 		float [] values = {2,4,6,8,10,12};
@@ -183,12 +143,6 @@ public class CubePosition : MonoBehaviour
 		}
 		Vector3 targetPos = new Vector3(x,position.y,z);
 
-		if(!b_cubeOnMove)
-			StartCoroutine(MoveCubeToPosition(targetPos));
-
-		OnMove ();
-		OnMoveSecond ();
+		StartCoroutine(MoveToPosition(targetPos));
 	}
-	 
-	#endregion
 }

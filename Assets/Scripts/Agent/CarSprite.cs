@@ -5,18 +5,16 @@ public class CarSprite : MonoBehaviour
 {
 	public Sprite leftDown, rightUp, leftUp, rightDown; 
 	private SpriteRenderer spriteRenderer;
-	private CarMovement carMovement;
 	
 	void Start () 
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		carMovement = transform.parent.gameObject.GetComponent<CarMovement>();
 	}
 
 	// Apply the corresponding srpite based on direction
-	public void GetDirection( Transform[] m_path, int i_index )
+	public void ApplySprite( Vector3[] m_path, int i_index )
 	{
-		Vector3 pathPoint = m_path[i_index].position;
+		Vector3 pathPoint = m_path[i_index];
 		Vector3 dir = (pathPoint - transform.parent.position);
 		dir.Normalize();
 
@@ -41,36 +39,38 @@ public class CarSprite : MonoBehaviour
 		case 0:
 			if(spriteRenderer.sprite != rightDown)
 			{
-				//Vector3 adjustedPos = Vector3.zero;
-				//adjustedPos.z -= 0.4f;
-				//transform.localPosition = adjustedPos;
+				Vector3 adjustedPos = Vector3.zero;
+				adjustedPos.z -= 0.7f;
+				transform.localPosition = adjustedPos;
 				spriteRenderer.sprite = rightDown;
 			}
 			break;
 		case 1 :
 			if(spriteRenderer.sprite != leftUp)
 			{
-				//Vector3 adjustedPos = Vector3.zero;
-				//adjustedPos.z -= 0.4f;
-				//transform.localPosition = adjustedPos;
+				Vector3 adjustedPos = Vector3.zero;
+				adjustedPos.z -= 0.4f;
+				transform.localPosition = adjustedPos;
 				spriteRenderer.sprite = leftUp;
 			}
 			break;
 		case 2:
 			if(spriteRenderer.sprite != rightUp)
 			{
-				//Vector3 adjustedPos = Vector3.zero;
-				//adjustedPos.x += 0.2f;
-				//transform.localPosition = adjustedPos;
+				Vector3 adjustedPos = Vector3.zero;
+				adjustedPos.z -= 0.6f;
+				adjustedPos.x += 0.2f;
+				transform.localPosition = adjustedPos;
 				spriteRenderer.sprite = rightUp;
 			}
 			break;
 		case 3:
 			if(spriteRenderer.sprite != leftDown)
 			{
-				//Vector3 adjustedPos = Vector3.zero;
-				//adjustedPos.x -= 0.5f;
-				//transform.localPosition = adjustedPos;
+				Vector3 adjustedPos = Vector3.zero;
+				adjustedPos.z -= 0.6f;
+				adjustedPos.x -= 0.2f;
+				transform.localPosition = adjustedPos;
 				spriteRenderer.sprite = leftDown;
 			}
 			break;

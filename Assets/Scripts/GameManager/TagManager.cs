@@ -7,20 +7,21 @@ using System;
 
 public enum BuildingType
 {
-	Official, Residential,Leisure, Shop
+	Official, Residential, Leisure, Shop
 }
 
 public class TagManager : MonoBehaviour 
 {
+	public List<TagInfo> tagInfos{get;set;}
 	private CubeCreator cubeCreator;
 	private Dictionary<string, BuildingType> tagBuildingTypes;
-	private List<TagInfo> tagInfos;
+	private Dictionary<string, int> tagReferenceIds;
 
-	void Start()
+	void Awake()
 	{
+		tagInfos = new List<TagInfo>();
 		cubeCreator = GetComponent<CubeCreator> ();
 		GetBuildingTypes();
-		tagInfos = new List<TagInfo>();
 	}
 
 	public void AddTag(string quuppaId )
@@ -28,7 +29,9 @@ public class TagManager : MonoBehaviour
 		try
 		{
 			BuildingType type = tagBuildingTypes [quuppaId];
-			tagInfos.Add( cubeCreator.CreateCube( quuppaId, type ) );
+			TagInfo newTagInfo = cubeCreator.CreateCube( quuppaId, type );
+			InitializeTagInfoValues( newTagInfo, quuppaId, type);
+			tagInfos.Add( newTagInfo );
 		}
 		catch(KeyNotFoundException e)
 		{
@@ -39,10 +42,15 @@ public class TagManager : MonoBehaviour
 		}
 	}
 
+	private void InitializeTagInfoValues(TagInfo newTagInfo, string quuppaId, BuildingType type)
+	{
+		newTagInfo.QuuppaId = quuppaId;
+		newTagInfo.BuildingType = type;
+	}
+
 	private void GetBuildingTypes()
 	{
 		tagBuildingTypes = new Dictionary<string, BuildingType>();
-		// Data needed for parsing
 		string id = "id";	
 		//string token = ","; 
 		string endToken = ";";		
@@ -107,6 +115,20 @@ public class TagManager : MonoBehaviour
 		catch (Exception e)
 		{
 			print(e.Message);
+		}
+	}
+
+	private void GetReferenceId()
+	{
+		//todo
+	}
+
+	public void ChangeBuildingType(int tagIndex)
+	{
+		tagInfos[ tagIndex ].BuildingType++;
+		if( (int)tagInfos[ tagIndex ].BuildingType >= 4 )
+		{
+			tagInfos[ tagIndex ].BuildingType = 0;
 		}
 	}
 }

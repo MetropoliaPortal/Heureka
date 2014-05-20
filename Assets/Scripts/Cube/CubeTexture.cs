@@ -7,36 +7,26 @@ public class CubeTexture : MonoBehaviour
 	private Material[] materials; 
 
 	private CubeRotation cubeRotation;
+	private TagInfo tagInfo;
 
-	void Start()
+	void Awake()
 	{
 		cubeRotation = GetComponent<CubeRotation> ();
 		cubeRotation.rotationChanged += ChangeTexture;
 
-		//without quuppa connection
-		if(category == 0)
-			Initialize( BuildingType.Leisure);
-		else if (category == 1)
-			Initialize( BuildingType.Official);
-		else if (category == 2)
-			Initialize( BuildingType.Residential);
-		else if (category == 3)
-			Initialize( BuildingType.Shop);
-		
-		renderer.material = materials[0];
+		tagInfo = GetComponent<TagInfo>();
+		tagInfo.buildingTypeChanged += ChangeBuildingType;
 	}
-
-	public void Initialize (BuildingType type = BuildingType.Leisure) 
+	
+	private void ChangeBuildingType()
 	{
-		string tempType = type.ToString ();				// Convert type to string
+		string tempType = tagInfo.BuildingType.ToString ();				// Convert type to string
 		string url = "Materials/" + tempType;			// Append type to url
 		materials = Resources.LoadAll<Material>(url);	// Get corresponding materials from Resources folder
-		
 	}
 
 	private void ChangeTexture()
 	{
 		renderer.material = materials[ cubeRotation.currentIndex ];
 	}
-
 }

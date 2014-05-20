@@ -5,13 +5,7 @@ using System.Collections.Generic;
 public class CarMovement : MonoBehaviour 
 {
 	public float speed = 4f;							
-	public float height = 1.0f;	
-
-	// Is the agent on a dynamic road, 
-	// is used to skip the updating of the path 
-	//if the agent is not on dynamic road
-	public bool DynamicRoadOn{get;set;}					
-
+	public float height = 1.0f;				
 	// Last waypoint script used
 	// It is used when updating the path on movement of a cube
 	// This helps figure out what road the agent is on
@@ -19,7 +13,7 @@ public class CarMovement : MonoBehaviour
 
 	// Cache of the transform
 	private new Transform trans;					
-	private Transform [] m_path;
+	private Vector3 [] m_path;
 
 	private int i_index = 0;	
 						
@@ -35,13 +29,9 @@ public class CarMovement : MonoBehaviour
 		{
 			list.Add (t);
 		}
-
 		RepositionCar ();
 
 		carSprite = GetComponentsInChildren<CarSprite>()[0];
-		
-		// Subscribe to event on movement of the cube
-		CubePosition.OnMoveSecond += UpdatePath;
 	}
 
 	// Get a random item for the connection array of the waypoint
@@ -55,33 +45,47 @@ public class CarMovement : MonoBehaviour
 		i_index  = 0;
 
 		Vector3 pos = new Vector3(start.position.x, height, start.position.z);
-		transform.position = pos;
+		trans.position = pos;
 	}
 	
 	void Update () 
 	{
-		Vector3 pathPos = m_path[i_index].position;
+		Vector3 pathPos = m_path[i_index];
 		pathPos.y = height;
-		//pathPos.z -= 0.4f;
 
-		Vector3 direction = (pathPos - transform.position);
+		Vector3 dir = (pathPos - transform.position);
 
-		trans.Translate (direction.normalized * Time.deltaTime * speed, Space.World);
+		trans.Translate (dir.normalized * Time.deltaTime * speed, Space.World);
 		Vector3 pos = transform.position;
 		trans.position = new Vector3(pos.x, height, pos.z);
 
 		if(Vector3.Distance(trans.position, pathPos) < 0.1f)
 		{
 			if(++i_index == m_path.Length)i_index = 0;
+			CheckIfOnRoad();
 		}
+	}
 
+	/// <summary>
+	/// Check if ray-cast down hits ground or cube and places the car to new position if needed.
+	/// </summary>
+	private void CheckIfOnRoad()
+	{
+		RaycastHit hit;
+		Ray ray = new Ray(trans.position, Vector3.down);
+		if(Physics.Raycast(ray, out hit))
+		{
+			if(hit.collider.name == "Ground" || hit.collider.tag == "Obstacle")
+			{
+				RepositionCar();
+			}
+		}
 	}
 
 	void LateUpdate()
 	{
-		carSprite.GetDirection( m_path, i_index );
+		carSprite.ApplySprite( m_path, i_index );
 	}
-
 
 	// When Car enters a trigger, the Waypoint script of the waypoint is accessed to get a new path.
 	void OnTriggerEnter(Collider col)
@@ -92,13 +96,5 @@ public class CarMovement : MonoBehaviour
 			m_path = ws.GetPath(this);
 			i_index  = 0;
 		}
-	}
-	
-	// Update path is called by the event of the Cube hen moved
-	// If not on a Dynamic road quit the method
-	private void UpdatePath()
-	{
-		if(DynamicRoadOn == false)return;
-		RepositionCar();
 	}
 }

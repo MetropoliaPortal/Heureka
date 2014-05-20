@@ -59,7 +59,6 @@ public class GridManager : MonoBehaviour
     {
         CreateGrid();
 		CreateCrossNode();
-        //ResolveObstacles();
 
 		int x = 2;
 		int z = 2;
@@ -93,8 +92,6 @@ public class GridManager : MonoBehaviour
 			}
 		}
 	}
-
-
 
 	public void ResetEstimatedCosts()
 	{
@@ -176,7 +173,6 @@ public class GridManager : MonoBehaviour
 				for(int j = 0; j < cn.Length; j++)
 				{
 					cn[j].bObstacle = true;
-					//Debug.Log( "obstacle: " +cn[j].position);
 				}
 			}
 			catch(KeyNotFoundException e)
@@ -306,7 +302,6 @@ public class GridManager : MonoBehaviour
     }
 
 	#region Debug
-
     /// <summary>
     /// Show Debug Grids and obstacles inside the editor
     /// </summary>
@@ -343,42 +338,5 @@ public class GridManager : MonoBehaviour
             Debug.DrawLine(startPos, endPos, color);
         }
     }
-
-	#endregion
-
-	#region NOT IN USE
-
-	/*
-	void MarkEdgeRoads(){
-		for(int i = 0; i < numOfColumns; i++){
-			nodes[i,0].isRoad = true;
-		}
-		
-		for(int i = 0; i < numOfRows; i++){
-			nodes[0,i].isRoad = true;
-		}
-		
-		for(int i = 0; i < numOfColumns; i++){
-			nodes[numOfColumns - 1,i].isRoad = true;
-		}
-		
-		for(int i = 0; i < numOfRows; i++){
-			nodes[i,numOfRows - 1].isRoad = true;
-		}
-	}
-	
-	void DeleteRoadFlags()
-	{
-		foreach(KeyValuePair<int, CrossNode> entry in dict)
-		{
-			Node[] cn = entry.Value.node;
-			for(int j = 0; j < cn.Length; j++)
-			{
-				cn[j].isRoad = false;
-			}
-		}
-	}
-	*/
-
 	#endregion
 }

@@ -1,17 +1,6 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
-
-/// <summary>
-/// ConnectScript.cs
-/// Component is added from StartScript.cs
-/// The purpose is to request from the server for the two files.
-/// The parse needed information and send them to the appropriate scripts
-/// 
-/// Position information are sent to CubePosition.cs
-/// Acceleration information are sent to CubeRotation.cs
-/// </summary>
 using System.Collections.Generic;
 
 
@@ -19,22 +8,18 @@ using System.Collections.Generic;
 [RequireComponent(typeof(CubeRotation))]
 public class QuuppaConnection : MonoBehaviour 
 {
+	
 
-	/// <summary>
-	/// The Quuppa tag
-	/// Only needed to see the tag of the cube in the Inspector
-	/// </summary>
-	public string tagQuuppa;
 	/// <summary>
 	/// The frequency of the calls for the request to the server 
 	/// </summary>
 	public float callFrequency = 0.00f;
-	
-	private CubePosition m_cubePosition;		// Reference to the CubePosition script attached to that object
-	private CubeRotation m_rotation;			// Reference to the CubeRotation script attached to that object
-	private string st_urlPosition;				// The url request for position
-	private string st_urlAccel;					// The url request for acceleration
-	private Vector3 v_prevPosition = new Vector3();		// Store previous positions to discard noise
+
+	private string tagQuuppa;
+	private TagInfo tagInfo;
+
+	private string haipFileUrl;	
+	private string tagFileUrl;
 
 	// All data are marked as const to make them immutable and static 
 	private const string s_positionX = "smoothedPositionX";	// string for X position parsing
@@ -51,7 +36,6 @@ public class QuuppaConnection : MonoBehaviour
 	private const string s_coma = ",";
 	private const string s_letter = "d";					// string for d letter to avoid creation of new string each round
 															// defining whether the tag state is default or triggered
-
 	private string tagState;
 
 	//quuppa debug
@@ -61,11 +45,10 @@ public class QuuppaConnection : MonoBehaviour
 	public void Initialize (string tag) 
 	{
 		tagQuuppa = tag;
-		m_cubePosition = GetComponent<CubePosition>();
-		m_rotation = GetComponent<CubeRotation>();
+		tagInfo = GetComponent<TagInfo>();
 
-        st_urlPosition = "192.168.123.124:8080/qpe/getHAIPLocation?tag=" + this.tagQuuppa;
-		st_urlAccel = "192.168.123.124:8080/qpe/getTagInfo?tag=" + this.tagQuuppa;
+        haipFileUrl = "192.168.123.124:8080/qpe/getHAIPLocation?tag=" + tagQuuppa;
+		tagFileUrl = "192.168.123.124:8080/qpe/getTagInfo?tag=" + tagQuuppa;
 		StartCoroutine(GetHAIPFile());
 		StartCoroutine(GetTagInfoFile());
 	}
@@ -75,7 +58,7 @@ public class QuuppaConnection : MonoBehaviour
 		while(true)
 		{
 			// Control the frequency calls
-			float timer  = 0f;
+			float timer = 0f;
 			while(timer < callFrequency)
 			{
 				timer += Time.deltaTime;
@@ -86,50 +69,49 @@ public class QuuppaConnection : MonoBehaviour
 				//continue;
 
 			// Access the url for request
-			WWW www = new WWW(st_urlPosition);
-			yield return www;
+			WWW haipFileAccess = new WWW(haipFileUrl);
+			yield return haipFileAccess;
 
-			if(www.error != null)
+			if(haipFileAccess.error != null)
 			{
-				Debug.LogError("Error with HAIP file connection: " +www.error);
+				Debug.LogError("Error with HAIP file connection: " +haipFileAccess.error);
 			}
            	else
             {
-				// Try/Catch needed since some of the data come sometimes as 0 without any extra information
-				// As a result, the parsed info contained a erroneous data like 0,0.2 instead of 0.000
-				try
-				{
-					float x = GetFloatFromJson(s_positionX, www.text);
-					float y = GetFloatFromJson(s_positionY, www.text);
-					float z = GetFloatFromJson(s_positionZ, www.text);
-
-					m_cubePosition.PositionCube(x, z, y);
-					v_prevPosition.x = x;
-					v_prevPosition.y = y;
-					v_prevPosition.z = z;
-				}
-				catch(Exception)
-				{
-					// If the exception is caught, one of our value probably has a case of 0 
-					// If the value was 0, the parsing has considered the following data
-					// We check if a coma is contained in the string
-					// If so, we used the previous values
-					m_cubePosition.PositionCube(v_prevPosition.x, v_prevPosition.z, v_prevPosition.y);
-				}
+				SolvePosition( haipFileAccess.text );
             }
         }
 	}
 
-	float GetFloatFromJson(string name, string file)
+	// Try/Catch needed since some of the data come sometimes as 0 without any extra information
+	// As a result, the parsed info contained a erroneous data like 0,0.2 instead of 0.000
+	private void SolvePosition( string jsonTxt)
+	{
+		try
+		{
+			float x = GetFloatFromJson(s_positionX, jsonTxt);
+			float y = GetFloatFromJson(s_positionY, jsonTxt);
+			float z = GetFloatFromJson(s_positionZ, jsonTxt);
+			
+			//cubePosition.SolvePosition(x, z, y);
+			tagInfo.Position = new Vector3(x, y, z);
+			tagInfo.HeightQuuppa = y;
+		}
+		catch(Exception e)
+		{
+			Debug.LogError(e.Message);
+		}
+	}
+
+	private float GetFloatFromJson(string name, string file)
 	{
 		int index = file.IndexOf(name) + name.Length + s_offsetExtraChar;
 		string pos = file.Substring(index, s_offsetGetData);
 
 		return float.Parse(pos);
 	}
-
-
-	IEnumerator GetTagInfoFile()
+	
+	private IEnumerator GetTagInfoFile()
 	{
 		while(true)
 		{
@@ -140,13 +122,12 @@ public class QuuppaConnection : MonoBehaviour
 				yield return null;
 			}
 
-			WWW wwwAccel = new WWW(st_urlAccel);
-			yield return wwwAccel;
+			WWW tagFileAccess = new WWW(tagFileUrl);
+			yield return tagFileAccess;
 
-
-			if( wwwAccel.error != null)
+			if( tagFileAccess.error != null)
 			{
-				Debug.LogError("Error with tagInfoFile connection: " +wwwAccel.error +", tag: " +tagQuuppa);
+				Debug.LogError("Error with tagInfoFile connection: " +tagFileAccess.error +", tag: " +tagQuuppa);
 				errorAmount++;
 
 				//print ("errors " +tagQuuppa +": " +errorAmount);
@@ -154,48 +135,60 @@ public class QuuppaConnection : MonoBehaviour
 			}
 			else
 			{
+				string jsonText = tagFileAccess.text;
 				successAmount++;
-				Vector3 acceleration = new Vector3();
 
-				string accel = wwwAccel.text;
+				SolveTagState( jsonText );
+				SolveAcceleration( jsonText );
 
-				int indexTag = accel.IndexOf (s_tagState);
-				indexTag += s_tagState.Length + 3;
-				tagState = accel.Substring(indexTag,1);
-				// set tag state in cubeposition
-				m_cubePosition.SetTagState( tagState );
-
-				int index = accel.IndexOf(s_acceleration) + s_acceleration.Length + 4 ;
-
-				// Isolate the acceleration data
-				accel = accel.Substring(index);
-				int token = accel.IndexOf(s_quotation);
-				accel = accel.Substring(0, token);
-				
-				// Get first value
-				token = accel.IndexOf (s_coma);
-				string accelX = accel.Substring(0,token );
-				accel = accel.Substring(token + 1);
-				// Get second value
-				token = accel.IndexOf (s_coma);
-				string accelY = accel.Substring(0,token );
-				accel = accel.Substring(token + 1);
-				// Get third value
-				string accelZ = accel;
-
-				try
-				{
-					acceleration.x = float.Parse(accelX);
-					acceleration.y = float.Parse (accelY);
-					acceleration.z = float.Parse (accelZ);
-
-					m_rotation.ProcessRotation(acceleration);
-				}
-				catch(Exception e)
-				{
-					print (e.Message);
-				}
 			}
+		}
+	}
+
+	private void SolveTagState(string jsonTxt)
+	{
+		int indexTag = jsonTxt.IndexOf (s_tagState);
+		indexTag += s_tagState.Length + 3;
+		tagState = jsonTxt.Substring(indexTag,1);
+
+		//cubePosition.SetTagState( tagState );
+		tagInfo.TagState = tagState;
+	}
+
+	private void SolveAcceleration(string jsonTxt)
+	{
+		Vector3 acceleration = new Vector3();
+
+		int index = jsonTxt.IndexOf(s_acceleration) + s_acceleration.Length + 4 ;
+		
+		// Isolate the acceleration data
+		jsonTxt = jsonTxt.Substring(index);
+		int token = jsonTxt.IndexOf(s_quotation);
+		jsonTxt = jsonTxt.Substring(0, token);
+		
+		// Get first value
+		token = jsonTxt.IndexOf (s_coma);
+		string accelX = jsonTxt.Substring(0,token );
+		jsonTxt = jsonTxt.Substring(token + 1);
+		// Get second value
+		token = jsonTxt.IndexOf (s_coma);
+		string accelY = jsonTxt.Substring(0,token );
+		jsonTxt = jsonTxt.Substring(token + 1);
+		// Get third value
+		string accelZ = jsonTxt;
+		
+		try
+		{
+			acceleration.x = float.Parse(accelX);
+			acceleration.y = float.Parse (accelY);
+			acceleration.z = float.Parse (accelZ);
+			
+			//cubeRotation.ProcessRotation(acceleration);
+			tagInfo.Acceleration = acceleration;
+		}
+		catch(Exception e)
+		{
+			print (e.Message);
 		}
 	}
 }

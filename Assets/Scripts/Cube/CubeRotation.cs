@@ -5,16 +5,18 @@ using System.Collections.Generic;
 public class CubeRotation : MonoBehaviour 
 {
 	public int ComparePreviousAmount = 4;
-	int i_prevIndex = -1;
-	int i_prevPolarity = -1;
+	public int currentIndex{get;set;}
 	private Queue<int> previousRotations = new Queue<int> ();
-
-	public int currentIndex;
-
 	public delegate void RotationChangedEvent();
 	public event RotationChangedEvent rotationChanged = delegate{};
+	private TagInfo tagInfo;
 
-
+	void Start()
+	{
+		tagInfo = GetComponent<TagInfo>();
+		tagInfo.accelerationChanged += ProcessRotation;
+	}
+	
 	/// <summary>
 	/// Process the cube rotation and apply corresponding texture
 	/// The method is called from the ConnectScript.cs where the Quuppa json file is requested
@@ -36,32 +38,15 @@ public class CubeRotation : MonoBehaviour
 
 		polarity = (acceleration[axis] >= 0) ? 1: -1;
 
-		if(ComparePreviousRotations(axis, polarity))
-			SwapTexture(axis, polarity);
-
+		if( Helpers.ComparePreviousValues( previousRotations, axis * polarity, ComparePreviousAmount) )
+		{
+			CheckIfRotationChanged(axis, polarity);
+		}
 	}
 
-	private bool ComparePreviousRotations(int axis, int polarity)
-	{
-		if (previousRotations.Count < ComparePreviousAmount) 
-		{
-			previousRotations.Enqueue (axis * polarity);
-		} 
-		else 
-		{
-			previousRotations.Dequeue();
-		}
-		foreach (int i in previousRotations) 
-		{
-			if( i != axis * polarity)
-				return false;
-		}
-		return true;
-	}
-
-	// The switch case uses the value of the axis, then once inside the statement, we check if the polarity is positive or negative
-	// This will define what texture is to be applied
-	private void SwapTexture(int axis, int polarity)
+	// The switch case uses the value of the axis, then once inside the statement, 
+	// we check if the polarity is positive or negative
+	private void CheckIfRotationChanged(int axis, int polarity)
 	{
 		int materialIdx = -1;
 		switch(axis)

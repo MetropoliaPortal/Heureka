@@ -17,7 +17,7 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 	private Rect r_restartRect;
 	private List<string> m_tagList = new List<string>();
 	private string[] GUIStrings = {"Resume","Add","Remove All","Remove","Quit"};
-	private string addIdFieldText;
+	private string addIdFieldText = "";
 	private Vector2 scrollPosition = Vector2.zero;
 	private string st_id;
 
@@ -31,6 +31,8 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 	}
 	void Start () 
 	{
+		tagManager = GetComponent<TagManager>();
+
 		float size = Screen.width / 10f;
 		float midWidth = Screen.width / 2f - size / 2f;
 		r_rect = new Rect(midWidth, 0, size, size / 2f);
@@ -41,10 +43,10 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 	{
 		if(Input.GetKeyDown (KeyCode.M)) e_state = State.GUIMenu;
 
+		//directx thing
 		if(Input.GetKeyDown (KeyCode.F))
 			Screen.fullScreen = !Screen.fullScreen;
 	}
-
 
 	void OnGUI()
 	{
@@ -60,14 +62,21 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 		float halfWidth = Screen.width / 2;
 		float halfHeight = Screen.height / 2;
 		float sizeBox = halfWidth / 2;
-		Rect rect = new Rect(halfWidth - sizeBox / 2, halfHeight - sizeBox / 2, sizeBox, sizeBox);
+		//Rect rect = new Rect(halfWidth - sizeBox / 2, halfHeight - sizeBox / 2, sizeBox, sizeBox);
+
+		float widthMargin = Screen.width / 5;
+		float heightMargin = Screen.height / 5;
+		Rect rect = new Rect(  widthMargin, 
+		                     heightMargin, 
+		                     Screen.width - 2 * widthMargin, 
+		                     Screen.height - 2 * heightMargin );
 
 		GUILayout.BeginArea(rect);
 
 		// Resume
 		if(GUILayout.Button (GUIStrings[0]))
 		{
-			//todo
+			e_state = State.Running;
 		}
 
 		// Add
@@ -102,7 +111,35 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 
 	private void CreateTagList()
 	{
+		List<TagInfo> tagInfos = tagManager.tagInfos;
 
+		GUILayout.BeginHorizontal();
+		
+		GUILayout.Label( "Reference ID" );
+		GUILayout.Label( "Quuppa ID" );
+		GUILayout.Label( "Battery Voltage" );
+		GUILayout.Label( "Position" );
+		GUILayout.Label( "Acceleration" );
+		GUILayout.Label( "Building Type" );
+		
+		GUILayout.EndHorizontal();
+
+		for( int i = 0; i < tagInfos.Count; i++ )
+		{
+			GUILayout.BeginHorizontal();
+
+			GUILayout.Label( tagInfos[i].RefId.ToString() );
+			GUILayout.Label( tagInfos[i].QuuppaId );
+			GUILayout.Label( tagInfos[i].BatteryVoltage.ToString() );
+			GUILayout.Label( tagInfos[i].Position.ToString() );
+			GUILayout.Label( tagInfos[i].Acceleration.ToString() );
+			if( GUILayout.Button( tagInfos[i].BuildingType.ToString() ) )
+			{
+				tagManager.ChangeBuildingType( i );
+			}
+
+			GUILayout.EndHorizontal();
+		}
 	}
 
 	// If the game is over, display commands to restart and start the game

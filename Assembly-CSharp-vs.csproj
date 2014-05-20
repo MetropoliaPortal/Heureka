@@ -39,10 +39,10 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +53,7 @@
      <Compile Include="Assets\Scripts\Agent\CarMovement.cs" />
      <Compile Include="Assets\Scripts\Agent\CarSprite.cs" />
      <Compile Include="Assets\Scripts\Agent\WaypointScript.cs" />
+     <Compile Include="Assets\Scripts\Cube\CubeDebug.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeEffect.cs" />
      <Compile Include="Assets\Scripts\Cube\CubePosition.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeRotation.cs" />
@@ -66,6 +67,7 @@
      <Compile Include="Assets\Scripts\GameManager\TagMaintenanceGUI.cs" />
      <Compile Include="Assets\Scripts\GameManager\TagManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\Timer.cs" />
+     <Compile Include="Assets\Scripts\Global\Helpers.cs" />
      <Compile Include="Assets\Scripts\Global\ScreenTexture.cs" />
      <Compile Include="Assets\Scripts\Global\StackPool.cs" />
      <Compile Include="Assets\Scripts\Quuppa\QuuppaConnection.cs" />

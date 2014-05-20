@@ -3,10 +3,17 @@ using System.Collections;
 
 public class DebugInput : MonoBehaviour 
 {
-	CubePosition cubePosition;
-	CubeRotation cubeRotation;
+	private CubePosition cubePosition;
+	private CubeRotation cubeRotation;
+	private TagInfo tagInfo;
 	
 	void Update () 
+	{
+		SolveMovement();
+		SolveRotation();
+	}
+
+	private void SolveMovement()
 	{
 		if(Input.GetMouseButtonDown(0))
 		{
@@ -17,6 +24,7 @@ public class DebugInput : MonoBehaviour
 				if(hit.collider.tag == "Obstacle")
 				{
 					cubePosition = hit.collider.gameObject.GetComponent<CubePosition>();
+					tagInfo = hit.collider.gameObject.GetComponent<TagInfo>();
 				}
 			}
 		}
@@ -25,7 +33,8 @@ public class DebugInput : MonoBehaviour
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			Physics.Raycast (ray, out hit);
-			cubePosition.MoveCubeInDebug(hit.point);
+			cubePosition.MoveInDebug(hit.point);
+			//tagInfo.Position = hit.point;
 		}
 		if (Input.GetMouseButtonUp (0))
 		{
@@ -34,18 +43,17 @@ public class DebugInput : MonoBehaviour
 				RaycastHit hit;
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				Physics.Raycast (ray, out hit);
-				cubePosition.MoveCubeInDebug(hit.point);
+				cubePosition.MoveInDebug(hit.point);
+				//tagInfo.Position = hit.point;
 				cubePosition = null;
 			}
 		}
-
-		CheckIfRotate();
 	}
 
 	/// <summary>
 	/// Textures of a cube can be changed with keys Q,W,E,R,T,Y
 	/// </summary>
-	private void CheckIfRotate()
+	private void SolveRotation()
 	{
 		RaycastHit hit;
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -54,21 +62,40 @@ public class DebugInput : MonoBehaviour
 			if(hit.collider.tag == "Obstacle")
 			{
 				cubeRotation = hit.collider.gameObject.GetComponent<CubeRotation>();
+				tagInfo = hit.collider.gameObject.GetComponent<TagInfo>();
 
-				if(Input.GetKey(KeyCode.Q) ){
-					cubeRotation.ProcessRotation(new Vector3(0,0,-65f));}
-				else if(Input.GetKey(KeyCode.W)){
-					cubeRotation.ProcessRotation(new Vector3(0,0,65f));}
+				Vector3 acceleration = Vector3.zero;
+
+				if(Input.GetKey(KeyCode.Q) )
+				{
+					acceleration = new Vector3(0,0,-65f);
+				}
+				else if(Input.GetKey(KeyCode.W))
+				{
+					acceleration = new Vector3(0,0,65f);
+				}
 
 				else if(Input.GetKey(KeyCode.E))
-					cubeRotation.ProcessRotation(new Vector3(-65f,0,0));
+				{
+					acceleration = new Vector3(-65f,0,0);
+				}
 				else if(Input.GetKey(KeyCode.R))
-					cubeRotation.ProcessRotation(new Vector3(65f,0,0));
-
+				{
+					acceleration = new Vector3(65f,0,0);
+				}
 				else if(Input.GetKey(KeyCode.T))
-					cubeRotation.ProcessRotation(new Vector3(0,-65f,0));
+				{
+					acceleration = new Vector3(0,-65f,0);
+				}
 				else if(Input.GetKey(KeyCode.Y))
-					cubeRotation.ProcessRotation(new Vector3(0,65f,0));
+				{
+					acceleration = new Vector3(0,65f,0);
+				}
+
+				if( acceleration != Vector3.zero )
+				{
+					tagInfo.Acceleration = acceleration;
+				}
 			}
 		}
 	}
