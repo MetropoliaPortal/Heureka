@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,19 +6,20 @@ using System.Collections.Generic;
 
 public class CubeStacking : MonoBehaviour 
 {
-	public int CompareFrequency = 5;
-	private int updateCount = 0;
-
-	/// <summary>
-	/// Limit comparing to happen only on every n:th frame 
-	/// </summary>
-	void LateUpdate()
+	public bool IsComparingOnUpdate;
+	public float CompareFrequency = 0;
+	private float timer = 0;
+	
+	void Update()
 	{
-		updateCount++;
-		if( updateCount == CompareFrequency)
+		if( IsComparingOnUpdate )
 		{
-			CompareStackedCubes ();
-			updateCount = 0;
+			timer += Time.deltaTime;
+			if( timer >= CompareFrequency)
+			{
+				CompareStackedCubes ();
+				timer = 0;
+			}
 		}
 	}
 
@@ -26,7 +27,7 @@ public class CubeStacking : MonoBehaviour
 	/// Get cube transforms which share the same 2d-position. Add them in to array and sort it according to
 	/// actual height coordinate from quuppa.
 	/// </summary>
-	private void CompareStackedCubes () 
+	public void CompareStackedCubes () 
 	{
 		List<Transform> ts = new List<Transform>();
 	
@@ -41,7 +42,7 @@ public class CubeStacking : MonoBehaviour
 
 		Transform[] transformArray = ts.ToArray();
 		System.Array.Sort(transformArray, delegate(Transform first, Transform second){
-			return (first.GetComponent<TagInfo>().HeightQuuppa.CompareTo(second.GetComponent<TagInfo>().HeightQuuppa));
+			return (first.GetComponent<QuuppaData>().HeightQuuppa.CompareTo(second.GetComponent<QuuppaData>().HeightQuuppa));
 		});
 
 		for (int i = 0; i < transformArray.Length; i++)

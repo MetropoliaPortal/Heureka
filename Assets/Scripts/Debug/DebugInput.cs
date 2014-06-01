@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class DebugInput : MonoBehaviour 
 {
 	private CubePosition cubePosition;
 	private CubeRotation cubeRotation;
-	private TagInfo tagInfo;
+	private QuuppaData tagInfo;
 	
 	void Update () 
 	{
@@ -24,7 +24,7 @@ public class DebugInput : MonoBehaviour
 				if(hit.collider.tag == "Obstacle")
 				{
 					cubePosition = hit.collider.gameObject.GetComponent<CubePosition>();
-					tagInfo = hit.collider.gameObject.GetComponent<TagInfo>();
+					tagInfo = hit.collider.gameObject.GetComponent<QuuppaData>();
 				}
 			}
 		}
@@ -62,7 +62,7 @@ public class DebugInput : MonoBehaviour
 			if(hit.collider.tag == "Obstacle")
 			{
 				cubeRotation = hit.collider.gameObject.GetComponent<CubeRotation>();
-				tagInfo = hit.collider.gameObject.GetComponent<TagInfo>();
+				tagInfo = hit.collider.gameObject.GetComponent<QuuppaData>();
 
 				Vector3 acceleration = Vector3.zero;
 

@@ -1,32 +1,35 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CubeTexture : MonoBehaviour 
 {
 	public int category;
-	private Material[] materials; 
-
-	private CubeRotation cubeRotation;
-	private TagInfo tagInfo;
+	private Material[] _materials; 
+	private CubeRotation _cubeRotation;
+	private QuuppaData _quuppaData;
 
 	void Awake()
 	{
-		cubeRotation = GetComponent<CubeRotation> ();
-		cubeRotation.rotationChanged += ChangeTexture;
-
-		tagInfo = GetComponent<TagInfo>();
-		tagInfo.buildingTypeChanged += ChangeBuildingType;
+		_cubeRotation = GetComponent<CubeRotation> ();
+		_cubeRotation.rotationChanged += ChangeTexture;
+		_quuppaData = GetComponent<QuuppaData>();
 	}
-	
+
+	public void Initialize()
+	{
+		_quuppaData.TagData.buildingTypeChanged += ChangeBuildingType;
+	}
+
 	private void ChangeBuildingType()
 	{
-		string tempType = tagInfo.BuildingType.ToString ();				// Convert type to string
+		string tempType = _quuppaData.TagData.BuildingType.ToString ();				// Convert type to string
 		string url = "Materials/" + tempType;			// Append type to url
-		materials = Resources.LoadAll<Material>(url);	// Get corresponding materials from Resources folder
+		_materials = Resources.LoadAll<Material>(url);	// Get corresponding materials from Resources folder
+		renderer.material = _materials [0];
 	}
 
 	private void ChangeTexture()
 	{
-		renderer.material = materials[ cubeRotation.currentIndex ];
+		renderer.material = _materials[ _cubeRotation.CurrentIndex ];
 	}
 }

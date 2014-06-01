@@ -39,19 +39,21 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Agent\NewBehaviourScript.js" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
-     <None Include="Assets\Resources\Textures\RimLight.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
+     <Compile Include="Assets\CubeCollision.js" />
+     <None Include="Assets\Resources\Shaders\ColoredSpecular.shader" />
+     <None Include="Assets\Resources\Shaders\BumpedDiffuseColourSpecular.shader" />
+     <None Include="Assets\Resources\Shaders\RimLight.shader" />
+     <None Include="Assets\Resources\Shaders\DetailBumpedSpecular.shader" />
+     <None Include="Assets\Resources\Shaders\DSNA.shader" />
+     <None Include="Assets\Resources\Shaders\StrumpyTest.shader" />
+     <None Include="Assets\Resources\Shaders\BumpedSpecularOwnMap.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

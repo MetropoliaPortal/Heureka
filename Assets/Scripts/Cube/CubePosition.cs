@@ -1,46 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
-/// <summary>
-/// CubePosition.cs
-/// Script is added to each from the StartScript.cs
-/// </summary>
 using System.Collections;
-
 
 public class CubePosition : MonoBehaviour
 {
     #region MEMBERS
     public delegate void EventMove();
     public static event EventMove OnMove = new EventMove(() => { });
-	public int ComparePreviousAmount = 4;
+	public int CompareAmountTriggered = 0;
+	public int CompareAmountDefault = 0;
+	public float PositionAccuracyLimit = 0;
 
+	[HideInInspector]
+	public bool IsMoving = false;
+
+	private int currentCompareAmount;
 	// Cache the transform for faster performance
 	private new Transform transform;
-	private bool isMoving = false;
 
-
-	private string tagState;
+	private bool isNoiseTooHigh = false;
 	private Queue<int> previousPositions = new Queue<int> ();
-	private TagInfo tagInfo;
+	private QuuppaData tagInfo;
+	private CubeStacking cubeStacking;
+	private int previousKey = 0;
     #endregion
 
 	void Start () 
     {
         transform = base.transform;
         GridManager.obstacleList.Add(gameObject);
-		tagInfo = GetComponent<TagInfo>();
+		tagInfo = GetComponent<QuuppaData>();
 		tagInfo.positionChanged += SolvePosition;
+		tagInfo.tagStateChanged += ChangeCompareAmount;
+		tagInfo.positionAccuracyChanged += SolveIsNoiseTooHigh;
+		cubeStacking = GetComponent<CubeStacking> ();
+		currentCompareAmount = CompareAmountDefault;
 	}
 
 	private void SolvePosition(Vector3 pos)
 	{
 		// If the cube is already on the move, we discard any other moves
-		// Next move will be considered once the cube has reached its destiantion
-		if(isMoving)return;
+		if(IsMoving)return;
 
-		pos.x = CheckValue(pos.x, Axis.X);
-		pos.z = CheckValue (pos.z, Axis.Y);
+		pos.x = GetGridPosition (pos.x, Axis.X);
+		pos.z = GetGridPosition (pos.z, Axis.Y);
 		
 		// Convert to game grid
 		// The key is defined to be unique
@@ -48,11 +51,16 @@ public class CubePosition : MonoBehaviour
 		// The dictionary contains the equivalent vector 3 in game grid
 		try
 		{
-			pos = GridManager.gridDict[key];
+			//key = Helpers.SolveMode(previousPositions, key, currentCompareAmount);
+			pos = GridManager.gridDictionary[key];
 
-			if( Helpers.ComparePreviousValues( previousPositions, key, ComparePreviousAmount) )
+			if( Helpers.ComparePreviousValues( previousPositions, key, currentCompareAmount) )
 			{
-				StartCoroutine(MoveToPosition(pos));		
+				if( key != previousKey && !isNoiseTooHigh)
+				{
+					StartCoroutine(MoveToPosition(pos));
+					previousKey = key;
+				}
 			}
 		}
 		catch(System.Exception e)
@@ -65,7 +73,7 @@ public class CubePosition : MonoBehaviour
 	//after lerp, makes sure transform is on the exactly correct position
 	private IEnumerator MoveToPosition(Vector3 position)
 	{
-		isMoving = true;
+		IsMoving = true;
 		float ratio = 0;
 		float duration = 0.6f;
 		float multiplier = 1 / duration;
@@ -82,8 +90,9 @@ public class CubePosition : MonoBehaviour
 		}
 
 		transform.position = new Vector3 (targetPos.x, position.y, targetPos.y);
+		cubeStacking.CompareStackedCubes ();
 
-		isMoving = false;
+		IsMoving = false;
 		OnMove ();
 	}
 
@@ -95,7 +104,7 @@ public class CubePosition : MonoBehaviour
 		we consider the value returned by Quuppa to be within that range considering error of max 0.2. 
 	 */
 	private enum Axis{X, Y}
-	private float CheckValue(float input, Axis axis)
+	private float GetGridPosition(float input, Axis axis)
 	{
 		float offset = 0.2f;
 		float [] values = null;
@@ -103,8 +112,17 @@ public class CubePosition : MonoBehaviour
 		else if(axis == Axis.Y) values  = GridManager.valuesY;
 		// Values are {0.715f, 1.115f, 1.515f, 1.915f, 2.315f, 2.715f};
 		int length = values.Length;
-		if(input < values[0]) return values[0];
-		if (input > values[length - 1])return values[length - 1];
+
+
+		//put cubes on a stack if not on screen
+		//if(input < values[0] - offset) return values[0];
+		//if (input > values[length - 1] + offset) return values[length - 1];
+		if(input < values[0] - offset || input > values[length - 1] + offset)
+		{
+			if(axis == Axis.X) return -2;
+			else return 2;
+		}
+
 		for(int i = 0 ; i < length; i++)
 		{
 			float v = values[i];
@@ -113,26 +131,20 @@ public class CubePosition : MonoBehaviour
 				return v;
 			}
 		}
+
 		return input;
 	}
 
 	public void MoveInDebug(Vector3 position)
 	{
-		if(isMoving)return;
+		if(IsMoving)return;
 
-		position.y++;
+		position.y = 1.0f;
 	
 		float [] values = {2,4,6,8,10,12};
 		float x = 0;
 		float z = 0;
-		if(position.x < values[0] - 1)
-			x = values[0];
-		if(position.x > values[values.Length - 1] + 1)
-			x = values[values.Length - 1];
-		if(position.z < values[0] - 1)
-			z = values[0];
-		if(position.z > values[values.Length - 1] + 1)
-			z = values[values.Length - 1];
+	
 
 		for (int i = 0; i < values.Length ; i++)
 		{
@@ -141,8 +153,61 @@ public class CubePosition : MonoBehaviour
 			if(position.z >= values[i] - 1 && position.z <= values[i] + 1)
 				z = values[i];
 		}
+
+		if(position.x < values[0] - 1)
+		{
+			//x = values[0];
+			x = -2;
+			z = 2;
+		}
+		
+		if(position.x > values[values.Length - 1] + 1)
+		{
+			//x = values[values.Length - 1];
+			x = -2;
+			z = 2;
+		}
+		
+		if(position.z < values[0] - 1)
+		{
+			//z = values[0];
+			x = -2;
+			z = 2;
+		}
+		
+		if(position.z > values[values.Length - 1] + 1)
+		{
+			//z = values[values.Length - 1];
+			x = -2;
+			z = 2;
+		}
 		Vector3 targetPos = new Vector3(x,position.y,z);
 
 		StartCoroutine(MoveToPosition(targetPos));
+	}
+
+	private void ChangeCompareAmount(string tagState)
+	{ 
+		if ( tagState == "t" ) 
+		{
+			currentCompareAmount = CompareAmountTriggered;
+		}
+		else
+		{
+			currentCompareAmount = CompareAmountDefault;
+		}
+	}
+
+	private void SolveIsNoiseTooHigh(float posAcc)
+	{
+		if( posAcc > PositionAccuracyLimit)
+		{
+			isNoiseTooHigh = true;
+			Debug.LogError("Position accuracy too bad");
+		}
+		else
+		{
+			isNoiseTooHigh = false;
+		}
 	}
 }

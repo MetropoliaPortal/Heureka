@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Text;
 using System.Collections.Generic;
@@ -9,20 +9,24 @@ public class CubeCreator : MonoBehaviour
 {
 	private TagManager tagManager;
 	public GameObject CubePrefab;
+	public Transform CubeParent;
 
 	void Start () 
 	{
 		tagManager = GetComponent<TagManager> ();
 	}
 
-	public TagInfo CreateCube( string quuppaId, BuildingType type )
+	public QuuppaData CreateCube(string quuppaId)
 	{
 		GameObject cube = (GameObject)MonoBehaviour.Instantiate(CubePrefab);
-		CubeTexture textureScript = cube.GetComponent<CubeTexture>();
-		QuuppaConnection connectScript = cube.GetComponent<QuuppaConnection>();
-		connectScript.Initialize( quuppaId );
-		//textureScript.Initialize( type );
+		QuuppaData quuppaData = cube.GetComponent<QuuppaData> ();
+		quuppaData.TagData = tagManager.TagDataDictionary[quuppaId];
+
+		cube.GetComponent<CubeRotation> ().Initialize ();
+		cube.GetComponent<CubeTexture>().Initialize() ;
+
+		cube.transform.parent = CubeParent;
 	
-		return cube.GetComponent<TagInfo>();
+		return quuppaData;
 	}
 }

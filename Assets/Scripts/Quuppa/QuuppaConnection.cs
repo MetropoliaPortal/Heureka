@@ -1,32 +1,29 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
 
-
-[RequireComponent(typeof(CubePosition))]
-[RequireComponent(typeof(CubeRotation))]
 public class QuuppaConnection : MonoBehaviour 
 {
-	
-
 	/// <summary>
 	/// The frequency of the calls for the request to the server 
 	/// </summary>
 	public float callFrequency = 0.00f;
+	public ThreadPriority connectionThreadPriority;
 
 	private string tagQuuppa;
-	private TagInfo tagInfo;
+	private QuuppaData tagInfo;
 
 	private string haipFileUrl;	
 	private string tagFileUrl;
 
-	// All data are marked as const to make them immutable and static 
-	private const string s_positionX = "smoothedPositionX";	// string for X position parsing
-	private const string s_positionY = "smoothedPositionY";	// string for Y position parsing
-	private const string s_positionZ = "smoothedPositionZ";	// string for Z position parsing
-	private const string s_acceleration = "acceleration"; 	// string for acceleration parsing
-	private const string s_tagState = "tagState\"";			// string for tag state parsing
+	//for parsing
+	private const string s_positionX = "smoothedPositionX";
+	private const string s_positionY = "smoothedPositionY";
+	private const string s_positionZ = "smoothedPositionZ";
+	private const string s_acceleration = "acceleration";
+	private const string s_tagState = "tagState\"";
+	private const string s_positionAccuray = "positionAccuracy";
 	private const int s_offsetExtraChar = 3;				// int for offsetting index when getting data
 															// This removes the extra ": " characters placed before the values
 	           												// smoothedPositionX": "0.10",
@@ -38,20 +35,42 @@ public class QuuppaConnection : MonoBehaviour
 															// defining whether the tag state is default or triggered
 	private string tagState;
 
+	private TagManager tagManager;
+
 	//quuppa debug
 	private int errorAmount = 0;
 	private int successAmount = 0;
+
+	void Start()
+	{
+
+	}
 	
 	public void Initialize (string tag) 
 	{
 		tagQuuppa = tag;
-		tagInfo = GetComponent<TagInfo>();
+		tagInfo = GetComponent<QuuppaData>();
+		tagManager = GetComponent<TagManager> ();
 
         haipFileUrl = "192.168.123.124:8080/qpe/getHAIPLocation?tag=" + tagQuuppa;
 		tagFileUrl = "192.168.123.124:8080/qpe/getTagInfo?tag=" + tagQuuppa;
 		StartCoroutine(GetHAIPFile());
 		StartCoroutine(GetTagInfoFile());
 	}
+
+	//initialization for single file
+	/*
+	public void Initialize () 
+	{
+		tagQuuppa = tag;
+		tagInfo = GetComponent<TagInfo>();
+		
+		haipFileUrl = "192.168.123.124:8080/qpe/getHAIPLocation";
+		tagFileUrl = "192.168.123.124:8080/qpe/getTagInfo";
+		StartCoroutine(GetHAIPFile());
+		StartCoroutine(GetTagInfoFile());
+	}
+	*/
 
 	IEnumerator GetHAIPFile()
 	{
@@ -65,11 +84,9 @@ public class QuuppaConnection : MonoBehaviour
 				yield return null;
 			}
 
-			//if(tagState == s_letter)
-				//continue;
-
-			// Access the url for request
 			WWW haipFileAccess = new WWW(haipFileUrl);
+			haipFileAccess.threadPriority = connectionThreadPriority;
+
 			yield return haipFileAccess;
 
 			if(haipFileAccess.error != null)
@@ -79,8 +96,31 @@ public class QuuppaConnection : MonoBehaviour
            	else
             {
 				SolvePosition( haipFileAccess.text );
+				/*
+				int idx = 0;
+				while(true)
+				{
+					string txt = SolveNextJsonEntity();
+					if( idx == 0 ) break;
+					TagInfo nextTagInfo = SolveNextTagInfo();
+					SolvePosition( haipFileAccess.text );	
+					SolvePositionAccuracy();
+				}
+				*/
             }
         }
+	}
+
+	private string SolveNextJsonEntity()
+	{
+		//todo
+		return null;
+	}
+
+	private QuuppaData SolveNextTagInfo()
+	{
+		//todo
+		return null;
 	}
 
 	// Try/Catch needed since some of the data come sometimes as 0 without any extra information
@@ -92,15 +132,19 @@ public class QuuppaConnection : MonoBehaviour
 			float x = GetFloatFromJson(s_positionX, jsonTxt);
 			float y = GetFloatFromJson(s_positionY, jsonTxt);
 			float z = GetFloatFromJson(s_positionZ, jsonTxt);
-			
-			//cubePosition.SolvePosition(x, z, y);
-			tagInfo.Position = new Vector3(x, y, z);
-			tagInfo.HeightQuuppa = y;
+
+			tagInfo.Position = new Vector3(x, z, y);
+			tagInfo.HeightQuuppa = z;
 		}
 		catch(Exception e)
 		{
 			Debug.LogError(e.Message);
 		}
+	}
+
+	private void SolvePositionAccuracy()
+	{
+		//todo
 	}
 
 	private float GetFloatFromJson(string name, string file)
@@ -123,6 +167,8 @@ public class QuuppaConnection : MonoBehaviour
 			}
 
 			WWW tagFileAccess = new WWW(tagFileUrl);
+			tagFileAccess.threadPriority = connectionThreadPriority;
+
 			yield return tagFileAccess;
 
 			if( tagFileAccess.error != null)
@@ -151,7 +197,6 @@ public class QuuppaConnection : MonoBehaviour
 		indexTag += s_tagState.Length + 3;
 		tagState = jsonTxt.Substring(indexTag,1);
 
-		//cubePosition.SetTagState( tagState );
 		tagInfo.TagState = tagState;
 	}
 
@@ -182,13 +227,17 @@ public class QuuppaConnection : MonoBehaviour
 			acceleration.x = float.Parse(accelX);
 			acceleration.y = float.Parse (accelY);
 			acceleration.z = float.Parse (accelZ);
-			
-			//cubeRotation.ProcessRotation(acceleration);
+
 			tagInfo.Acceleration = acceleration;
 		}
 		catch(Exception e)
 		{
 			print (e.Message);
 		}
+	}
+
+	private void SolveBatteryVoltage()
+	{
+		//todo
 	}
 }

@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_LINUX;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_4;UNITY_4_3;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_LINUX;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_4;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -39,40 +39,45 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AStar\AStar.cs" />
-     <Compile Include="Assets\Scripts\AStar\GridManager.cs" />
-     <Compile Include="Assets\Scripts\AStar\Node.cs" />
-     <Compile Include="Assets\Scripts\AStar\PriorityQueue.cs" />
-     <Compile Include="Assets\Scripts\Agent\CarMovement.cs" />
-     <Compile Include="Assets\Scripts\Agent\CarSprite.cs" />
-     <Compile Include="Assets\Scripts\Agent\WaypointScript.cs" />
-     <Compile Include="Assets\Scripts\Cube\CubeDebug.cs" />
+     <Compile Include="Assets\Scripts\Car\CarMovement.cs" />
+     <Compile Include="Assets\Scripts\Car\CarSprite.cs" />
+     <Compile Include="Assets\Scripts\Cube\CubeCollision.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeEffect.cs" />
+     <Compile Include="Assets\Scripts\Cube\CubeHighlight.cs" />
      <Compile Include="Assets\Scripts\Cube\CubePosition.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeRotation.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeStacking.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeTexture.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeUvMap.cs" />
+     <Compile Include="Assets\Scripts\Debug\CubeDebug.cs" />
      <Compile Include="Assets\Scripts\Debug\DebugInput.cs" />
      <Compile Include="Assets\Scripts\GameManager\CubeCreator.cs" />
-     <Compile Include="Assets\Scripts\GameManager\QuuppaGUIStateManager.cs" />
-     <Compile Include="Assets\Scripts\GameManager\RoadManager.cs" />
-     <Compile Include="Assets\Scripts\GameManager\TagMaintenanceGUI.cs" />
-     <Compile Include="Assets\Scripts\GameManager\TagManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\Timer.cs" />
      <Compile Include="Assets\Scripts\Global\Helpers.cs" />
+     <Compile Include="Assets\Scripts\Global\PriorityQueue.cs" />
+     <Compile Include="Assets\Scripts\Global\QuuppaGUIStateManager.cs" />
      <Compile Include="Assets\Scripts\Global\ScreenTexture.cs" />
      <Compile Include="Assets\Scripts\Global\StackPool.cs" />
+     <Compile Include="Assets\Scripts\Grid\GridManager.cs" />
+     <Compile Include="Assets\Scripts\Grid\Node.cs" />
+     <Compile Include="Assets\Scripts\Quuppa\QuuppaConnectAll.cs" />
      <Compile Include="Assets\Scripts\Quuppa\QuuppaConnection.cs" />
+     <Compile Include="Assets\Scripts\Quuppa\QuuppaData.cs" />
      <Compile Include="Assets\Scripts\Quuppa\QuuppaStart.cs" />
-     <Compile Include="Assets\Scripts\Quuppa\TagInfo.cs" />
+     <Compile Include="Assets\Scripts\Road\AStar.cs" />
+     <Compile Include="Assets\Scripts\Road\RoadManager.cs" />
+     <Compile Include="Assets\Scripts\Road\WaypointScript.cs" />
+     <Compile Include="Assets\Scripts\Tag\TagData.cs" />
+     <Compile Include="Assets\Scripts\Tag\TagFileHandler.cs" />
+     <Compile Include="Assets\Scripts\Tag\TagMaintenanceGUI.cs" />
+     <Compile Include="Assets\Scripts\Tag\TagManager.cs" />
      <None Include="Assets\Resources\Shaders\ColoredSpecular.shader" />
      <None Include="Assets\Resources\Shaders\BumpedDiffuseColourSpecular.shader" />
      <None Include="Assets\Resources\Shaders\RimLight.shader" />
