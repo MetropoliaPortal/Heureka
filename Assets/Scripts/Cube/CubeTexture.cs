@@ -12,12 +12,14 @@ public class CubeTexture : MonoBehaviour
 	{
 		_cubeRotation = GetComponent<CubeRotation> ();
 		_cubeRotation.rotationChanged += ChangeTexture;
-		_quuppaData = GetComponent<QuuppaData>();
 	}
 
 	public void Initialize()
 	{
+		_quuppaData = GetComponent<QuuppaData>();
 		_quuppaData.TagData.buildingTypeChanged += ChangeBuildingType;
+		ChangeBuildingType ();
+		ChangeTexture ();
 	}
 
 	private void ChangeBuildingType()

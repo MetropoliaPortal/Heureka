@@ -50,6 +50,7 @@
      <Compile Include="Assets\Scripts\Car\CarSprite.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeCollision.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeEffect.cs" />
+     <Compile Include="Assets\Scripts\Cube\CubeHider.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeHighlight.cs" />
      <Compile Include="Assets\Scripts\Cube\CubePosition.cs" />
      <Compile Include="Assets\Scripts\Cube\CubeRotation.cs" />

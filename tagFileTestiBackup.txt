@@ -5,6 +5,7 @@ refId:04,quuppaId:001830ed48ca,Leisure;
 refId:05,quuppaId:001830ed46a1,Shop;
 refId:06,quuppaId:001830ed3fb0,Shop;
 refId:07,quuppaId:001830ed5a8f,Shop;
+refId:08,quuppaId:001830ececed,Shop;
 refId:09,quuppaId:001830ed583a,Residential;
 refId:10,quuppaId:001830eced5d,Residential;
 refId:11,quuppaId:001830ed47a5,Residential;
@@ -13,4 +14,7 @@ refId:13,quuppaId:001830ed585f,Official;
 refId:14,quuppaId:001830ed41a4,Official;
 refId:15,quuppaId:001830ed41e8,Official;
 refId:16,quuppaId:001830ed5c01,Official;
-refId:00,quuppaId:001830ecf57a,Shop;
+refId:00,quuppaId:00180ecf57a,Shop;
+
+
+missing: 1,4,8

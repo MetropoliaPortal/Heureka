@@ -5,6 +5,7 @@ public class CubeEffect : MonoBehaviour
 {
 	public GameObject particleEffect;
 	private ParticleSystem particleSystem;
+	private bool isDisabled = false;
 	
 	void Start () 
 	{
@@ -14,10 +15,19 @@ public class CubeEffect : MonoBehaviour
 
 		CubeRotation cr = GetComponent<CubeRotation>();
 		cr.rotationChanged += EmitParticles;
+
+		CubePosition cp = GetComponent<CubePosition> ();
+		cp.OnOutsideGrid += HandleOnOutsideGrid;
+	}
+
+	void HandleOnOutsideGrid (bool par)
+	{
+		isDisabled = par;
 	}
 
 	private void EmitParticles()
 	{
-		particleSystem.Emit(120);
+		if(!isDisabled)
+			particleSystem.Emit(120);
 	}
 }

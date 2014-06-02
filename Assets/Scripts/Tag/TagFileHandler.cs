@@ -9,7 +9,7 @@ public class TagFileHandler : MonoBehaviour
 	public static void UpdateTagFile( Dictionary<string, TagData> tagDatas)
 	{
 		string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-		url += @"\tagFileTesti.txt";	
+		url += @"\tagFile.txt";	
 
 		using (StreamWriter sw = File.CreateText(url))
 		{

@@ -8,7 +8,18 @@ public class CubeStacking : MonoBehaviour
 {
 	public bool IsComparingOnUpdate;
 	public float CompareFrequency = 0;
+	public int CompareAmount = 0;
+
+	private QuuppaData quuppaData;
 	private float timer = 0;
+	public float quuppaHeight{ get; private set;}
+	private Queue<float> previousValues = new Queue<float>();
+
+	void Start()
+	{
+		quuppaData = GetComponent<QuuppaData>();
+		quuppaData.heightQuuppaChanged += SolveHeight;
+	}
 	
 	void Update()
 	{
@@ -21,6 +32,11 @@ public class CubeStacking : MonoBehaviour
 				timer = 0;
 			}
 		}
+	}
+
+	private void SolveHeight(float height)
+	{
+		quuppaHeight = Helpers.SolveAverage ( previousValues, height, CompareAmount );
 	}
 
 	/// <summary>
@@ -41,9 +57,15 @@ public class CubeStacking : MonoBehaviour
 		}
 
 		Transform[] transformArray = ts.ToArray();
+		/*
 		System.Array.Sort(transformArray, delegate(Transform first, Transform second){
 			return (first.GetComponent<QuuppaData>().HeightQuuppa.CompareTo(second.GetComponent<QuuppaData>().HeightQuuppa));
 		});
+		*/
+		System.Array.Sort(transformArray, delegate(Transform first, Transform second){
+			return (first.GetComponent<CubeStacking>().quuppaHeight.CompareTo(second.GetComponent<CubeStacking>().quuppaHeight));
+		});
+
 
 		for (int i = 0; i < transformArray.Length; i++)
 		{

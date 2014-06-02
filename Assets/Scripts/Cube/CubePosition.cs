@@ -6,7 +6,11 @@ public class CubePosition : MonoBehaviour
 {
     #region MEMBERS
     public delegate void EventMove();
-    public static event EventMove OnMove = new EventMove(() => { });
+    public static event EventMove OnMove = new EventMove(() => { }); //clean this
+
+	public delegate void OutsideGridEvent(bool par);
+	public event OutsideGridEvent OnOutsideGrid = delegate{};
+
 	public int CompareAmountTriggered = 0;
 	public int CompareAmountDefault = 0;
 	public float PositionAccuracyLimit = 0;
@@ -20,19 +24,21 @@ public class CubePosition : MonoBehaviour
 
 	private bool isNoiseTooHigh = false;
 	private Queue<int> previousPositions = new Queue<int> ();
-	private QuuppaData tagInfo;
+	private QuuppaData quuppaData;
 	private CubeStacking cubeStacking;
 	private int previousKey = 0;
+	private bool isOutsideGrid = false;
+
     #endregion
 
 	void Start () 
     {
         transform = base.transform;
         GridManager.obstacleList.Add(gameObject);
-		tagInfo = GetComponent<QuuppaData>();
-		tagInfo.positionChanged += SolvePosition;
-		tagInfo.tagStateChanged += ChangeCompareAmount;
-		tagInfo.positionAccuracyChanged += SolveIsNoiseTooHigh;
+		quuppaData = GetComponent<QuuppaData>();
+		quuppaData.positionChanged += SolvePosition;
+		quuppaData.tagStateChanged += ChangeCompareAmount;
+		quuppaData.positionAccuracyChanged += SolveIsNoiseTooHigh;
 		cubeStacking = GetComponent<CubeStacking> ();
 		currentCompareAmount = CompareAmountDefault;
 	}
@@ -43,7 +49,16 @@ public class CubePosition : MonoBehaviour
 		if(IsMoving)return;
 
 		pos.x = GetGridPosition (pos.x, Axis.X);
-		pos.z = GetGridPosition (pos.z, Axis.Y);
+		if(!isOutsideGrid)
+			pos.z = GetGridPosition (pos.z, Axis.Y);
+
+		if(isOutsideGrid)
+		{
+			pos.x = -2.0f;
+			pos.z = 2.0f;
+		}
+
+		//Debug.Log ("posX: " + pos.x + ", posZ: " + pos.z);
 		
 		// Convert to game grid
 		// The key is defined to be unique
@@ -75,7 +90,7 @@ public class CubePosition : MonoBehaviour
 	{
 		IsMoving = true;
 		float ratio = 0;
-		float duration = 0.6f;
+		float duration = 1.5f;
 		float multiplier = 1 / duration;
 
 		Vector2 cube2dPos = new Vector2 (transform.position.x, transform.position.z);
@@ -113,15 +128,26 @@ public class CubePosition : MonoBehaviour
 		// Values are {0.715f, 1.115f, 1.515f, 1.915f, 2.315f, 2.715f};
 		int length = values.Length;
 
-
-		//put cubes on a stack if not on screen
 		//if(input < values[0] - offset) return values[0];
 		//if (input > values[length - 1] + offset) return values[length - 1];
+
+
+		//put cubes on a stack if not on screen
 		if(input < values[0] - offset || input > values[length - 1] + offset)
 		{
-			if(axis == Axis.X) return -2;
-			else return 2;
+			//if(axis == Axis.X) return -2;
+			//else return 2;
+			isOutsideGrid = true;
+			OnOutsideGrid(true);
+			Debug.Log("cube out");
+			return 0;
 		}
+		else
+		{
+			isOutsideGrid = false;
+			OnOutsideGrid(false);
+		}
+
 
 		for(int i = 0 ; i < length; i++)
 		{
@@ -203,7 +229,7 @@ public class CubePosition : MonoBehaviour
 		if( posAcc > PositionAccuracyLimit)
 		{
 			isNoiseTooHigh = true;
-			Debug.LogError("Position accuracy too bad");
+			Debug.Log("Position accuracy too bad");
 		}
 		else
 		{

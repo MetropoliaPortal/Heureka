@@ -86,10 +86,10 @@ public class QuuppaConnectAll : MonoBehaviour
 
 					try
 					{
-						QuuppaData tagInfo = tagManager.QuuppaDataDictionary[quuppaId];
-						tagInfo.Position = pos;
-						tagInfo.HeightQuuppa = pos.y;
-						tagInfo.PositionAccuracy = posAccuracy;
+						QuuppaData quuppaData = tagManager.QuuppaDataDictionary[quuppaId];
+						quuppaData.Position = pos;
+						quuppaData.HeightQuuppa = pos.y;
+						quuppaData.PositionAccuracy = posAccuracy;
 					}
 					catch( Exception e)
 					{
@@ -175,35 +175,32 @@ public class QuuppaConnectAll : MonoBehaviour
 					if(index < 0) break;
 
 					index = txt.IndexOf(": {") - 12 - 1;
-					string id = txt.Substring(index, 12);
+					string quuppaId = txt.Substring(index, 12);
 
-					//print ("tagfile id: " +id +".");
-
-
-					string batteryAlarm = ParseBatteryAlarm( txt );
-					Vector3 acceleration = ParseAcceleration( txt );
-					string tagState = ParseTagState( txt );
-					float batteryVoltage = ParseBatteryVoltage( txt );
-
-
-					try
+					if( tagManager.QuuppaDataDictionary.ContainsKey( quuppaId ) )
 					{
-						QuuppaData tagInfo = tagManager.QuuppaDataDictionary[ id ];
-						tagInfo.Acceleration = acceleration;
-						tagInfo.TagState = tagState;
-						tagInfo.BatteryVoltage = batteryVoltage;
-					}
-					catch( Exception e)
-					{
-						Debug.LogError( e.Message );
-						Debug.LogError( "missing key: " +id);
-					}
+						string batteryAlarm = ParseBatteryAlarm( txt );
+						Vector3 acceleration = ParseAcceleration( txt );
+						string tagState = ParseTagState( txt );
+						float batteryVoltage = ParseBatteryVoltage( txt );
 
-
+						QuuppaData quuppaData = null;
+						try
+						{
+							quuppaData = tagManager.QuuppaDataDictionary[ quuppaId ];
+							quuppaData.Acceleration = acceleration;
+							quuppaData.TagState = tagState;
+							quuppaData.BatteryVoltage = batteryVoltage;
+						}
+						catch( Exception e)
+						{
+							Debug.LogError( e.Message );
+							print (quuppaData);
+							Debug.LogError( "missing key: " +quuppaId);
+						}
+					}
 					int start = txt.IndexOf("}");            
 					txt = txt.Substring(start + 1);
-
-					//print ("start idx: " +start);
 				}
 			}
 		}
@@ -251,7 +248,7 @@ public class QuuppaConnectAll : MonoBehaviour
 		}
 		catch(Exception e)
 		{
-			print (e.Message);
+			Debug.LogError (e.Message);
 		}
 
 		return acceleration;

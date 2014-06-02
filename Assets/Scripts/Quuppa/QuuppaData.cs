@@ -15,6 +15,7 @@ public class QuuppaData : MonoBehaviour
 	public event ChangedEventVector3 positionChanged = delegate{};
 	public event ChangedEventString tagStateChanged = delegate{};
 	public event ChangedEventFloat positionAccuracyChanged = delegate{};
+	public event ChangedEventFloat heightQuuppaChanged = delegate{};
 	public event ChangedEventVector3 accelerationChanged = delegate{};
 
 	public TagData TagData{get;set;}
@@ -30,6 +31,7 @@ public class QuuppaData : MonoBehaviour
 		set
 		{
 			heightQuuppa = value;
+			heightQuuppaChanged( heightQuuppa );
 		}
 	}
 

@@ -28,9 +28,10 @@ public class TagManager : MonoBehaviour
 
 	public void TryCreateCube(string quuppaId)
 	{
-		if (QuuppaDataDictionary.ContainsKey (quuppaId)) 
+		if (TagDataDictionary.ContainsKey (quuppaId)) 
 		{
 			QuuppaData newQuuppaData = _cubeCreator.CreateCube( quuppaId );
+			//QuuppaDataDictionary.Remove( quuppaId );
 			QuuppaDataDictionary.Add( quuppaId, newQuuppaData );
 		}
 		else
@@ -51,7 +52,7 @@ public class TagManager : MonoBehaviour
 		try
 		{
 			string url = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-			url += @"\tagFileTesti.txt";	
+			url += @"\tagFile.txt";	
 			
 			using (StreamReader sr = new StreamReader(url))
 			{
@@ -108,7 +109,7 @@ public class TagManager : MonoBehaviour
 					//TODO: default acceleration from tagfile
 					newTagData.DefaultAcceleration = Vector3.zero;
 					TagDataDictionary.Add( quuppaId, newTagData );
-					QuuppaDataDictionary.Add( quuppaId, null );
+					//QuuppaDataDictionary.Add( quuppaId, null );
 				}
 			}
 		}

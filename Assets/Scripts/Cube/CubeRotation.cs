@@ -22,14 +22,15 @@ public class CubeRotation : MonoBehaviour
 
 	void Start()
 	{
-		_quuppaData = GetComponent<QuuppaData>();
-		_quuppaData.accelerationChanged += ProcessRotation;
-		_quuppaData.tagStateChanged += ChangeCompareAmount;
-		_currentCompareAmount = CompareAmountDefault;
+
 	}
 
 	public void Initialize()
 	{
+		_quuppaData = GetComponent<QuuppaData>();
+		_quuppaData.accelerationChanged += ProcessRotation;
+		_quuppaData.tagStateChanged += ChangeCompareAmount;
+		_currentCompareAmount = CompareAmountDefault;
 		_quuppaData.TagData.defaultAccelerationChanged += ChangeDefaultAcceleration;
 		_defaultAcceleration = _quuppaData.TagData.DefaultAcceleration;
 	}

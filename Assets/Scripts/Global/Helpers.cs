@@ -12,10 +12,13 @@ public static class Helpers
 		} 
 		else 
 		{
+			previousValues.Dequeue();
+			/*
 			while( previousValues.Count > comparePreviousAmount )
 			{
 				previousValues.Dequeue();
 			}
+			*/
 		}
 
 		foreach (int i in previousValues) 
@@ -36,16 +39,20 @@ public static class Helpers
 		} 
 		else 
 		{
+			previousValues.Dequeue();
+			/*
 			while( previousValues.Count > comparePreviousAmount )
 			{
 				previousValues.Dequeue();
 			}
+			*/
 		}
 		float sum = 0;
+		float[] values = previousValues.ToArray ();
 
-		foreach (int i in previousValues) 
+		for(int i = 0; i < values.Length; i++)
 		{
-			sum += i;
+			sum += values[i];
 		}
 
 		return sum / previousValues.Count;

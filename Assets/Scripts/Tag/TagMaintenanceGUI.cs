@@ -57,8 +57,8 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 		float halfHeight = Screen.height / 2;
 		float sizeBox = halfWidth / 2;
 
-		float widthMargin = Screen.width / 10;
-		float heightMargin = Screen.height / 10;
+		float widthMargin = 0;//Screen.width / 10;
+		float heightMargin = 0;//Screen.height / 10;
 		Rect rect = new Rect(  widthMargin, 
 		                     heightMargin, 
 		                     Screen.width - 2 * widthMargin, 
@@ -123,6 +123,8 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 		GUILayout.Label( "Position" );
 		GUILayout.Label( "Acceleration" );
 		GUILayout.Label( "Building Type" );
+		GUILayout.Label( "" );
+		GUILayout.Label( "" );
 		
 		GUILayout.EndHorizontal();
 
@@ -130,11 +132,11 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 		{
 			GUILayout.BeginHorizontal();
 
-			if( quuppaDatas[tag.Key] != null )
+			if( quuppaDatas.ContainsKey( tag.Key ) )
 			{
 				if( GUILayout.Button( tag.Key ))
 				{
-					tagManager.HighlightCube( tag.Value.RefId );
+					tagManager.HighlightCube( tag.Key );
 				}
 				GUILayout.Label( tag.Value.QuuppaId );
 				GUILayout.Label( quuppaDatas[tag.Key].BatteryVoltage.ToString() );
@@ -157,10 +159,14 @@ public class TagMaintenanceGUI : QuuppaGUIStateManager
 			{
 				GUILayout.Label( "Offline ");
 				GUILayout.Label( tag.Key );
+				GUILayout.Label( "" );
+				GUILayout.Label( "" );
+				GUILayout.Label( "" );
 				if( GUILayout.Button( tag.Value.BuildingType.ToString() ) )
 				{
 					tagManager.ChangeBuildingType( tag.Key );
 				}
+				GUILayout.Label( "" );
 				if( GUILayout.Button( "Remove") ) 
 				{
 					toRemove.Add( tag.Key );
